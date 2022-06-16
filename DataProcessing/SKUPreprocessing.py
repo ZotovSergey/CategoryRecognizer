@@ -5,6 +5,10 @@ def clear_sku(sku_rows):
     cleaned_sku_rows = cleaned_sku_rows.str.replace.str.replace(r'^\[[^\[\]]*\]|^{[^{}]*}|^<[^<>]*>|~|^#|^\'|^\?|^\*|^\.|^\,|^_|^-|^–|{|}', '')
     return cleaned_sku_rows
 
+def preprocess_sku_df(sku_df):
+    sku_rows = sku_df.squeeze().astype(str)
+    preprocessed_rows = list(' ' + sku_rows.str.upper() + ' ')
+    return preprocessed_rows, sku_rows
 
 class SKUReader:
 
