@@ -1,4 +1,3 @@
-from email import header
 import pandas as pd
 import numpy as np
 import csv
@@ -31,7 +30,7 @@ class BrendRecognizer:
         pool = mp.Pool(self.cpu_count)
         brends_list = list(pool.map(self.brend_dictionary.identify_brend_cython, data_rows))
         pool.close()
-        return brends_list
+        return [brends_list]
     
     def process_rows_get_dec_id(self, data_rows):
         pool = mp.Pool(self.cpu_count)
@@ -63,7 +62,7 @@ class BrendRecognizer:
     
     def read_and_preprocess_pd_file_batch(self, batch_start):
         try:
-            sku_df = pd.read_csv(self.file_path, header=None, usecols=[self.rows_col_num], skiprows=batch_start + 1, nrows=self.batch_len, sep='\t').fillna('')
+            sku_df = pd.read_csv(self.file_path, header=None, usecols=[self.rows_col_num], skiprows=batch_start + 1, nrows=self.batch_len, sep='\t', encoding=self.encoding).fillna('')
         except:
             sku_df = pd.read_excel(self.file_path, header=None, usecols=[self.rows_col_num], skiprows=batch_start + 1, nrows=self.batch_len).fillna('')
         return preprocess_sku_df(sku_df)
@@ -90,8 +89,20 @@ class BrendRecognizer:
     def write_csv_file(self, df_path_zip):
         df = df_path_zip[0]
         df.to_csv(df_path_zip[1], sep='\t', index=False, header=False)
+    
+    def write_csv_temp_file(self, data_rows):
+        temp = tempfile.TemporaryFile()
+        with tempfile.TemporaryFile() as temp:
+            temp.writelines()
+        return temp
 
     def write_csv_temp_files_batch(self, df):
+        # self.write_csv_temp_file(data_rows_batches[0])
+        # pool = mp.Pool(self.cpu_count)
+        # with pool:
+        #     temps = pool.map(self.write_csv_temp_file, data_rows_batches)
+        # pool.close()
+
         temp_files_list = list(map(os.path.join, self.cpu_count * ['temp'], list(map(str, np.arange(0, self.cpu_count)))))
         
         pool = mp.Pool(self.cpu_count)
@@ -103,13 +114,13 @@ class BrendRecognizer:
     #     temp = tempfile.TemporaryFile()
     #     df.to_csv(df_path_zip[1], sep='\t', index=False, header=False)
 
-    # def write_data_temp_files_batch(self, df):
-    #     temp_files_list = list(map(os.path.join, self.cpu_count * ['temp'], list(map(str, np.arange(0, self.cpu_count)))))
+    def write_data_temp_files_batch(self, df):
+        temp_files_list = list(map(os.path.join, self.cpu_count * ['temp'], list(map(str, np.arange(0, self.cpu_count)))))
         
-    #     pool = mp.Pool(self.cpu_count)
-    #     with pool:
-    #         pool.map(self.write_data_temp_file, zip(df, temp_files_list))
-    #     pool.close()
+        pool = mp.Pool(self.cpu_count)
+        with pool:
+            pool.map(self.write_data_temp_file, zip(df, temp_files_list))
+        pool.close()
 
     def process_excel_files_pool(self, excel_files_path_list, sku_sheet_name, sku_col_title, ret_data_folder_path, brend_sheet_name, suffix='Processed_', cpu_count=None):
         if isinstance(excel_files_path_list, str):
@@ -170,22 +181,25 @@ class BrendRecognizer:
                 df_path_batch.append((pd.DataFrame({'SKU': sku_rows_batch[i], 'Brend': brends_lists_batch[i], 'History': history_lists_batch[i]}), save_path))
             self.write_excel_files_batch(df_path_batch)
     
-    def process_csv(self, csv_path, output_data_path, rows_col_name=None, batch_len=100000, get_dec_id=False, gui_window=None):
+    def process_csv(self, csv_path, output_data_path, rows_col_name=None, batch_len=100000, get_dec_id=False, encoding = None, gui_window=None):
         # Количество обработанных батчей
-        baches_done_num = 0
+        batches_done_num = 0
         # Путь к обрабатываемому файлу
         self.file_path = csv_path
         # Максимальный размер одного батча
         self.batch_len = batch_len
+        # Кодировка обрабатываемого файла
+        self.encoding = encoding
 
         # Определение количества строк в обрабатываемом файле
         rows_count = -1
         try:
-            for line in csv.reader(open(self.file_path)):
-                rows_count += 1
+            rows_count = len(pd.read_csv(self.file_path, encoding=self.encoding, sep='\t')) - 1
+            # for line in csv.reader(open(self.file_path)):
+            #     rows_count += 1
         except:
             rows_count = len(pd.read_excel(self.file_path)) - 1
-        #   Сообщение о количестве строк вв обрабатываемом файле
+        #   Сообщение о количестве строк в обрабатываемом файле
         set_msg_in_gui('Обрабатываемый файл содержит ' + str(rows_count), gui_window)
         
         # Определение количества батчей
@@ -197,7 +211,7 @@ class BrendRecognizer:
         # Определение порядкового номера столбца с SKU
         if rows_col_name is not None:
             try:
-                self.rows_col_num = np.where(pd.read_csv(self.file_path, nrows=0, sep='\t').columns.values == rows_col_name)[0][0]
+                self.rows_col_num = np.where(pd.read_csv(self.file_path, nrows=0, sep='\t', encoding=self.encoding).columns.values == rows_col_name)[0][0]
             except:
                 self.rows_col_num = np.where(pd.read_excel(self.file_path, nrows=0).columns.values == rows_col_name)[0][0]
         else:
@@ -211,7 +225,7 @@ class BrendRecognizer:
         else:
             proc_func = self.process_rows_get_dec_id
             dec_id_header = pd.DataFrame({'main identifier': [], 'main limiting identifier': [], 'additional limiting identifier': []})
-            output_data_path = pd.concat([output_file_header, dec_id_header], axis=1)
+            output_file_header = pd.concat([output_file_header, dec_id_header], axis=1)
         output_file_header.to_csv(output_data_path, sep='\t', index=False)
         #   Сообщение о создании исходящего файла
         set_msg_in_gui('Исходящий файл \"' + output_data_path + '\" создан', gui_window)
@@ -223,7 +237,7 @@ class BrendRecognizer:
         for batches_starts_list in batch_starts_gen:
             # Загрузка и предобработка self.cpu_count батчей, вывод предобработанных строк SKU и исходных
             #   Сообщение о начале загрузки и предобработке батчей
-            set_msg_in_gui('Загружаются и предобрабатываются батчи №' + ', '.join(map(str, list(np.arange(baches_done_num + 1, baches_done_num + self.cpu_count + 1)))), gui_window)
+            set_msg_in_gui('Загружаются и предобрабатываются батчи №' + ', '.join(map(str, list(np.arange(batches_done_num + 1, batches_done_num + len(batches_starts_list) + 1)))), gui_window)
             #   Процесс загрузки
             rows_batches_list, sku_batches_list = self.read_and_preprocess_pd_file_batches_pool(batches_starts_list)
             #   Сообщение о завершении загрузки и предобработке батчей
@@ -233,9 +247,9 @@ class BrendRecognizer:
             proc_data_batches_list = []
             for i, rows_batch in enumerate(rows_batches_list):
                 # Сообщение о начале обработки батча
-                set_msg_in_gui('Обрабатывается батч №' + str(baches_done_num + 1 + i), gui_window)
+                set_msg_in_gui('Обрабатывается батч №' + str(batches_done_num + 1 + i), gui_window)
                 # Процесс обработки
-                proc_data_batches_list.append([proc_func(rows_batch)])
+                proc_data_batches_list.append(proc_func(rows_batch))
                 # Сообщение о окончании обработки батча
                 set_msg_in_gui('Батч обработан', gui_window)
             
@@ -244,11 +258,15 @@ class BrendRecognizer:
             #       Сообщение о начале записи обработанных данных
             set_msg_in_gui('Сохранение полученных данных', gui_window)
             #       Состаление фреймов с исходящими данными
+            #           Столбцы с исходными SKU
             df_list = [{'SKU': sku_batches_list[i]} for i in range(len(sku_batches_list))]
+            #           Перебор фремов, соответствующих батчам
             for i, df in enumerate(df_list):
+                # Перебор столбцов исходящих данных сооттствующего батча
                 for j, col in enumerate(proc_data_batches_list[i]):
+                    # Добавление столба в соответствующий фрейм
                     df['ans' + str(j)] = col
-            df_list = map(pd.DataFrame, df_list)
+            df_list = list(map(pd.DataFrame, df_list))
             #       Запись временных файлов с исходящими данными
             self.write_csv_temp_files_batch(df_list)
             #       Запись путей к временным файлам
@@ -266,13 +284,13 @@ class BrendRecognizer:
                     # Удаление временного файла
                     os.remove(temp_file_path)
             #       Обновление количества обработанных батчей
-            baches_done_num += len(batches_starts_list)
+            batches_done_num += len(batches_starts_list)
             #       Сообщение о завершении записи обработанных данных
-            set_msg_in_gui('(' + str(baches_done_num) + '/' + str(batches_num) + ') ' + 'Полученные данные сохранены в исходящий файл', gui_window)
+            set_msg_in_gui('(' + str(batches_done_num) + '/' + str(batches_num) + ') ' + 'Полученные данные сохранены в исходящий файл', gui_window)
 
             # Обновление project bar
             if gui_window is not None:
-                pbar_value = int(baches_done_num / batches_num * 100)
+                pbar_value = int(batches_done_num / batches_num * 100)
                 gui_window.pbar.setValue(pbar_value)
                 QApplication.processEvents()
 
