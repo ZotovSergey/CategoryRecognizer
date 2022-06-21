@@ -45,23 +45,20 @@ class BrendDictionary:
     """
     Справочник брендов, содержащий их обозначения и им соответствующие обозначения идентифткаторы всех типов
     """
-    def __init__(self, file_path, dictinary_sheet_name,
+    def __init__(self, features_df,
                  brand_rightholders_title='ЗНАЧЕНИЕ К ВОЗВРАЩЕНИЮ',
                  main_identifires_title='ОСНОВНЫЕ ИДЕНТИФИКАТОРЫ КАТЕГОРИИ\n (СОДЕРЖИТ)',
                  main_limit_identifires_title='ОСНОВНЫЕ ОГРАНИЧИВАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (И ОБЯЗАТЕЛЬНО СОДЕРЖИТ)',
                  add_limit_identifires_title='ДОПОЛНИТЕЛЬНЫЕ ОГРАНИЧИВАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (И ТАКЖЕ ОБЯЗАТЕЛЬНО СОДЕРЖИТ)',
                  excluding_identifires_title='ИСКЛЮЧАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (НЕ СОДЕРЖИТ)'):
         """
-        :param file_path: путь к excel файлу, содержащему справочник
-        :param dictinary_sheet_name: название книги из excel файла по пути file_path, содержащей справочник
+        :param features_df: справочник в формате pandas.DataFrame с заголовком
         :param brand_rightholders_title: название колонки, содержащей обозначения брендов
         :param main_identifires_title: название колонки, содержащей основные идентификаторы
         :param main_limit_identifires_title: название колонки, содержащей основные ограничивающие идентификаторы
         :param add_limit_identifires_title: название колонки, содержащей дополнительные ограничивающие идентификаторы
         :param excluding_identifires_title: название колонки, содержащей исключающие идентификаторы
         """
-        # Чтение книги excel файла по пути file_path с названием dictinary_sheet_name, содержащей обозначения брендов и их идентификаторы
-        features_df = pd.read_excel(file_path, sheet_name=dictinary_sheet_name)
         # Запись списка обозначений бренда из features_df
         self.brand_rightholders = list(features_df[brand_rightholders_title])
         # Предобработка и запись списка основных идентификаторов из features_df
@@ -96,9 +93,8 @@ class BrendDictionary:
             # Перебор основых идентификаторов
             for main_id in self.main_identifires[i]:
                 # Определение, содержатся ли основной идентификатор в заданном SKU
-                pos = main_id in sku_row
-                # Если основной идентификатор найден
-                if pos:
+                #   Если основной идентификатор найден
+                if main_id in sku_row:
                     # Флаг "ограничивающие идентификаторы найдены"
                     limit_id_found = False
                     # Если есть основные ограничивающие идентификаторы
@@ -106,17 +102,15 @@ class BrendDictionary:
                         # Перебор основных ограничивающих идентификаторов
                         for main_limit_id in self.main_limit_identifires[i]:
                             # Определение, содержатся ли основной ограничивающий идентификатор в заданном SKU
-                            pos = main_limit_id in sku_row
-                            # Если основной ограничивающий идентификатор найден
-                            if pos:
+                            #   Если основной ограничивающий идентификатор найден
+                            if main_limit_id in sku_row:
                                 # Если есть дополнительные ограничивающие идентификаторы
                                 if len(self.add_limit_identifires[i]) > 0:
                                     # Перебор дополнительных ограничивающих идентификаторов
                                     for add_limit_id in self.add_limit_identifires[i]:
                                         # Определение, содержатся ли дополнительный ограничивающий идентификатор в заданном SKU
-                                        pos = add_limit_id in sku_row
-                                        # Если дополнительный ограничивающий идентификатор найден
-                                        if pos:
+                                        #    Если дополнительный ограничивающий идентификатор найден
+                                        if add_limit_id in sku_row:
                                             # Выставляется флаг "ограничивающие идентификаторы найдены", цикл поиска дополнительных ограничивающих идентификаторов прерывается
                                             limit_id_found = True
                                             break
@@ -138,9 +132,8 @@ class BrendDictionary:
                         # Перебор исключающих идентификаторов
                         for excluding_id in self.excluding_identifires[i]:
                             # Определение, содержатся ли исключающий идентификатор в заданном SKU
-                            pos = excluding_id in sku_row
-                            # Если исключающий идентификатор найден
-                            if pos:
+                            #   Если исключающий идентификатор найден
+                            if excluding_id in sku_row:
                                 # Выставляется флаг "исключающий дентификатор найден", цикл поиска исключающих идентификаторов прерывается
                                 excluding_id_found = True
                                 break
@@ -170,9 +163,8 @@ class BrendDictionary:
             # Перебор основых идентификаторов
             for main_id in self.main_identifires[i]:
                 # Определение, содержатся ли основной идентификатор в заданном SKU
-                pos = main_id in sku_row
-                # Если основной идентификатор найден
-                if pos:
+                #   Если основной идентификатор найден
+                if main_id in sku_row:
                     # Флаг "ограничивающие идентификаторы найдены"
                     limit_id_found = False
                     # Если есть основные ограничивающие идентификаторы
@@ -180,17 +172,15 @@ class BrendDictionary:
                         # Перебор основных ограничивающих идентификаторов
                         for main_limit_id in self.main_limit_identifires[i]:
                             # Определение, содержатся ли основной ограничивающий идентификатор в заданном SKU
-                            pos = main_limit_id in sku_row
-                            # Если основной ограничивающий идентификатор найден
-                            if pos:
+                            #   Если основной ограничивающий идентификатор найден
+                            if main_limit_id in sku_row:
                                 # Если есть дополнительные ограничивающие идентификаторы
                                 if len(self.add_limit_identifires[i]) > 0:
                                     # Перебор дополнительных ограничивающих идентификаторов
                                     for add_limit_id in self.add_limit_identifires[i]:
                                         # Определение, содержатся ли дополнительный ограничивающий идентификатор в заданном SKU
-                                        pos = add_limit_id in sku_row
-                                        # Если дополнительный ограничивающий идентификатор найден
-                                        if pos:
+                                        #   Если дополнительный ограничивающий идентификатор найден
+                                        if add_limit_id in sku_row:
                                             # Выставляется флаг "ограничивающие идентификаторы найдены", цикл поиска дополнительных ограничивающих идентификаторов прерывается
                                             limit_id_found = True
                                             # Запись кандидатов в решающие главный и дополнительный ограничивающие идинтификаторы
@@ -221,9 +211,8 @@ class BrendDictionary:
                         # Перебор исключающих идентификаторов
                         for excluding_id in self.excluding_identifires[i]:
                             # Определение, содержатся ли исключающий идентификатор в заданном SKU
-                            pos = excluding_id in sku_row
-                            # Если исключающий идентификатор найден
-                            if pos:
+                            #   Если исключающий идентификатор найден
+                            if excluding_id in sku_row:
                                 # Выставляется флаг "исключающий дентификатор найден", цикл поиска исключающих идентификаторов прерывается
                                 excluding_id_found = True
                                 break
@@ -244,9 +233,8 @@ class BrendDictionary:
             # Перебор основых идентификаторов
             for main_id in self.main_identifires[i]:
                 # Определение, содержатся ли основной идентификатор в заданном SKU
-                pos = main_id in sku_row
-                # Если основной идентификатор найден
-                if pos:
+                #   Если основной идентификатор найден
+                if main_id in sku_row:
                     main_limit_id_found = False
                     # Флаг "ограничивающие идентификаторы найдены"
                     limit_id_found = False
@@ -257,18 +245,16 @@ class BrendDictionary:
                         # Перебор основных ограничивающих идентификаторов
                         for main_limit_id in self.main_limit_identifires[i]:
                             # Определение, содержатся ли основной ограничивающий идентификатор в заданном SKU
-                            pos = main_limit_id in sku_row
-                            # Если основной ограничивающий идентификатор найден
-                            if pos:
+                            #   Если основной ограничивающий идентификатор найден
+                            if main_limit_id in sku_row:
                                 main_limit_id_found = True
                                 # Если есть дополнительные ограничивающие идентификаторы
                                 if len(self.add_limit_identifires[i]) > 0:
                                     # Перебор дополнительных ограничивающих идентификаторов
                                     for add_limit_id in self.add_limit_identifires[i]:
                                         # Определение, содержатся ли дополнительный ограничивающий идентификатор в заданном SKU
-                                        pos = add_limit_id in sku_row
-                                        # Если дополнительный ограничивающий идентификатор найден
-                                        if pos:
+                                        #   Если дополнительный ограничивающий идентификатор найден
+                                        if add_limit_id in sku_row:
                                             # Выставляется флаг "ограничивающие идентификаторы найдены", цикл поиска дополнительных ограничивающих идентификаторов прерывается
                                             limit_id_found = True
                                             break
@@ -290,9 +276,8 @@ class BrendDictionary:
                         # Перебор исключающих идентификаторов
                         for excluding_id in self.excluding_identifires[i]:
                             # Определение, содержатся ли исключающий идентификатор в заданном SKU
-                            pos = excluding_id in sku_row
-                            # Если исключающий идентификатор найден
-                            if pos:
+                            #   Если исключающий идентификатор найден
+                            if excluding_id in sku_row:
                                 # Выставляется флаг "исключающий дентификатор найден", цикл поиска исключающих идентификаторов прерывается
                                 excluding_id_found = True
                                 break

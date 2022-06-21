@@ -1,1 +1,0 @@
-{"sel_dict": "\u044b\u0432\u043f\u0432\u0430\u0440\u0432\u0440", "input_data_path": "D:/Data/\u041c\u0435\u0433\u0430\u041f\u043e\u0438\u0441\u043a/uniqueCount[name].txt", "sku_col_name": "", "output_data_path": "D:/Data/\u041c\u0435\u0433\u0430\u041f\u043e\u0438\u0441\u043a/Return/uniqueCount[name]_cat.csv", "use_threads_count": "4", "batch_len": "100000", "dec_id": false}

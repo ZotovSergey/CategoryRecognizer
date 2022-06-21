@@ -1214,7 +1214,6 @@ static PyObject *__pyx_tuple__2;
 static PyObject *__pyx_pw_14identify_brend_1identify_brend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_row, PyObject *__pyx_v_brand_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_v_i;
-  int __pyx_v_pos;
   int __pyx_v_limit_id_found;
   int __pyx_v_excluding_id_found;
   PyObject *__pyx_v_main_id = 0;
@@ -1231,13 +1230,13 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
   Py_ssize_t __pyx_t_6;
   PyObject *(*__pyx_t_7)(PyObject *);
   int __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *(*__pyx_t_11)(PyObject *);
-  Py_ssize_t __pyx_t_12;
-  PyObject *__pyx_t_13 = NULL;
-  PyObject *(*__pyx_t_14)(PyObject *);
-  int __pyx_t_15;
+  int __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *(*__pyx_t_12)(PyObject *);
+  Py_ssize_t __pyx_t_13;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *(*__pyx_t_15)(PyObject *);
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1264,7 +1263,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  *         #
  *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
- *             pos = main_id in sku_row
+ *             #
  */
     if (unlikely(__pyx_v_main_identifires == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -1316,28 +1315,19 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
       __Pyx_XDECREF_SET(__pyx_v_main_id, ((PyObject*)__pyx_t_4));
       __pyx_t_4 = 0;
 
-      /* "identify_brend.pyx":27
- *         for main_id in main_identifires[i]:
+      /* "identify_brend.pyx":28
  *             # ,       SKU
- *             pos = main_id in sku_row             # <<<<<<<<<<<<<<
  *             #
- *             if pos:
- */
-      __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 27, __pyx_L1_error)
-      __pyx_v_pos = __pyx_t_8;
-
-      /* "identify_brend.pyx":29
- *             pos = main_id in sku_row
- *             #
- *             if pos:             # <<<<<<<<<<<<<<
+ *             if main_id in sku_row:             # <<<<<<<<<<<<<<
  *                 #  "  "
  *                 limit_id_found = False
  */
-      __pyx_t_8 = (__pyx_v_pos != 0);
-      if (__pyx_t_8) {
+      __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 28, __pyx_L1_error)
+      __pyx_t_9 = (__pyx_t_8 != 0);
+      if (__pyx_t_9) {
 
-        /* "identify_brend.pyx":31
- *             if pos:
+        /* "identify_brend.pyx":30
+ *             if main_id in sku_row:
  *                 #  "  "
  *                 limit_id_found = False             # <<<<<<<<<<<<<<
  *                 #
@@ -1345,7 +1335,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
         __pyx_v_limit_id_found = 0;
 
-        /* "identify_brend.pyx":33
+        /* "identify_brend.pyx":32
  *                 limit_id_found = False
  *                 #
  *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
@@ -1354,94 +1344,85 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
         if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 33, __pyx_L1_error)
+          __PYX_ERR(0, 32, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 33, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_9 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 33, __pyx_L1_error)
+        __pyx_t_10 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_10 == ((Py_ssize_t)-1))) __PYX_ERR(0, 32, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_8 = ((__pyx_t_9 > 0) != 0);
-        if (__pyx_t_8) {
+        __pyx_t_9 = ((__pyx_t_10 > 0) != 0);
+        if (__pyx_t_9) {
 
-          /* "identify_brend.pyx":35
+          /* "identify_brend.pyx":34
  *                 if len(main_limit_identifires[i]) > 0:
  *                     #
  *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
- *                         pos = main_limit_id in sku_row
+ *                         #
  */
           if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 35, __pyx_L1_error)
+            __PYX_ERR(0, 34, __pyx_L1_error)
           }
-          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
-            __pyx_t_10 = __pyx_t_4; __Pyx_INCREF(__pyx_t_10); __pyx_t_9 = 0;
-            __pyx_t_11 = NULL;
+            __pyx_t_11 = __pyx_t_4; __Pyx_INCREF(__pyx_t_11); __pyx_t_10 = 0;
+            __pyx_t_12 = NULL;
           } else {
-            __pyx_t_9 = -1; __pyx_t_10 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 35, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_10);
-            __pyx_t_11 = Py_TYPE(__pyx_t_10)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 35, __pyx_L1_error)
+            __pyx_t_10 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 34, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_11);
+            __pyx_t_12 = Py_TYPE(__pyx_t_11)->tp_iternext; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 34, __pyx_L1_error)
           }
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           for (;;) {
-            if (likely(!__pyx_t_11)) {
-              if (likely(PyList_CheckExact(__pyx_t_10))) {
-                if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_10)) break;
+            if (likely(!__pyx_t_12)) {
+              if (likely(PyList_CheckExact(__pyx_t_11))) {
+                if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_11)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_4 = PyList_GET_ITEM(__pyx_t_10, __pyx_t_9); __Pyx_INCREF(__pyx_t_4); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 35, __pyx_L1_error)
+                __pyx_t_4 = PyList_GET_ITEM(__pyx_t_11, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 34, __pyx_L1_error)
                 #else
-                __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
+                __pyx_t_4 = PySequence_ITEM(__pyx_t_11, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 #endif
               } else {
-                if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_10)) break;
+                if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_11)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_10, __pyx_t_9); __Pyx_INCREF(__pyx_t_4); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 35, __pyx_L1_error)
+                __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_11, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 34, __pyx_L1_error)
                 #else
-                __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
+                __pyx_t_4 = PySequence_ITEM(__pyx_t_11, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 #endif
               }
             } else {
-              __pyx_t_4 = __pyx_t_11(__pyx_t_10);
+              __pyx_t_4 = __pyx_t_12(__pyx_t_11);
               if (unlikely(!__pyx_t_4)) {
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
                   if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                  else __PYX_ERR(0, 35, __pyx_L1_error)
+                  else __PYX_ERR(0, 34, __pyx_L1_error)
                 }
                 break;
               }
               __Pyx_GOTREF(__pyx_t_4);
             }
-            if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 35, __pyx_L1_error)
+            if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 34, __pyx_L1_error)
             __Pyx_XDECREF_SET(__pyx_v_main_limit_id, ((PyObject*)__pyx_t_4));
             __pyx_t_4 = 0;
 
             /* "identify_brend.pyx":37
- *                     for main_limit_id in main_limit_identifires[i]:
  *                         # ,        SKU
- *                         pos = main_limit_id in sku_row             # <<<<<<<<<<<<<<
  *                         #
- *                         if pos:
- */
-            __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 37, __pyx_L1_error)
-            __pyx_v_pos = __pyx_t_8;
-
-            /* "identify_brend.pyx":39
- *                         pos = main_limit_id in sku_row
- *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:
  */
-            __pyx_t_8 = (__pyx_v_pos != 0);
+            __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 37, __pyx_L1_error)
+            __pyx_t_8 = (__pyx_t_9 != 0);
             if (__pyx_t_8) {
 
-              /* "identify_brend.pyx":41
- *                         if pos:
+              /* "identify_brend.pyx":39
+ *                         if main_limit_id in sku_row:
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
@@ -1449,94 +1430,85 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
               if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 41, __pyx_L1_error)
+                __PYX_ERR(0, 39, __pyx_L1_error)
               }
-              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 39, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
-              __pyx_t_12 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_12 == ((Py_ssize_t)-1))) __PYX_ERR(0, 41, __pyx_L1_error)
+              __pyx_t_13 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 39, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-              __pyx_t_8 = ((__pyx_t_12 > 0) != 0);
+              __pyx_t_8 = ((__pyx_t_13 > 0) != 0);
               if (__pyx_t_8) {
 
-                /* "identify_brend.pyx":43
+                /* "identify_brend.pyx":41
  *                             if len(add_limit_identifires[i]) > 0:
  *                                 #
  *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
- *                                     pos = add_limit_id in sku_row
+ *                                     #
  */
                 if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
                   PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                  __PYX_ERR(0, 43, __pyx_L1_error)
+                  __PYX_ERR(0, 41, __pyx_L1_error)
                 }
-                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
+                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
-                  __pyx_t_13 = __pyx_t_4; __Pyx_INCREF(__pyx_t_13); __pyx_t_12 = 0;
-                  __pyx_t_14 = NULL;
+                  __pyx_t_14 = __pyx_t_4; __Pyx_INCREF(__pyx_t_14); __pyx_t_13 = 0;
+                  __pyx_t_15 = NULL;
                 } else {
-                  __pyx_t_12 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 43, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_13);
-                  __pyx_t_14 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 43, __pyx_L1_error)
+                  __pyx_t_13 = -1; __pyx_t_14 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 41, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_14);
+                  __pyx_t_15 = Py_TYPE(__pyx_t_14)->tp_iternext; if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 41, __pyx_L1_error)
                 }
                 __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
                 for (;;) {
-                  if (likely(!__pyx_t_14)) {
-                    if (likely(PyList_CheckExact(__pyx_t_13))) {
-                      if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_13)) break;
+                  if (likely(!__pyx_t_15)) {
+                    if (likely(PyList_CheckExact(__pyx_t_14))) {
+                      if (__pyx_t_13 >= PyList_GET_SIZE(__pyx_t_14)) break;
                       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 43, __pyx_L1_error)
+                      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_14, __pyx_t_13); __Pyx_INCREF(__pyx_t_4); __pyx_t_13++; if (unlikely(0 < 0)) __PYX_ERR(0, 41, __pyx_L1_error)
                       #else
-                      __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
+                      __pyx_t_4 = PySequence_ITEM(__pyx_t_14, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
                       __Pyx_GOTREF(__pyx_t_4);
                       #endif
                     } else {
-                      if (__pyx_t_12 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
+                      if (__pyx_t_13 >= PyTuple_GET_SIZE(__pyx_t_14)) break;
                       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                      __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 43, __pyx_L1_error)
+                      __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_14, __pyx_t_13); __Pyx_INCREF(__pyx_t_4); __pyx_t_13++; if (unlikely(0 < 0)) __PYX_ERR(0, 41, __pyx_L1_error)
                       #else
-                      __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
+                      __pyx_t_4 = PySequence_ITEM(__pyx_t_14, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
                       __Pyx_GOTREF(__pyx_t_4);
                       #endif
                     }
                   } else {
-                    __pyx_t_4 = __pyx_t_14(__pyx_t_13);
+                    __pyx_t_4 = __pyx_t_15(__pyx_t_14);
                     if (unlikely(!__pyx_t_4)) {
                       PyObject* exc_type = PyErr_Occurred();
                       if (exc_type) {
                         if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                        else __PYX_ERR(0, 43, __pyx_L1_error)
+                        else __PYX_ERR(0, 41, __pyx_L1_error)
                       }
                       break;
                     }
                     __Pyx_GOTREF(__pyx_t_4);
                   }
-                  if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 43, __pyx_L1_error)
+                  if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 41, __pyx_L1_error)
                   __Pyx_XDECREF_SET(__pyx_v_add_limit_id, ((PyObject*)__pyx_t_4));
                   __pyx_t_4 = 0;
 
-                  /* "identify_brend.pyx":45
- *                                 for add_limit_id in add_limit_identifires[i]:
+                  /* "identify_brend.pyx":44
  *                                     # ,        SKU
- *                                     pos = add_limit_id in sku_row             # <<<<<<<<<<<<<<
  *                                     #
- *                                     if pos:
- */
-                  __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_add_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 45, __pyx_L1_error)
-                  __pyx_v_pos = __pyx_t_8;
-
-                  /* "identify_brend.pyx":47
- *                                     pos = add_limit_id in sku_row
- *                                     #
- *                                     if pos:             # <<<<<<<<<<<<<<
+ *                                     if add_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                                         #   "  ",
  *                                         limit_id_found = True
  */
-                  __pyx_t_8 = (__pyx_v_pos != 0);
-                  if (__pyx_t_8) {
+                  __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_add_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 44, __pyx_L1_error)
+                  __pyx_t_9 = (__pyx_t_8 != 0);
+                  if (__pyx_t_9) {
 
-                    /* "identify_brend.pyx":49
- *                                     if pos:
+                    /* "identify_brend.pyx":46
+ *                                     if add_limit_id in sku_row:
  *                                         #   "  ",
  *                                         limit_id_found = True             # <<<<<<<<<<<<<<
  *                                         break
@@ -1544,7 +1516,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
                     __pyx_v_limit_id_found = 1;
 
-                    /* "identify_brend.pyx":50
+                    /* "identify_brend.pyx":47
  *                                         #   "  ",
  *                                         limit_id_found = True
  *                                         break             # <<<<<<<<<<<<<<
@@ -1553,28 +1525,28 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
                     goto __pyx_L14_break;
 
-                    /* "identify_brend.pyx":47
- *                                     pos = add_limit_id in sku_row
+                    /* "identify_brend.pyx":44
+ *                                     # ,        SKU
  *                                     #
- *                                     if pos:             # <<<<<<<<<<<<<<
+ *                                     if add_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                                         #   "  ",
  *                                         limit_id_found = True
  */
                   }
 
-                  /* "identify_brend.pyx":43
+                  /* "identify_brend.pyx":41
  *                             if len(add_limit_identifires[i]) > 0:
  *                                 #
  *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
- *                                     pos = add_limit_id in sku_row
+ *                                     #
  */
                 }
                 __pyx_L14_break:;
-                __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+                __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-                /* "identify_brend.pyx":41
- *                         if pos:
+                /* "identify_brend.pyx":39
+ *                         if main_limit_id in sku_row:
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
@@ -1583,7 +1555,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
                 goto __pyx_L12;
               }
 
-              /* "identify_brend.pyx":54
+              /* "identify_brend.pyx":51
  *                             else:
  *                                 #   "  "
  *                                 limit_id_found = True             # <<<<<<<<<<<<<<
@@ -1595,26 +1567,26 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
               }
               __pyx_L12:;
 
-              /* "identify_brend.pyx":39
- *                         pos = main_limit_id in sku_row
+              /* "identify_brend.pyx":37
+ *                         # ,        SKU
  *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:
  */
             }
 
-            /* "identify_brend.pyx":56
+            /* "identify_brend.pyx":53
  *                                 limit_id_found = True
  *                         #  "  ",
  *                         if limit_id_found:             # <<<<<<<<<<<<<<
  *                             break
  *                 #
  */
-            __pyx_t_8 = (__pyx_v_limit_id_found != 0);
-            if (__pyx_t_8) {
+            __pyx_t_9 = (__pyx_v_limit_id_found != 0);
+            if (__pyx_t_9) {
 
-              /* "identify_brend.pyx":57
+              /* "identify_brend.pyx":54
  *                         #  "  ",
  *                         if limit_id_found:
  *                             break             # <<<<<<<<<<<<<<
@@ -1623,7 +1595,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
               goto __pyx_L10_break;
 
-              /* "identify_brend.pyx":56
+              /* "identify_brend.pyx":53
  *                                 limit_id_found = True
  *                         #  "  ",
  *                         if limit_id_found:             # <<<<<<<<<<<<<<
@@ -1632,18 +1604,18 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
             }
 
-            /* "identify_brend.pyx":35
+            /* "identify_brend.pyx":34
  *                 if len(main_limit_identifires[i]) > 0:
  *                     #
  *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
- *                         pos = main_limit_id in sku_row
+ *                         #
  */
           }
           __pyx_L10_break:;
-          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "identify_brend.pyx":33
+          /* "identify_brend.pyx":32
  *                 limit_id_found = False
  *                 #
  *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
@@ -1653,7 +1625,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
           goto __pyx_L8;
         }
 
-        /* "identify_brend.pyx":61
+        /* "identify_brend.pyx":58
  *                 else:
  *                     #   "  "
  *                     limit_id_found = True             # <<<<<<<<<<<<<<
@@ -1665,17 +1637,17 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
         }
         __pyx_L8:;
 
-        /* "identify_brend.pyx":63
+        /* "identify_brend.pyx":60
  *                     limit_id_found = True
  *                 #  "  ",
  *                 if limit_id_found:             # <<<<<<<<<<<<<<
  *                     #  "  "
  *                     excluding_id_found = False
  */
-        __pyx_t_8 = (__pyx_v_limit_id_found != 0);
-        if (__pyx_t_8) {
+        __pyx_t_9 = (__pyx_v_limit_id_found != 0);
+        if (__pyx_t_9) {
 
-          /* "identify_brend.pyx":65
+          /* "identify_brend.pyx":62
  *                 if limit_id_found:
  *                     #  "  "
  *                     excluding_id_found = False             # <<<<<<<<<<<<<<
@@ -1684,85 +1656,76 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
           __pyx_v_excluding_id_found = 0;
 
-          /* "identify_brend.pyx":67
+          /* "identify_brend.pyx":64
  *                     excluding_id_found = False
  *                     #
  *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
- *                         pos = excluding_id in sku_row
+ *                         #
  */
           if (unlikely(__pyx_v_excluding_identifires == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 67, __pyx_L1_error)
+            __PYX_ERR(0, 64, __pyx_L1_error)
           }
-          __pyx_t_10 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 67, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_10);
-          if (likely(PyList_CheckExact(__pyx_t_10)) || PyTuple_CheckExact(__pyx_t_10)) {
-            __pyx_t_13 = __pyx_t_10; __Pyx_INCREF(__pyx_t_13); __pyx_t_9 = 0;
-            __pyx_t_11 = NULL;
+          __pyx_t_11 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 64, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_11);
+          if (likely(PyList_CheckExact(__pyx_t_11)) || PyTuple_CheckExact(__pyx_t_11)) {
+            __pyx_t_14 = __pyx_t_11; __Pyx_INCREF(__pyx_t_14); __pyx_t_10 = 0;
+            __pyx_t_12 = NULL;
           } else {
-            __pyx_t_9 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 67, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __pyx_t_11 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 67, __pyx_L1_error)
+            __pyx_t_10 = -1; __pyx_t_14 = PyObject_GetIter(__pyx_t_11); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 64, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_14);
+            __pyx_t_12 = Py_TYPE(__pyx_t_14)->tp_iternext; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 64, __pyx_L1_error)
           }
-          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           for (;;) {
-            if (likely(!__pyx_t_11)) {
-              if (likely(PyList_CheckExact(__pyx_t_13))) {
-                if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_13)) break;
+            if (likely(!__pyx_t_12)) {
+              if (likely(PyList_CheckExact(__pyx_t_14))) {
+                if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_14)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_10 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_9); __Pyx_INCREF(__pyx_t_10); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
+                __pyx_t_11 = PyList_GET_ITEM(__pyx_t_14, __pyx_t_10); __Pyx_INCREF(__pyx_t_11); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
                 #else
-                __pyx_t_10 = PySequence_ITEM(__pyx_t_13, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 67, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_10);
+                __pyx_t_11 = PySequence_ITEM(__pyx_t_14, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 64, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_11);
                 #endif
               } else {
-                if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
+                if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_14)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_9); __Pyx_INCREF(__pyx_t_10); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
+                __pyx_t_11 = PyTuple_GET_ITEM(__pyx_t_14, __pyx_t_10); __Pyx_INCREF(__pyx_t_11); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
                 #else
-                __pyx_t_10 = PySequence_ITEM(__pyx_t_13, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 67, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_10);
+                __pyx_t_11 = PySequence_ITEM(__pyx_t_14, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 64, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_11);
                 #endif
               }
             } else {
-              __pyx_t_10 = __pyx_t_11(__pyx_t_13);
-              if (unlikely(!__pyx_t_10)) {
+              __pyx_t_11 = __pyx_t_12(__pyx_t_14);
+              if (unlikely(!__pyx_t_11)) {
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
                   if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                  else __PYX_ERR(0, 67, __pyx_L1_error)
+                  else __PYX_ERR(0, 64, __pyx_L1_error)
                 }
                 break;
               }
-              __Pyx_GOTREF(__pyx_t_10);
+              __Pyx_GOTREF(__pyx_t_11);
             }
-            if (!(likely(PyString_CheckExact(__pyx_t_10))||((__pyx_t_10) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_10)->tp_name), 0))) __PYX_ERR(0, 67, __pyx_L1_error)
-            __Pyx_XDECREF_SET(__pyx_v_excluding_id, ((PyObject*)__pyx_t_10));
-            __pyx_t_10 = 0;
+            if (!(likely(PyString_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_11)->tp_name), 0))) __PYX_ERR(0, 64, __pyx_L1_error)
+            __Pyx_XDECREF_SET(__pyx_v_excluding_id, ((PyObject*)__pyx_t_11));
+            __pyx_t_11 = 0;
 
-            /* "identify_brend.pyx":69
- *                     for excluding_id in excluding_identifires[i]:
+            /* "identify_brend.pyx":67
  *                         # ,       SKU
- *                         pos = excluding_id in sku_row             # <<<<<<<<<<<<<<
  *                         #
- *                         if pos:
- */
-            __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_excluding_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 69, __pyx_L1_error)
-            __pyx_v_pos = __pyx_t_8;
-
-            /* "identify_brend.pyx":71
- *                         pos = excluding_id in sku_row
- *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if excluding_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #   "  ",
  *                             excluding_id_found = True
  */
-            __pyx_t_8 = (__pyx_v_pos != 0);
+            __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_excluding_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
+            __pyx_t_8 = (__pyx_t_9 != 0);
             if (__pyx_t_8) {
 
-              /* "identify_brend.pyx":73
- *                         if pos:
+              /* "identify_brend.pyx":69
+ *                         if excluding_id in sku_row:
  *                             #   "  ",
  *                             excluding_id_found = True             # <<<<<<<<<<<<<<
  *                             break
@@ -1770,7 +1733,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
               __pyx_v_excluding_id_found = 1;
 
-              /* "identify_brend.pyx":74
+              /* "identify_brend.pyx":70
  *                             #   "  ",
  *                             excluding_id_found = True
  *                             break             # <<<<<<<<<<<<<<
@@ -1779,27 +1742,27 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
               goto __pyx_L19_break;
 
-              /* "identify_brend.pyx":71
- *                         pos = excluding_id in sku_row
+              /* "identify_brend.pyx":67
+ *                         # ,       SKU
  *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if excluding_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #   "  ",
  *                             excluding_id_found = True
  */
             }
 
-            /* "identify_brend.pyx":67
+            /* "identify_brend.pyx":64
  *                     excluding_id_found = False
  *                     #
  *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
- *                         pos = excluding_id in sku_row
+ *                         #
  */
           }
           __pyx_L19_break:;
-          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-          /* "identify_brend.pyx":63
+          /* "identify_brend.pyx":60
  *                     limit_id_found = True
  *                 #  "  ",
  *                 if limit_id_found:             # <<<<<<<<<<<<<<
@@ -1808,25 +1771,25 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
         }
 
-        /* "identify_brend.pyx":76
+        /* "identify_brend.pyx":72
  *                             break
  *                 #  "  "   "  "
  *                 if limit_id_found and not excluding_id_found:             # <<<<<<<<<<<<<<
  *                     #
  *                     return brand_rightholders[i]
  */
-        __pyx_t_15 = (__pyx_v_limit_id_found != 0);
-        if (__pyx_t_15) {
+        __pyx_t_9 = (__pyx_v_limit_id_found != 0);
+        if (__pyx_t_9) {
         } else {
-          __pyx_t_8 = __pyx_t_15;
+          __pyx_t_8 = __pyx_t_9;
           goto __pyx_L22_bool_binop_done;
         }
-        __pyx_t_15 = ((!(__pyx_v_excluding_id_found != 0)) != 0);
-        __pyx_t_8 = __pyx_t_15;
+        __pyx_t_9 = ((!(__pyx_v_excluding_id_found != 0)) != 0);
+        __pyx_t_8 = __pyx_t_9;
         __pyx_L22_bool_binop_done:;
         if (__pyx_t_8) {
 
-          /* "identify_brend.pyx":78
+          /* "identify_brend.pyx":74
  *                 if limit_id_found and not excluding_id_found:
  *                     #
  *                     return brand_rightholders[i]             # <<<<<<<<<<<<<<
@@ -1836,17 +1799,17 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
           __Pyx_XDECREF(__pyx_r);
           if (unlikely(__pyx_v_brand_rightholders == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 78, __pyx_L1_error)
+            __PYX_ERR(0, 74, __pyx_L1_error)
           }
-          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_brand_rightholders, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 78, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_13);
-          if (!(likely(PyString_CheckExact(__pyx_t_13))||((__pyx_t_13) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_13)->tp_name), 0))) __PYX_ERR(0, 78, __pyx_L1_error)
-          __pyx_r = ((PyObject*)__pyx_t_13);
-          __pyx_t_13 = 0;
+          __pyx_t_14 = __Pyx_GetItemInt_List(__pyx_v_brand_rightholders, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 74, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_14);
+          if (!(likely(PyString_CheckExact(__pyx_t_14))||((__pyx_t_14) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_14)->tp_name), 0))) __PYX_ERR(0, 74, __pyx_L1_error)
+          __pyx_r = ((PyObject*)__pyx_t_14);
+          __pyx_t_14 = 0;
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           goto __pyx_L0;
 
-          /* "identify_brend.pyx":76
+          /* "identify_brend.pyx":72
  *                             break
  *                 #  "  "   "  "
  *                 if limit_id_found and not excluding_id_found:             # <<<<<<<<<<<<<<
@@ -1855,10 +1818,10 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  */
         }
 
-        /* "identify_brend.pyx":29
- *             pos = main_id in sku_row
+        /* "identify_brend.pyx":28
+ *             # ,       SKU
  *             #
- *             if pos:             # <<<<<<<<<<<<<<
+ *             if main_id in sku_row:             # <<<<<<<<<<<<<<
  *                 #  "  "
  *                 limit_id_found = False
  */
@@ -1869,13 +1832,13 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
  *         #
  *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
- *             pos = main_id in sku_row
+ *             #
  */
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
 
-  /* "identify_brend.pyx":80
+  /* "identify_brend.pyx":76
  *                     return brand_rightholders[i]
  *     #       ,
  *     return ''             # <<<<<<<<<<<<<<
@@ -1897,8 +1860,8 @@ static PyObject *__pyx_f_14identify_brend_identify_brend(PyObject *__pyx_v_sku_r
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_14);
   __Pyx_AddTraceback("identify_brend.identify_brend", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -2056,7 +2019,7 @@ static PyObject *__pyx_pf_14identify_brend_identify_brend(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "identify_brend.pyx":82
+/* "identify_brend.pyx":78
  *     return ''
  * 
  * cpdef tuple identify_brend_and_dec_id(str sku_row, list brand_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):             # <<<<<<<<<<<<<<
@@ -2067,7 +2030,6 @@ static PyObject *__pyx_pf_14identify_brend_identify_brend(CYTHON_UNUSED PyObject
 static PyObject *__pyx_pw_14identify_brend_3identify_brend_and_dec_id(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__pyx_v_sku_row, PyObject *__pyx_v_brand_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_v_i;
-  int __pyx_v_pos;
   int __pyx_v_limit_id_found;
   int __pyx_v_excluding_id_found;
   PyObject *__pyx_v_main_id = 0;
@@ -2086,19 +2048,19 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
   Py_ssize_t __pyx_t_6;
   PyObject *(*__pyx_t_7)(PyObject *);
   int __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *(*__pyx_t_11)(PyObject *);
-  Py_ssize_t __pyx_t_12;
-  PyObject *__pyx_t_13 = NULL;
-  PyObject *(*__pyx_t_14)(PyObject *);
-  int __pyx_t_15;
+  int __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *(*__pyx_t_12)(PyObject *);
+  Py_ssize_t __pyx_t_13;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *(*__pyx_t_15)(PyObject *);
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("identify_brend_and_dec_id", 0);
 
-  /* "identify_brend.pyx":107
+  /* "identify_brend.pyx":103
  *     cdef str main_id, main_limit_id, add_limit_id, excluding_id, main_limit_dec_id, add_limit_dec_id
  *     #
  *     for i in range(len(brand_rightholders)):             # <<<<<<<<<<<<<<
@@ -2107,33 +2069,33 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
   if (unlikely(__pyx_v_brand_rightholders == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 107, __pyx_L1_error)
+    __PYX_ERR(0, 103, __pyx_L1_error)
   }
-  __pyx_t_1 = PyList_GET_SIZE(__pyx_v_brand_rightholders); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_1 = PyList_GET_SIZE(__pyx_v_brand_rightholders); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 103, __pyx_L1_error)
   __pyx_t_2 = __pyx_t_1;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "identify_brend.pyx":109
+    /* "identify_brend.pyx":105
  *     for i in range(len(brand_rightholders)):
  *         #
  *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
- *             pos = main_id in sku_row
+ *             #
  */
     if (unlikely(__pyx_v_main_identifires == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 109, __pyx_L1_error)
+      __PYX_ERR(0, 105, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
       __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5); __pyx_t_6 = 0;
       __pyx_t_7 = NULL;
     } else {
-      __pyx_t_6 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 109, __pyx_L1_error)
+      __pyx_t_6 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 105, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_7 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 109, __pyx_L1_error)
+      __pyx_t_7 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 105, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     for (;;) {
@@ -2141,17 +2103,17 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
         if (likely(PyList_CheckExact(__pyx_t_5))) {
           if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_5)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_4); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 109, __pyx_L1_error)
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_4); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 105, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
           if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_5)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_4); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 109, __pyx_L1_error)
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_4); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 105, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         }
@@ -2161,38 +2123,29 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 109, __pyx_L1_error)
+            else __PYX_ERR(0, 105, __pyx_L1_error)
           }
           break;
         }
         __Pyx_GOTREF(__pyx_t_4);
       }
-      if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 109, __pyx_L1_error)
+      if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 105, __pyx_L1_error)
       __Pyx_XDECREF_SET(__pyx_v_main_id, ((PyObject*)__pyx_t_4));
       __pyx_t_4 = 0;
 
-      /* "identify_brend.pyx":111
- *         for main_id in main_identifires[i]:
+      /* "identify_brend.pyx":108
  *             # ,       SKU
- *             pos = main_id in sku_row             # <<<<<<<<<<<<<<
  *             #
- *             if pos:
- */
-      __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 111, __pyx_L1_error)
-      __pyx_v_pos = __pyx_t_8;
-
-      /* "identify_brend.pyx":113
- *             pos = main_id in sku_row
- *             #
- *             if pos:             # <<<<<<<<<<<<<<
+ *             if main_id in sku_row:             # <<<<<<<<<<<<<<
  *                 #  "  "
  *                 limit_id_found = False
  */
-      __pyx_t_8 = (__pyx_v_pos != 0);
-      if (__pyx_t_8) {
+      __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 108, __pyx_L1_error)
+      __pyx_t_9 = (__pyx_t_8 != 0);
+      if (__pyx_t_9) {
 
-        /* "identify_brend.pyx":115
- *             if pos:
+        /* "identify_brend.pyx":110
+ *             if main_id in sku_row:
  *                 #  "  "
  *                 limit_id_found = False             # <<<<<<<<<<<<<<
  *                 #
@@ -2200,7 +2153,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
         __pyx_v_limit_id_found = 0;
 
-        /* "identify_brend.pyx":117
+        /* "identify_brend.pyx":112
  *                 limit_id_found = False
  *                 #
  *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
@@ -2209,94 +2162,85 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
         if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 117, __pyx_L1_error)
+          __PYX_ERR(0, 112, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 117, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 112, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_9 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 117, __pyx_L1_error)
+        __pyx_t_10 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_10 == ((Py_ssize_t)-1))) __PYX_ERR(0, 112, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_8 = ((__pyx_t_9 > 0) != 0);
-        if (__pyx_t_8) {
+        __pyx_t_9 = ((__pyx_t_10 > 0) != 0);
+        if (__pyx_t_9) {
 
-          /* "identify_brend.pyx":119
+          /* "identify_brend.pyx":114
  *                 if len(main_limit_identifires[i]) > 0:
  *                     #
  *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
- *                         pos = main_limit_id in sku_row
+ *                         #
  */
           if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 119, __pyx_L1_error)
+            __PYX_ERR(0, 114, __pyx_L1_error)
           }
-          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
-            __pyx_t_10 = __pyx_t_4; __Pyx_INCREF(__pyx_t_10); __pyx_t_9 = 0;
-            __pyx_t_11 = NULL;
+            __pyx_t_11 = __pyx_t_4; __Pyx_INCREF(__pyx_t_11); __pyx_t_10 = 0;
+            __pyx_t_12 = NULL;
           } else {
-            __pyx_t_9 = -1; __pyx_t_10 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 119, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_10);
-            __pyx_t_11 = Py_TYPE(__pyx_t_10)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 119, __pyx_L1_error)
+            __pyx_t_10 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 114, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_11);
+            __pyx_t_12 = Py_TYPE(__pyx_t_11)->tp_iternext; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 114, __pyx_L1_error)
           }
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           for (;;) {
-            if (likely(!__pyx_t_11)) {
-              if (likely(PyList_CheckExact(__pyx_t_10))) {
-                if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_10)) break;
+            if (likely(!__pyx_t_12)) {
+              if (likely(PyList_CheckExact(__pyx_t_11))) {
+                if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_11)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_4 = PyList_GET_ITEM(__pyx_t_10, __pyx_t_9); __Pyx_INCREF(__pyx_t_4); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 119, __pyx_L1_error)
+                __pyx_t_4 = PyList_GET_ITEM(__pyx_t_11, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
                 #else
-                __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+                __pyx_t_4 = PySequence_ITEM(__pyx_t_11, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 #endif
               } else {
-                if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_10)) break;
+                if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_11)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_10, __pyx_t_9); __Pyx_INCREF(__pyx_t_4); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 119, __pyx_L1_error)
+                __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_11, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
                 #else
-                __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+                __pyx_t_4 = PySequence_ITEM(__pyx_t_11, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 #endif
               }
             } else {
-              __pyx_t_4 = __pyx_t_11(__pyx_t_10);
+              __pyx_t_4 = __pyx_t_12(__pyx_t_11);
               if (unlikely(!__pyx_t_4)) {
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
                   if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                  else __PYX_ERR(0, 119, __pyx_L1_error)
+                  else __PYX_ERR(0, 114, __pyx_L1_error)
                 }
                 break;
               }
               __Pyx_GOTREF(__pyx_t_4);
             }
-            if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 119, __pyx_L1_error)
+            if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 114, __pyx_L1_error)
             __Pyx_XDECREF_SET(__pyx_v_main_limit_id, ((PyObject*)__pyx_t_4));
             __pyx_t_4 = 0;
 
-            /* "identify_brend.pyx":121
- *                     for main_limit_id in main_limit_identifires[i]:
+            /* "identify_brend.pyx":117
  *                         # ,        SKU
- *                         pos = main_limit_id in sku_row             # <<<<<<<<<<<<<<
  *                         #
- *                         if pos:
- */
-            __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
-            __pyx_v_pos = __pyx_t_8;
-
-            /* "identify_brend.pyx":123
- *                         pos = main_limit_id in sku_row
- *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:
  */
-            __pyx_t_8 = (__pyx_v_pos != 0);
+            __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
+            __pyx_t_8 = (__pyx_t_9 != 0);
             if (__pyx_t_8) {
 
-              /* "identify_brend.pyx":125
- *                         if pos:
+              /* "identify_brend.pyx":119
+ *                         if main_limit_id in sku_row:
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
@@ -2304,94 +2248,85 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
               if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 125, __pyx_L1_error)
+                __PYX_ERR(0, 119, __pyx_L1_error)
               }
-              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L1_error)
+              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
-              __pyx_t_12 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_12 == ((Py_ssize_t)-1))) __PYX_ERR(0, 125, __pyx_L1_error)
+              __pyx_t_13 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 119, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-              __pyx_t_8 = ((__pyx_t_12 > 0) != 0);
+              __pyx_t_8 = ((__pyx_t_13 > 0) != 0);
               if (__pyx_t_8) {
 
-                /* "identify_brend.pyx":127
+                /* "identify_brend.pyx":121
  *                             if len(add_limit_identifires[i]) > 0:
  *                                 #
  *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
- *                                     pos = add_limit_id in sku_row
+ *                                     #
  */
                 if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
                   PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                  __PYX_ERR(0, 127, __pyx_L1_error)
+                  __PYX_ERR(0, 121, __pyx_L1_error)
                 }
-                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 127, __pyx_L1_error)
+                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
-                  __pyx_t_13 = __pyx_t_4; __Pyx_INCREF(__pyx_t_13); __pyx_t_12 = 0;
-                  __pyx_t_14 = NULL;
+                  __pyx_t_14 = __pyx_t_4; __Pyx_INCREF(__pyx_t_14); __pyx_t_13 = 0;
+                  __pyx_t_15 = NULL;
                 } else {
-                  __pyx_t_12 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 127, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_13);
-                  __pyx_t_14 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 127, __pyx_L1_error)
+                  __pyx_t_13 = -1; __pyx_t_14 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 121, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_14);
+                  __pyx_t_15 = Py_TYPE(__pyx_t_14)->tp_iternext; if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 121, __pyx_L1_error)
                 }
                 __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
                 for (;;) {
-                  if (likely(!__pyx_t_14)) {
-                    if (likely(PyList_CheckExact(__pyx_t_13))) {
-                      if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_13)) break;
+                  if (likely(!__pyx_t_15)) {
+                    if (likely(PyList_CheckExact(__pyx_t_14))) {
+                      if (__pyx_t_13 >= PyList_GET_SIZE(__pyx_t_14)) break;
                       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 127, __pyx_L1_error)
+                      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_14, __pyx_t_13); __Pyx_INCREF(__pyx_t_4); __pyx_t_13++; if (unlikely(0 < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
                       #else
-                      __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 127, __pyx_L1_error)
+                      __pyx_t_4 = PySequence_ITEM(__pyx_t_14, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
                       __Pyx_GOTREF(__pyx_t_4);
                       #endif
                     } else {
-                      if (__pyx_t_12 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
+                      if (__pyx_t_13 >= PyTuple_GET_SIZE(__pyx_t_14)) break;
                       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                      __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 127, __pyx_L1_error)
+                      __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_14, __pyx_t_13); __Pyx_INCREF(__pyx_t_4); __pyx_t_13++; if (unlikely(0 < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
                       #else
-                      __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 127, __pyx_L1_error)
+                      __pyx_t_4 = PySequence_ITEM(__pyx_t_14, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
                       __Pyx_GOTREF(__pyx_t_4);
                       #endif
                     }
                   } else {
-                    __pyx_t_4 = __pyx_t_14(__pyx_t_13);
+                    __pyx_t_4 = __pyx_t_15(__pyx_t_14);
                     if (unlikely(!__pyx_t_4)) {
                       PyObject* exc_type = PyErr_Occurred();
                       if (exc_type) {
                         if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                        else __PYX_ERR(0, 127, __pyx_L1_error)
+                        else __PYX_ERR(0, 121, __pyx_L1_error)
                       }
                       break;
                     }
                     __Pyx_GOTREF(__pyx_t_4);
                   }
-                  if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 127, __pyx_L1_error)
+                  if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 121, __pyx_L1_error)
                   __Pyx_XDECREF_SET(__pyx_v_add_limit_id, ((PyObject*)__pyx_t_4));
                   __pyx_t_4 = 0;
 
-                  /* "identify_brend.pyx":129
- *                                 for add_limit_id in add_limit_identifires[i]:
+                  /* "identify_brend.pyx":124
  *                                     # ,        SKU
- *                                     pos = add_limit_id in sku_row             # <<<<<<<<<<<<<<
  *                                     #
- *                                     if pos:
- */
-                  __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_add_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 129, __pyx_L1_error)
-                  __pyx_v_pos = __pyx_t_8;
-
-                  /* "identify_brend.pyx":131
- *                                     pos = add_limit_id in sku_row
- *                                     #
- *                                     if pos:             # <<<<<<<<<<<<<<
+ *                                     if add_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                                         #   "  ",
  *                                         limit_id_found = True
  */
-                  __pyx_t_8 = (__pyx_v_pos != 0);
-                  if (__pyx_t_8) {
+                  __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_add_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+                  __pyx_t_9 = (__pyx_t_8 != 0);
+                  if (__pyx_t_9) {
 
-                    /* "identify_brend.pyx":133
- *                                     if pos:
+                    /* "identify_brend.pyx":126
+ *                                     if add_limit_id in sku_row:
  *                                         #   "  ",
  *                                         limit_id_found = True             # <<<<<<<<<<<<<<
  *                                         #
@@ -2399,7 +2334,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
                     __pyx_v_limit_id_found = 1;
 
-                    /* "identify_brend.pyx":135
+                    /* "identify_brend.pyx":128
  *                                         limit_id_found = True
  *                                         #
  *                                         main_limit_dec_id = main_limit_id             # <<<<<<<<<<<<<<
@@ -2409,7 +2344,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
                     __Pyx_INCREF(__pyx_v_main_limit_id);
                     __Pyx_XDECREF_SET(__pyx_v_main_limit_dec_id, __pyx_v_main_limit_id);
 
-                    /* "identify_brend.pyx":136
+                    /* "identify_brend.pyx":129
  *                                         #
  *                                         main_limit_dec_id = main_limit_id
  *                                         add_limit_dec_id = add_limit_id             # <<<<<<<<<<<<<<
@@ -2419,7 +2354,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
                     __Pyx_INCREF(__pyx_v_add_limit_id);
                     __Pyx_XDECREF_SET(__pyx_v_add_limit_dec_id, __pyx_v_add_limit_id);
 
-                    /* "identify_brend.pyx":137
+                    /* "identify_brend.pyx":130
  *                                         main_limit_dec_id = main_limit_id
  *                                         add_limit_dec_id = add_limit_id
  *                                         break             # <<<<<<<<<<<<<<
@@ -2428,28 +2363,28 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
                     goto __pyx_L14_break;
 
-                    /* "identify_brend.pyx":131
- *                                     pos = add_limit_id in sku_row
+                    /* "identify_brend.pyx":124
+ *                                     # ,        SKU
  *                                     #
- *                                     if pos:             # <<<<<<<<<<<<<<
+ *                                     if add_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                                         #   "  ",
  *                                         limit_id_found = True
  */
                   }
 
-                  /* "identify_brend.pyx":127
+                  /* "identify_brend.pyx":121
  *                             if len(add_limit_identifires[i]) > 0:
  *                                 #
  *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
- *                                     pos = add_limit_id in sku_row
+ *                                     #
  */
                 }
                 __pyx_L14_break:;
-                __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+                __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-                /* "identify_brend.pyx":125
- *                         if pos:
+                /* "identify_brend.pyx":119
+ *                         if main_limit_id in sku_row:
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
@@ -2458,7 +2393,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
                 goto __pyx_L12;
               }
 
-              /* "identify_brend.pyx":141
+              /* "identify_brend.pyx":134
  *                             else:
  *                                 #   "  "
  *                                 limit_id_found = True             # <<<<<<<<<<<<<<
@@ -2468,7 +2403,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
               /*else*/ {
                 __pyx_v_limit_id_found = 1;
 
-                /* "identify_brend.pyx":143
+                /* "identify_brend.pyx":136
  *                                 limit_id_found = True
  *                                 #       ,
  *                                 main_limit_dec_id = main_limit_id             # <<<<<<<<<<<<<<
@@ -2478,7 +2413,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
                 __Pyx_INCREF(__pyx_v_main_limit_id);
                 __Pyx_XDECREF_SET(__pyx_v_main_limit_dec_id, __pyx_v_main_limit_id);
 
-                /* "identify_brend.pyx":144
+                /* "identify_brend.pyx":137
  *                                 #       ,
  *                                 main_limit_dec_id = main_limit_id
  *                                 add_limit_dec_id = ''             # <<<<<<<<<<<<<<
@@ -2490,26 +2425,26 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
               }
               __pyx_L12:;
 
-              /* "identify_brend.pyx":123
- *                         pos = main_limit_id in sku_row
+              /* "identify_brend.pyx":117
+ *                         # ,        SKU
  *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
  *                             if len(add_limit_identifires[i]) > 0:
  */
             }
 
-            /* "identify_brend.pyx":146
+            /* "identify_brend.pyx":139
  *                                 add_limit_dec_id = ''
  *                         #  "  ",
  *                         if limit_id_found:             # <<<<<<<<<<<<<<
  *                             break
  *                 #
  */
-            __pyx_t_8 = (__pyx_v_limit_id_found != 0);
-            if (__pyx_t_8) {
+            __pyx_t_9 = (__pyx_v_limit_id_found != 0);
+            if (__pyx_t_9) {
 
-              /* "identify_brend.pyx":147
+              /* "identify_brend.pyx":140
  *                         #  "  ",
  *                         if limit_id_found:
  *                             break             # <<<<<<<<<<<<<<
@@ -2518,7 +2453,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
               goto __pyx_L10_break;
 
-              /* "identify_brend.pyx":146
+              /* "identify_brend.pyx":139
  *                                 add_limit_dec_id = ''
  *                         #  "  ",
  *                         if limit_id_found:             # <<<<<<<<<<<<<<
@@ -2527,18 +2462,18 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
             }
 
-            /* "identify_brend.pyx":119
+            /* "identify_brend.pyx":114
  *                 if len(main_limit_identifires[i]) > 0:
  *                     #
  *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
- *                         pos = main_limit_id in sku_row
+ *                         #
  */
           }
           __pyx_L10_break:;
-          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "identify_brend.pyx":117
+          /* "identify_brend.pyx":112
  *                 limit_id_found = False
  *                 #
  *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
@@ -2548,7 +2483,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
           goto __pyx_L8;
         }
 
-        /* "identify_brend.pyx":151
+        /* "identify_brend.pyx":144
  *                 else:
  *                     #   "  "
  *                     limit_id_found = True             # <<<<<<<<<<<<<<
@@ -2558,7 +2493,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
         /*else*/ {
           __pyx_v_limit_id_found = 1;
 
-          /* "identify_brend.pyx":153
+          /* "identify_brend.pyx":146
  *                     limit_id_found = True
  *                     #
  *                     main_limit_dec_id = ''             # <<<<<<<<<<<<<<
@@ -2568,7 +2503,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
           __Pyx_INCREF(__pyx_kp_s_);
           __Pyx_XDECREF_SET(__pyx_v_main_limit_dec_id, __pyx_kp_s_);
 
-          /* "identify_brend.pyx":154
+          /* "identify_brend.pyx":147
  *                     #
  *                     main_limit_dec_id = ''
  *                     add_limit_dec_id = ''             # <<<<<<<<<<<<<<
@@ -2580,17 +2515,17 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
         }
         __pyx_L8:;
 
-        /* "identify_brend.pyx":156
+        /* "identify_brend.pyx":149
  *                     add_limit_dec_id = ''
  *                 #  "  ",
  *                 if limit_id_found:             # <<<<<<<<<<<<<<
  *                     #  "  "
  *                     excluding_id_found = False
  */
-        __pyx_t_8 = (__pyx_v_limit_id_found != 0);
-        if (__pyx_t_8) {
+        __pyx_t_9 = (__pyx_v_limit_id_found != 0);
+        if (__pyx_t_9) {
 
-          /* "identify_brend.pyx":158
+          /* "identify_brend.pyx":151
  *                 if limit_id_found:
  *                     #  "  "
  *                     excluding_id_found = False             # <<<<<<<<<<<<<<
@@ -2599,85 +2534,76 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
           __pyx_v_excluding_id_found = 0;
 
-          /* "identify_brend.pyx":160
+          /* "identify_brend.pyx":153
  *                     excluding_id_found = False
  *                     #
  *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
- *                         pos = excluding_id in sku_row
+ *                         #
  */
           if (unlikely(__pyx_v_excluding_identifires == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 160, __pyx_L1_error)
+            __PYX_ERR(0, 153, __pyx_L1_error)
           }
-          __pyx_t_10 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 160, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_10);
-          if (likely(PyList_CheckExact(__pyx_t_10)) || PyTuple_CheckExact(__pyx_t_10)) {
-            __pyx_t_13 = __pyx_t_10; __Pyx_INCREF(__pyx_t_13); __pyx_t_9 = 0;
-            __pyx_t_11 = NULL;
+          __pyx_t_11 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 153, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_11);
+          if (likely(PyList_CheckExact(__pyx_t_11)) || PyTuple_CheckExact(__pyx_t_11)) {
+            __pyx_t_14 = __pyx_t_11; __Pyx_INCREF(__pyx_t_14); __pyx_t_10 = 0;
+            __pyx_t_12 = NULL;
           } else {
-            __pyx_t_9 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 160, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __pyx_t_11 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 160, __pyx_L1_error)
+            __pyx_t_10 = -1; __pyx_t_14 = PyObject_GetIter(__pyx_t_11); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 153, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_14);
+            __pyx_t_12 = Py_TYPE(__pyx_t_14)->tp_iternext; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 153, __pyx_L1_error)
           }
-          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           for (;;) {
-            if (likely(!__pyx_t_11)) {
-              if (likely(PyList_CheckExact(__pyx_t_13))) {
-                if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_13)) break;
+            if (likely(!__pyx_t_12)) {
+              if (likely(PyList_CheckExact(__pyx_t_14))) {
+                if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_14)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_10 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_9); __Pyx_INCREF(__pyx_t_10); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 160, __pyx_L1_error)
+                __pyx_t_11 = PyList_GET_ITEM(__pyx_t_14, __pyx_t_10); __Pyx_INCREF(__pyx_t_11); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 153, __pyx_L1_error)
                 #else
-                __pyx_t_10 = PySequence_ITEM(__pyx_t_13, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 160, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_10);
+                __pyx_t_11 = PySequence_ITEM(__pyx_t_14, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 153, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_11);
                 #endif
               } else {
-                if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
+                if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_14)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_9); __Pyx_INCREF(__pyx_t_10); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 160, __pyx_L1_error)
+                __pyx_t_11 = PyTuple_GET_ITEM(__pyx_t_14, __pyx_t_10); __Pyx_INCREF(__pyx_t_11); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 153, __pyx_L1_error)
                 #else
-                __pyx_t_10 = PySequence_ITEM(__pyx_t_13, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 160, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_10);
+                __pyx_t_11 = PySequence_ITEM(__pyx_t_14, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 153, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_11);
                 #endif
               }
             } else {
-              __pyx_t_10 = __pyx_t_11(__pyx_t_13);
-              if (unlikely(!__pyx_t_10)) {
+              __pyx_t_11 = __pyx_t_12(__pyx_t_14);
+              if (unlikely(!__pyx_t_11)) {
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
                   if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                  else __PYX_ERR(0, 160, __pyx_L1_error)
+                  else __PYX_ERR(0, 153, __pyx_L1_error)
                 }
                 break;
               }
-              __Pyx_GOTREF(__pyx_t_10);
+              __Pyx_GOTREF(__pyx_t_11);
             }
-            if (!(likely(PyString_CheckExact(__pyx_t_10))||((__pyx_t_10) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_10)->tp_name), 0))) __PYX_ERR(0, 160, __pyx_L1_error)
-            __Pyx_XDECREF_SET(__pyx_v_excluding_id, ((PyObject*)__pyx_t_10));
-            __pyx_t_10 = 0;
+            if (!(likely(PyString_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_11)->tp_name), 0))) __PYX_ERR(0, 153, __pyx_L1_error)
+            __Pyx_XDECREF_SET(__pyx_v_excluding_id, ((PyObject*)__pyx_t_11));
+            __pyx_t_11 = 0;
 
-            /* "identify_brend.pyx":162
- *                     for excluding_id in excluding_identifires[i]:
+            /* "identify_brend.pyx":156
  *                         # ,       SKU
- *                         pos = excluding_id in sku_row             # <<<<<<<<<<<<<<
  *                         #
- *                         if pos:
- */
-            __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_excluding_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 162, __pyx_L1_error)
-            __pyx_v_pos = __pyx_t_8;
-
-            /* "identify_brend.pyx":164
- *                         pos = excluding_id in sku_row
- *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if excluding_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #   "  ",
  *                             excluding_id_found = True
  */
-            __pyx_t_8 = (__pyx_v_pos != 0);
+            __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_excluding_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 156, __pyx_L1_error)
+            __pyx_t_8 = (__pyx_t_9 != 0);
             if (__pyx_t_8) {
 
-              /* "identify_brend.pyx":166
- *                         if pos:
+              /* "identify_brend.pyx":158
+ *                         if excluding_id in sku_row:
  *                             #   "  ",
  *                             excluding_id_found = True             # <<<<<<<<<<<<<<
  *                             break
@@ -2685,7 +2611,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
               __pyx_v_excluding_id_found = 1;
 
-              /* "identify_brend.pyx":167
+              /* "identify_brend.pyx":159
  *                             #   "  ",
  *                             excluding_id_found = True
  *                             break             # <<<<<<<<<<<<<<
@@ -2694,27 +2620,27 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
               goto __pyx_L19_break;
 
-              /* "identify_brend.pyx":164
- *                         pos = excluding_id in sku_row
+              /* "identify_brend.pyx":156
+ *                         # ,       SKU
  *                         #
- *                         if pos:             # <<<<<<<<<<<<<<
+ *                         if excluding_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #   "  ",
  *                             excluding_id_found = True
  */
             }
 
-            /* "identify_brend.pyx":160
+            /* "identify_brend.pyx":153
  *                     excluding_id_found = False
  *                     #
  *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
- *                         pos = excluding_id in sku_row
+ *                         #
  */
           }
           __pyx_L19_break:;
-          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-          /* "identify_brend.pyx":156
+          /* "identify_brend.pyx":149
  *                     add_limit_dec_id = ''
  *                 #  "  ",
  *                 if limit_id_found:             # <<<<<<<<<<<<<<
@@ -2723,25 +2649,25 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
         }
 
-        /* "identify_brend.pyx":169
+        /* "identify_brend.pyx":161
  *                             break
  *                 #  "  "   "  "
  *                 if limit_id_found and not excluding_id_found:             # <<<<<<<<<<<<<<
  *                     #
  *                     return brand_rightholders[i], main_id, main_limit_dec_id, add_limit_dec_id
  */
-        __pyx_t_15 = (__pyx_v_limit_id_found != 0);
-        if (__pyx_t_15) {
+        __pyx_t_9 = (__pyx_v_limit_id_found != 0);
+        if (__pyx_t_9) {
         } else {
-          __pyx_t_8 = __pyx_t_15;
+          __pyx_t_8 = __pyx_t_9;
           goto __pyx_L22_bool_binop_done;
         }
-        __pyx_t_15 = ((!(__pyx_v_excluding_id_found != 0)) != 0);
-        __pyx_t_8 = __pyx_t_15;
+        __pyx_t_9 = ((!(__pyx_v_excluding_id_found != 0)) != 0);
+        __pyx_t_8 = __pyx_t_9;
         __pyx_L22_bool_binop_done:;
         if (__pyx_t_8) {
 
-          /* "identify_brend.pyx":171
+          /* "identify_brend.pyx":163
  *                 if limit_id_found and not excluding_id_found:
  *                     #
  *                     return brand_rightholders[i], main_id, main_limit_dec_id, add_limit_dec_id             # <<<<<<<<<<<<<<
@@ -2751,32 +2677,32 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
           __Pyx_XDECREF(__pyx_r);
           if (unlikely(__pyx_v_brand_rightholders == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 171, __pyx_L1_error)
+            __PYX_ERR(0, 163, __pyx_L1_error)
           }
-          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_brand_rightholders, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 171, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_13);
-          if (unlikely(!__pyx_v_main_limit_dec_id)) { __Pyx_RaiseUnboundLocalError("main_limit_dec_id"); __PYX_ERR(0, 171, __pyx_L1_error) }
-          if (unlikely(!__pyx_v_add_limit_dec_id)) { __Pyx_RaiseUnboundLocalError("add_limit_dec_id"); __PYX_ERR(0, 171, __pyx_L1_error) }
-          __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 171, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_10);
-          __Pyx_GIVEREF(__pyx_t_13);
-          PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_13);
+          __pyx_t_14 = __Pyx_GetItemInt_List(__pyx_v_brand_rightholders, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 163, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_14);
+          if (unlikely(!__pyx_v_main_limit_dec_id)) { __Pyx_RaiseUnboundLocalError("main_limit_dec_id"); __PYX_ERR(0, 163, __pyx_L1_error) }
+          if (unlikely(!__pyx_v_add_limit_dec_id)) { __Pyx_RaiseUnboundLocalError("add_limit_dec_id"); __PYX_ERR(0, 163, __pyx_L1_error) }
+          __pyx_t_11 = PyTuple_New(4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 163, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_11);
+          __Pyx_GIVEREF(__pyx_t_14);
+          PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_14);
           __Pyx_INCREF(__pyx_v_main_id);
           __Pyx_GIVEREF(__pyx_v_main_id);
-          PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_v_main_id);
+          PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_v_main_id);
           __Pyx_INCREF(__pyx_v_main_limit_dec_id);
           __Pyx_GIVEREF(__pyx_v_main_limit_dec_id);
-          PyTuple_SET_ITEM(__pyx_t_10, 2, __pyx_v_main_limit_dec_id);
+          PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_v_main_limit_dec_id);
           __Pyx_INCREF(__pyx_v_add_limit_dec_id);
           __Pyx_GIVEREF(__pyx_v_add_limit_dec_id);
-          PyTuple_SET_ITEM(__pyx_t_10, 3, __pyx_v_add_limit_dec_id);
-          __pyx_t_13 = 0;
-          __pyx_r = ((PyObject*)__pyx_t_10);
-          __pyx_t_10 = 0;
+          PyTuple_SET_ITEM(__pyx_t_11, 3, __pyx_v_add_limit_dec_id);
+          __pyx_t_14 = 0;
+          __pyx_r = ((PyObject*)__pyx_t_11);
+          __pyx_t_11 = 0;
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           goto __pyx_L0;
 
-          /* "identify_brend.pyx":169
+          /* "identify_brend.pyx":161
  *                             break
  *                 #  "  "   "  "
  *                 if limit_id_found and not excluding_id_found:             # <<<<<<<<<<<<<<
@@ -2785,27 +2711,27 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
  */
         }
 
-        /* "identify_brend.pyx":113
- *             pos = main_id in sku_row
+        /* "identify_brend.pyx":108
+ *             # ,       SKU
  *             #
- *             if pos:             # <<<<<<<<<<<<<<
+ *             if main_id in sku_row:             # <<<<<<<<<<<<<<
  *                 #  "  "
  *                 limit_id_found = False
  */
       }
 
-      /* "identify_brend.pyx":109
+      /* "identify_brend.pyx":105
  *     for i in range(len(brand_rightholders)):
  *         #
  *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
- *             pos = main_id in sku_row
+ *             #
  */
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
 
-  /* "identify_brend.pyx":173
+  /* "identify_brend.pyx":165
  *                     return brand_rightholders[i], main_id, main_limit_dec_id, add_limit_dec_id
  *     #       ,
  *     return '', '', '', ''             # <<<<<<<<<<<<<<
@@ -2815,7 +2741,7 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
   __pyx_r = __pyx_tuple__2;
   goto __pyx_L0;
 
-  /* "identify_brend.pyx":82
+  /* "identify_brend.pyx":78
  *     return ''
  * 
  * cpdef tuple identify_brend_and_dec_id(str sku_row, list brand_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):             # <<<<<<<<<<<<<<
@@ -2827,8 +2753,8 @@ static PyObject *__pyx_f_14identify_brend_identify_brend_and_dec_id(PyObject *__
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_14);
   __Pyx_AddTraceback("identify_brend.identify_brend_and_dec_id", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -2890,35 +2816,35 @@ static PyObject *__pyx_pw_14identify_brend_3identify_brend_and_dec_id(PyObject *
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_brand_rightholders)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 1); __PYX_ERR(0, 82, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 1); __PYX_ERR(0, 78, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_identifires)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 2); __PYX_ERR(0, 82, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 2); __PYX_ERR(0, 78, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_limit_identifires)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 3); __PYX_ERR(0, 82, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 3); __PYX_ERR(0, 78, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_add_limit_identifires)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 4); __PYX_ERR(0, 82, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 4); __PYX_ERR(0, 78, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_excluding_identifires)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 5); __PYX_ERR(0, 82, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, 5); __PYX_ERR(0, 78, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "identify_brend_and_dec_id") < 0)) __PYX_ERR(0, 82, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "identify_brend_and_dec_id") < 0)) __PYX_ERR(0, 78, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
@@ -2939,18 +2865,18 @@ static PyObject *__pyx_pw_14identify_brend_3identify_brend_and_dec_id(PyObject *
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 82, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("identify_brend_and_dec_id", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 78, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("identify_brend.identify_brend_and_dec_id", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sku_row), (&PyString_Type), 1, "sku_row", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_brand_rightholders), (&PyList_Type), 1, "brand_rightholders", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_identifires), (&PyList_Type), 1, "main_identifires", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_limit_identifires), (&PyList_Type), 1, "main_limit_identifires", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_add_limit_identifires), (&PyList_Type), 1, "add_limit_identifires", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_excluding_identifires), (&PyList_Type), 1, "excluding_identifires", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sku_row), (&PyString_Type), 1, "sku_row", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_brand_rightholders), (&PyList_Type), 1, "brand_rightholders", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_identifires), (&PyList_Type), 1, "main_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_limit_identifires), (&PyList_Type), 1, "main_limit_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_add_limit_identifires), (&PyList_Type), 1, "add_limit_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_excluding_identifires), (&PyList_Type), 1, "excluding_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
   __pyx_r = __pyx_pf_14identify_brend_2identify_brend_and_dec_id(__pyx_self, __pyx_v_sku_row, __pyx_v_brand_rightholders, __pyx_v_main_identifires, __pyx_v_main_limit_identifires, __pyx_v_add_limit_identifires, __pyx_v_excluding_identifires);
 
   /* function exit code */
@@ -2971,7 +2897,7 @@ static PyObject *__pyx_pf_14identify_brend_2identify_brend_and_dec_id(CYTHON_UNU
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("identify_brend_and_dec_id", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_14identify_brend_identify_brend_and_dec_id(__pyx_v_sku_row, __pyx_v_brand_rightholders, __pyx_v_main_identifires, __pyx_v_main_limit_identifires, __pyx_v_add_limit_identifires, __pyx_v_excluding_identifires, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_14identify_brend_identify_brend_and_dec_id(__pyx_v_sku_row, __pyx_v_brand_rightholders, __pyx_v_main_identifires, __pyx_v_main_limit_identifires, __pyx_v_add_limit_identifires, __pyx_v_excluding_identifires, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3061,12 +2987,12 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "identify_brend.pyx":173
+  /* "identify_brend.pyx":165
  *                     return brand_rightholders[i], main_id, main_limit_dec_id, add_limit_dec_id
  *     #       ,
  *     return '', '', '', ''             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__2 = PyTuple_Pack(4, __pyx_kp_s_, __pyx_kp_s_, __pyx_kp_s_, __pyx_kp_s_); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(4, __pyx_kp_s_, __pyx_kp_s_, __pyx_kp_s_, __pyx_kp_s_); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
   __Pyx_RefNannyFinishContext();

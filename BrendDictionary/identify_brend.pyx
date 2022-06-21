@@ -17,16 +17,15 @@ cpdef str identify_brend(str sku_row, list brand_rightholders, list main_identif
     """
     # Типизация используемых переменных
     cdef int i
-    cdef bint pos, limit_id_found, excluding_id_found
+    cdef bint limit_id_found, excluding_id_found
     cdef str main_id, main_limit_id, add_limit_id, excluding_id
     # Перебор всех брендов из словаря
     for i in range(len(brand_rightholders)):
         # Перебор основых идентификаторов
         for main_id in main_identifires[i]:
             # Определение, содержатся ли основной идентификатор в заднном SKU
-            pos = main_id in sku_row
-            # Если основной идентификатор найден
-            if pos:
+            #   Если основной идентификатор найден
+            if main_id in sku_row:
                 # Флаг "ограничивающие идентификаторы найдены"
                 limit_id_found = False
                 # Если есть основные ограничивающие идентификаторы
@@ -34,17 +33,15 @@ cpdef str identify_brend(str sku_row, list brand_rightholders, list main_identif
                     # Перебор основных ограничивающих идентификаторов
                     for main_limit_id in main_limit_identifires[i]:
                         # Определение, содержатся ли основной ограничивающий идентификатор в заднном SKU
-                        pos = main_limit_id in sku_row
-                        # Если основной ограничивающий идентификатор найден
-                        if pos:
+                        #    Если основной ограничивающий идентификатор найден
+                        if main_limit_id in sku_row:
                             # Если есть дополнительные ограничивающие идентификаторы
                             if len(add_limit_identifires[i]) > 0:
                                 # Перебор дополнительных ограничивающих идентификаторов
                                 for add_limit_id in add_limit_identifires[i]:
                                     # Определение, содержатся ли дополнительный ограничивающий идентификатор в заднном SKU
-                                    pos = add_limit_id in sku_row
-                                    # Если дополнительный ограничивающий идентификатор найден
-                                    if pos:
+                                    #   Если дополнительный ограничивающий идентификатор найден
+                                    if add_limit_id in sku_row:
                                         # Выставляется флаг "ограничивающие идентификаторы найдены", цикл поиска дополнительных ограничивающих идентификаторов прерывается
                                         limit_id_found = True
                                         break
@@ -66,9 +63,8 @@ cpdef str identify_brend(str sku_row, list brand_rightholders, list main_identif
                     # Перебор исключающих идентификаторов
                     for excluding_id in excluding_identifires[i]:
                         # Определение, содержатся ли исключающий идентификатор в заднном SKU
-                        pos = excluding_id in sku_row
-                        # Если исключающий идентификатор найден
-                        if pos:
+                        #   Если исключающий идентификатор найден
+                        if excluding_id in sku_row:
                             # Выставляется флаг "исключающий дентификатор найден", цикл поиска исключающих идентификаторов прерывается
                             excluding_id_found = True
                             break
@@ -101,16 +97,15 @@ cpdef tuple identify_brend_and_dec_id(str sku_row, list brand_rightholders, list
     """
     # Типизация используемых переменных
     cdef int i
-    cdef bint pos, limit_id_found, excluding_id_found
+    cdef bint limit_id_found, excluding_id_found
     cdef str main_id, main_limit_id, add_limit_id, excluding_id, main_limit_dec_id, add_limit_dec_id
     # Перебор всех брендов из словаря
     for i in range(len(brand_rightholders)):
         # Перебор основых идентификаторов
         for main_id in main_identifires[i]:
             # Определение, содержатся ли основной идентификатор в заднном SKU
-            pos = main_id in sku_row
-            # Если основной идентификатор найден
-            if pos:
+            #   Если основной идентификатор найден
+            if main_id in sku_row:
                 # Флаг "ограничивающие идентификаторы найдены"
                 limit_id_found = False
                 # Если есть основные ограничивающие идентификаторы
@@ -118,17 +113,15 @@ cpdef tuple identify_brend_and_dec_id(str sku_row, list brand_rightholders, list
                     # Перебор основных ограничивающих идентификаторов
                     for main_limit_id in main_limit_identifires[i]:
                         # Определение, содержатся ли основной ограничивающий идентификатор в заднном SKU
-                        pos = main_limit_id in sku_row
-                        # Если основной ограничивающий идентификатор найден
-                        if pos:
+                        #   Если основной ограничивающий идентификатор найден
+                        if main_limit_id in sku_row:
                             # Если есть дополнительные ограничивающие идентификаторы
                             if len(add_limit_identifires[i]) > 0:
                                 # Перебор дополнительных ограничивающих идентификаторов
                                 for add_limit_id in add_limit_identifires[i]:
                                     # Определение, содержатся ли дополнительный ограничивающий идентификатор в заднном SKU
-                                    pos = add_limit_id in sku_row
-                                    # Если дополнительный ограничивающий идентификатор найден
-                                    if pos:
+                                    #   Если дополнительный ограничивающий идентификатор найден
+                                    if add_limit_id in sku_row:
                                         # Выставляется флаг "ограничивающие идентификаторы найдены", цикл поиска дополнительных ограничивающих идентификаторов прерывается
                                         limit_id_found = True
                                         # Запись кандидатов в решающие главный и дополнительный ограничивающие идинтификаторы
@@ -159,9 +152,8 @@ cpdef tuple identify_brend_and_dec_id(str sku_row, list brand_rightholders, list
                     # Перебор исключающих идентификаторов
                     for excluding_id in excluding_identifires[i]:
                         # Определение, содержатся ли исключающий идентификатор в заднном SKU
-                        pos = excluding_id in sku_row
-                        # Если исключающий идентификатор найден
-                        if pos:
+                        #    Если исключающий идентификатор найден
+                        if excluding_id in sku_row:
                             # Выставляется флаг "исключающий дентификатор найден", цикл поиска исключающих идентификаторов прерывается
                             excluding_id_found = True
                             break

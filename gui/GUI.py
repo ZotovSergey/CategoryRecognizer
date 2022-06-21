@@ -14,6 +14,7 @@ import multiprocessing as mp
 from datetime import datetime
 
 from DataProcessing.DataProcessing import BrendRecognizer
+from DataProcessing.SKUPreprocessing import SKUReaderCSV, SKUReaderExcel
 from BrendDictionary.BrendDictionary import BrendDictionary, find_all_dict, load_dictionary
 
 
@@ -49,9 +50,10 @@ class Window(QWidget):
         self.short_input_line_wight = 100
         # Отступ для второго столбца по горизонтали
         self.second_col_hor = int(self.window_wight / 2)
-
+        # Фиксация размера окна
         self.setFixedSize(self.window_wight, self.window_high)
-        self.setWindowTitle('Brend Recognizer')
+        # Название окна
+        self.setWindowTitle('Category Recognizer')
 
     def get_path_from_file_dialog(self, dialog_name, existed=True):
         """
@@ -61,11 +63,13 @@ class Window(QWidget):
         
         :return: путь к выбранному файлу (существующему или не существующему)
         """
-
+        # Путь к директории, в которой открывается диалоговое окно
+        initial_dir = os.path.join(os.path.splitdrive(os.path.abspath(__file__))[0], os.sep)
+        # Выбор вида открываемого диалогового окна: для загрузки существующего файла или сохранения файла
         if existed:
-            return QFileDialog.getOpenFileName(self, dialog_name, os.path.join(os.path.splitdrive(os.path.abspath(__file__))[0], os.sep))[0]
+            return QFileDialog.getOpenFileName(self, dialog_name, initial_dir)[0]
         else:
-            return QFileDialog.getSaveFileName(self, dialog_name, os.path.join(os.path.splitdrive(os.path.abspath(__file__))[0], os.sep))[0]
+            return QFileDialog.getSaveFileName(self, dialog_name, initial_dir)[0]
     
     def set_message(self, msg):
         """
@@ -106,12 +110,15 @@ class ProcessingWindow(Window):
         
         # Максимальное число потоков
         self.cpu_max = mp.cpu_count()
-        # Длина батча по умолчанию
-        self.default_batch_len = 100000
-
+        # Максимальная длина батча по умолчанию
+        self.default_max_batch_len = 100000
+        # Создание окна
         self.initUI()
 
     def initUI(self):
+        """
+        Создание окна
+        """
         # Положение следующей строки по вертикали
         new_line_vert = self.margin_vert
 
@@ -143,6 +150,18 @@ class ProcessingWindow(Window):
         self.input_file_path_btn.move(self.input_line_wight + self.margin_vert + self.space, new_line_vert)
         self.input_file_path_btn.resize(self.file_path_btn_wight, self.file_path_btn_high)
         self.input_file_path_btn.clicked.connect(self.input_file_path_btn_click)
+        new_line_vert += self.input_line_high + self.space
+
+        # Ввод названия страницы SKU в обрабатываемом excel-файле
+        #   Подпись
+        self.sku_sheet_name_label = QLabel(self)
+        self.sku_sheet_name_label.setText('Название страницы SKU в обрабатываемом файле (если файл excel):')
+        self.sku_sheet_name_label.move(self.margin_hor, new_line_vert)
+        new_line_vert += self.space_after_label_vert
+        #   Строка ввода
+        self.sku_sheet_name_line_edit = QLineEdit(self)
+        self.sku_sheet_name_line_edit.move(self.margin_hor, new_line_vert)
+        self.sku_sheet_name_line_edit.resize(self.input_line_wight, self.input_line_high)
         new_line_vert += self.input_line_high + self.space
 
         # Ввод названия столбца SKU в обрабатываемом файле
@@ -212,11 +231,11 @@ class ProcessingWindow(Window):
 
         #   Ввод количества строк в батче
         #       Строка ввода
-        self.batch_len_line_edit = QLineEdit(self)
-        self.batch_len_line_edit.move(self.second_col_hor, new_line_vert)
-        self.batch_len_line_edit.resize(self.short_input_line_wight, self.input_line_high)
-        self.batch_len_line_edit.setValidator(QIntValidator())
-        self.batch_len_line_edit.setText(str(self.default_batch_len))
+        self.max_batch_len_line_edit = QLineEdit(self)
+        self.max_batch_len_line_edit.move(self.second_col_hor, new_line_vert)
+        self.max_batch_len_line_edit.resize(self.short_input_line_wight, self.input_line_high)
+        self.max_batch_len_line_edit.setValidator(QIntValidator())
+        self.max_batch_len_line_edit.setText(str(self.default_max_batch_len))
         new_line_vert += self.input_line_high + self.space
 
         # Кнопка запуска вычислений
@@ -249,6 +268,8 @@ class ProcessingWindow(Window):
         self.pbar = QProgressBar(self)
         self.pbar.move(self.margin_hor, new_line_vert)
         self.pbar.resize(self.content_wight, self.input_line_high)
+        #       Обнуление progress bar
+        self.pbar.setValue(0)
         #   Заполнение редактирумых элементов окна значениями из конфигурационного файла, которыми эти элементы были заполнены при последнем успешном запуске вычислений
         self.load_config()
 
@@ -294,10 +315,11 @@ class ProcessingWindow(Window):
         dict_win_config = {
                            'sel_dict': self.select_dict_combo.currentText(),
                            'input_data_path': self.input_file_path_line_edit.text(),
+                           'sku_sheet_name': self.sku_sheet_name_line_edit.text(),
                            'sku_col_name': self.sku_col_name_text_edit.toPlainText(),
                            'output_data_path': self.output_file_path_line_edit.text(),
                            'use_threads_count': self.use_threads_count_line_edit.text(),
-                           'batch_len': self.batch_len_line_edit.text(),
+                           'max_batch_len': self.max_batch_len_line_edit.text(),
                            'dec_id': self.id_output_check.isChecked()
                           }
         with open(os.path.join('config', 'proc_win_config.json'), 'w') as config_file:
@@ -315,8 +337,9 @@ class ProcessingWindow(Window):
             self.sku_col_name_text_edit.setText(dict_win_config['sku_col_name'])
             self.output_file_path_line_edit.setText(dict_win_config['output_data_path'])
             self.use_threads_count_line_edit.setText(dict_win_config['use_threads_count'])
-            self.batch_len_line_edit.setText(dict_win_config['batch_len'])
+            self.max_batch_len_line_edit.setText(dict_win_config['max_batch_len'])
             self.id_output_check.setChecked(dict_win_config['dec_id'])
+            self.sku_sheet_name_line_edit.setText(dict_win_config['sku_sheet_name'])
         except:
             print()
     
@@ -326,26 +349,45 @@ class ProcessingWindow(Window):
             self.pbar.setValue(0)
             # Начало отсчета таймера
             self.proc_begin_time = datetime.now()
-            # Сбор данных из GUI
+            # Сбор данных из GUI и определение параметров файла с данными для обработки, подготовка к началу рассчетов
             #   Загрузка выбранного справочника, по нему будет идти распознавание категорий
             sel_dict = load_dictionary(self.select_dict_combo.currentText())
             #   Сообщение о завершении загрузки справочника
             self.set_message(self.countdown() + '\tСправочник \"' + self.select_dict_combo.currentText() + '\" загружен')
             #   Путь к csv файлу, со строками SKU для обработки
             input_data_path = self.input_file_path_line_edit.text()
-            #       Определение кодировки обрабатываемого файла
-            #           Сообщение о начале определния кодировки
-            self.set_message(self.countdown() + '\tОпределение кодировки обрабатываемого файла')
-            encoding = chardet.detect(open(input_data_path, 'rb').read())['encoding']
-            #           Сообщение о определенной кодировки
-            self.set_message(self.countdown() + '\tКодировка обрабатываемого файла:\t\"' + encoding + '\"')
+            #   Кодировка файла с данными
+            encoding = None
+            #   Страница excel-файла, содержащей строки SKU для обработки
+            sku_sheet_name = None
+            #   Определение расширения файла
+            file_ext = input_data_path.split('.')[-1]
             #   Название столбца, содержащего строки SKU для обработки, если строка пустая, то берется первый столбец в заданном файле
             sku_col_name = self.sku_col_name_text_edit.toPlainText()
+            #   Определение типа обрабатываемого файла и определение необходимых для полученного типа параметров
+            if  file_ext in json.load(open(os.path.join('config', 'excel_ext.json')))['excel_ext']:
+                # Формат обрабатываемого файла - excel
+                # Название страницы, содержащей строки SKU для обработки, если строка пустая, то берется первая страница в заданном файле
+                sku_sheet_name = self.sku_sheet_name_line_edit.text()
+                # Создание объекта-ридера SKU из excel-файла по пути input_data_path, из страницы sku_sheet_name (или первой страницы), из столбца sku_col_name (или первого столбца),
+                # осуществляющего чтение и предобработку SKU
+                sku_reader = SKUReaderExcel(input_data_path, sku_col_name, sku_sheet_name)
+                # Заполнение пустого значения названия страницы с SKU excel-файла
+                if len(sku_sheet_name) == 0:
+                    sku_sheet_name = sku_reader.sku_sheet_name
+            else:
+                # Формат обрабатываемого файла - csv, txt
+                # Определение кодировки обрабатываемого файла
+                #   Сообщение о начале определния кодировки
+                self.set_message(self.countdown() + '\tОпределение кодировки обрабатываемого файла')
+                encoding = chardet.detect(open(input_data_path, 'rb').read())['encoding']
+                #   Сообщение о определенной кодировки
+                self.set_message(self.countdown() + '\tКодировка обрабатываемого файла:\t\"' + encoding + '\"')
+                # Создание объекта-ридера SKU из csv-файла по пути input_data_path, из столбца sku_col_name (или первого столбца), осуществляющего чтение и предобработку SKU
+                sku_reader = SKUReaderCSV(input_data_path, sku_col_name, encoding)
+            #   Заполнение пустого значения названия столбца с SKU
             if len(sku_col_name) == 0:
-                try:
-                    sku_col_name = pd.read_csv(input_data_path, nrows=0, sep='\t', encoding=encoding).columns.values[0]
-                except:
-                    sku_col_name = pd.read_excel(input_data_path, nrows=0).columns.values[0]
+                sku_col_name = sku_reader.column_name()
             #   Путь к файлу, в который будут выводиться результаты распознавания
             output_data_path = self.output_file_path_line_edit.text()
             #   Количество задействованых в вычислении потоков, если строка пустая, то берется максимальное доступное количество потоков
@@ -356,17 +398,17 @@ class ProcessingWindow(Window):
                 self.use_threads_count_line_edit.setText(str(use_threads_count))
             else:
                 use_threads_count = int(use_threads_count)
-            #   Количество строк в одном батче, если строка пустая, то берется значение потоков по умолчанию
-            batch_len = self.batch_len_line_edit.text()
-            if len(batch_len) == 0:
-                batch_len == self.default_batch_len
+            #   Максимальное количество строк в одном батче, если строка пустая, то берется значение потоков по умолчанию
+            max_batch_len = self.max_batch_len_line_edit.text()
+            if len(max_batch_len) == 0:
+                max_batch_len == self.default_max_batch_len
                 # Заполнение пустой строки значением по умолчанию
-                self.batch_len_line_edit.setText(str(use_threads_count))
+                self.max_batch_len_line_edit.setText(str(use_threads_count))
             else:
-                batch_len = int(batch_len)
-            # Создание объекта, распознающего категории по SKU в соответствии справочнику sel_dict
-            br = BrendRecognizer(sel_dict, cpu_count=use_threads_count)
-            # Сообщение о начале обработки
+                max_batch_len = int(max_batch_len)
+            
+            # Обработка
+            #   Сообщение о начале обработки
             #   Добавочное сообщение о том, что выводятся определяющие идентификаторы
             if self.id_output_check.isChecked():
                 id_output_add_msg = ' с выводом определяющих идентификаторов'
@@ -376,16 +418,20 @@ class ProcessingWindow(Window):
             self.set_message('\tиз файла \"' + input_data_path + '\";')
             self.set_message('\tстолбец SKU:\t\t\t\"' + sku_col_name + '\";')
             self.set_message('\tкол-во задействованных потоков:\t' + str(use_threads_count) + ';')
-            self.set_message('\tмакс. кол-во строк в батче:\t\t' + str(batch_len) + ';')
+            self.set_message('\tмакс. кол-во строк в батче:\t\t' + str(max_batch_len) + ';')
             self.set_message('\tрезультат обработки будет сохранен в файл:\t\"' + output_data_path + '\"')
-            # Распознавание SKU из заданного файла в соответствии заданному справочнику
-            br.process_csv(input_data_path, output_data_path, rows_col_name=sku_col_name, get_dec_id=self.id_output_check.isChecked(), batch_len=batch_len, encoding=encoding, gui_window=self)
-            # Сообщение о завершении обработки
+            #   Создание объекта, распознающего категории по SKU в соответствии справочнику sel_dict
+            br = BrendRecognizer(sku_reader, sel_dict, max_batch_len=max_batch_len, get_dec_id=self.id_output_check.isChecked(), cpu_count=use_threads_count)
+            #   Распознавание SKU из заданного файла в соответствии заданному справочнику
+            br.process_data(output_data_path, gui_window=self)
+            #   Сообщение о завершении обработки
             self.set_message(self.countdown() + '\tРаспознвание категорий по SKU завершено, результаты сохранены в исходящий файл')
-            # Запись содержания строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
+            #   Запись содержания строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             self.save_config()
         except Exception as e:
             self.set_message('ERROR!!!\t' + str(e))
+            if os.path.exists('temp'):
+                os.rmdir('temp')
 
 class DictionaryWindow(Window):
     """
@@ -399,10 +445,13 @@ class DictionaryWindow(Window):
         
         # Окно вычислений
         self.proc_wind = proc_wind
-
+        # Создание окна
         self.initUI()
 
     def initUI(self):
+        """
+        Создание окна
+        """
         # Положение следующей строки по вертикали
         new_line_vert = self.margin_vert
 
@@ -599,23 +648,25 @@ class DictionaryWindow(Window):
             add_limit_identifires_title = self.add_limit_id_title_col_name_text_edit.toPlainText()
             #   Название столбца исключающих идентификаторов, если строка пустая, то берется пятый столбец в заданной книге заданного файла
             excluding_identifires_title = self.exclud_id_title_col_name_text_edit.toPlainText()
-            # Замена значений пустых строк на соответствующие значения, если необходимо
-            if (len(dictinary_sheet_name) == 0) or (len(brand_rightholders_title) == 0) or (len(main_identifires_title) == 0) or \
-                (len(main_limit_identifires_title) == 0) or (len(add_limit_identifires_title) == 0) or (len(excluding_identifires_title) == 0):
-                with pd.ExcelFile(data_path) as reader:
-                    if len(dictinary_sheet_name) == 0:
-                        dictinary_sheet_name = reader.sheet_names[0]
-                    columns_list = pd.read_excel(reader, sheet_name=dictinary_sheet_name, nrows=0).columns.values
-                    if len(brand_rightholders_title) == 0:
-                        brand_rightholders_title = columns_list[0]
-                    if len(main_identifires_title) == 0:
-                        main_identifires_title = columns_list[1]
-                    if len(main_limit_identifires_title) == 0:
-                        main_limit_identifires_title = columns_list[2]
-                    if len(add_limit_identifires_title) == 0:
-                        add_limit_identifires_title = columns_list[3]
-                    if len(excluding_identifires_title) == 0:
-                        excluding_identifires_title = columns_list[4]
+            
+            # Чтение данных из файла data_path
+            with pd.ExcelFile(data_path) as reader:
+                # Замена пустого значения страницы со справочником а название первой странице в файле
+                if len(dictinary_sheet_name) == 0:
+                    dictinary_sheet_name = reader.sheet_names[0]
+                # Чтение книги excel файла с названием dictinary_sheet_name, содержащей обозначения брендов и их идентификаторы
+                features_df = pd.read_excel(reader, sheet_name=dictinary_sheet_name)
+                # Замена значений пустых строк на соответствующие значения, если необходимо
+                if len(brand_rightholders_title) == 0:
+                    brand_rightholders_title = features_df.columns[0]
+                if len(main_identifires_title) == 0:
+                    main_identifires_title = features_df.columns[1]
+                if len(main_limit_identifires_title) == 0:
+                    main_limit_identifires_title = features_df.columns[2]
+                if len(add_limit_identifires_title) == 0:
+                    add_limit_identifires_title = features_df.columns[3]
+                if len(excluding_identifires_title) == 0:
+                    excluding_identifires_title = features_df.columns[4]
                     
             # Сообщение о начале составления справочника
             self.set_message(self.countdown() + '\tСоставление справочника ' + '\"' + dict_name + '\"')
@@ -627,12 +678,12 @@ class DictionaryWindow(Window):
             self.set_message('\tстолбец доп. огран. ид-ов:\t\"' + add_limit_identifires_title + '\";')
             self.set_message('\tстолбец искл. ид-ов:\t\"' + excluding_identifires_title + '\"')
             # Создание объекта справочника
-            brend_dict = BrendDictionary(data_path, dictinary_sheet_name,
-                                        brand_rightholders_title,
-                                        main_identifires_title,
-                                        main_limit_identifires_title,
-                                        add_limit_identifires_title,
-                                        excluding_identifires_title)
+            brend_dict = BrendDictionary(features_df,
+                                         brand_rightholders_title,
+                                         main_identifires_title,
+                                         main_limit_identifires_title,
+                                         add_limit_identifires_title,
+                                         excluding_identifires_title)
             # Сообщение о завершении составлния спраочника
             self.set_message(self.countdown() + '\tСправочник \"' + dict_name + '\" составлен')
             # Сообщение о начале сохранения справочника
