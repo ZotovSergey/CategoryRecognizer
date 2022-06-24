@@ -14,22 +14,22 @@ def get_batch(iterable, batch_len=1):
         yield iterable[ndx : min(ndx + batch_len, iterable_len)]
 
 
-class BrendRecognizer:
+class CategoryRecognizer:
     """
     Распознаватель категорий по SKU из заданного файла по заданному справочнику. Обрабатывает SKU из заданного файла по батчам заданного размера используя заданный справочник категорий и записывает наименования
     категорий в csv файл по заданному пути. Поддерживает многопоточную обработку для ускорния вычислений.
     """
-    def __init__(self, sku_reader, brend_dictionary, max_batch_len=100000, get_dec_id=False, cpu_count=None):
+    def __init__(self, sku_reader, category_directory, max_batch_len=100000, get_dec_id=False, cpu_count=None):
         """
         :param sku_reader: ридер SKU из заданого файла (SKUReaderCSV, SKUReaderExcel)
-        :param brend_dictionary: справочник категорий, в соотвтствии с которым определяется категория по SKU (BrendDictionary)
+        :param category_directory: справочник категорий, в соотвтствии с которым определяется категория по SKU (CategoryDirectory)
         :param max_batch_len: максимальное количество строк SKU, содержащихся в одном обрабатываемом батче
         :param get_dec_id: флаг, означающий, что нужно выводить определяющие идентификаторы (bool)
         :param cpu_count: количество потоков, использумых для обработки, если превышает максимально доступное оличество потоков, то применяетс максимально доступное количество (int)
         """
         self.sku_reader = sku_reader
         self.get_dec_id = get_dec_id
-        self.brend_dictionary = brend_dictionary
+        self.category_directory = category_directory
         self.max_batch_len = max_batch_len
 
         # Количество задействованных потоков
@@ -59,7 +59,7 @@ class BrendRecognizer:
     
     def process_rows(self, data_rows):
         """
-        Обработка строк data_rows (предобработанных SKU) в формате pandas.DataFrame - распознавания категории по заданым строкам, соответствующих справочнику self.brend_dictionary, с использованием
+        Обработка строк data_rows (предобработанных SKU) в формате pandas.DataFrame - распознавания категории по заданым строкам, соответствующих справочнику self.category_directory, с использованием
         self.cpu_count потоков одновременно
 
         :param data_rows: предобработанные строки SKU
@@ -68,15 +68,15 @@ class BrendRecognizer:
         """ 
         # Создание пула потоков для self.cpu_count потоков
         pool = mp.Pool(self.cpu_count)
-        # Распознование категорий в соответствии справочнику self.brend_dictionary
-        brends_list = list(pool.map(self.brend_dictionary.identify_brend_cython, data_rows))
+        # Распознование категорий в соответствии справочнику self.category_directory
+        categorys_list = list(pool.map(self.category_directory.identify_category_cython, data_rows))
         # Закрытие пула потоков
         pool.close()
-        return [brends_list]
+        return [categorys_list]
     
     def process_rows_get_dec_id(self, data_rows):
         """
-        Обработка строк data_rows (предобработанных SKU) в формате pandas.DataFrame - распознавания категории по заданым строкам, соответствующих справочнику self.brend_dictionary, с использованием
+        Обработка строк data_rows (предобработанных SKU) в формате pandas.DataFrame - распознавания категории по заданым строкам, соответствующих справочнику self.category_directory, с использованием
         self.cpu_count потоков одновременно, а также вывод определяющих идентификаторов - тех, по которым была найдена подходящая категория
 
         :param data_rows: предобработанные строки SKU
@@ -86,26 +86,26 @@ class BrendRecognizer:
         """
         # Создание пула потоков для self.cpu_count потоков
         pool = mp.Pool(self.cpu_count)
-        # Распознование категорий в соответствии справочнику self.brend_dictionary
-        brends_dec_id_list = list(pool.map(self.brend_dictionary.identify_brend_and_dec_id_cython, data_rows))
+        # Распознование категорий в соответствии справочнику self.category_directory
+        categories_dec_id_list = list(pool.map(self.category_directory.identify_category_and_dec_id_cython, data_rows))
         # Закрытие пула потоков
         pool.close()
         # Распределение полученных данных по соответствующи переменным
-        brends_dec_id_list = list(zip(*brends_dec_id_list))
-        brends_list = brends_dec_id_list[0]
-        main_dec_id_list = brends_dec_id_list[1]
-        main_limit_dec_id_list = brends_dec_id_list[2]
-        add_limit_dec_id_list = brends_dec_id_list[3]
-        return brends_list, main_dec_id_list, main_limit_dec_id_list, add_limit_dec_id_list
+        categories_dec_id_list = list(zip(*categories_dec_id_list))
+        categories_list = categories_dec_id_list[0]
+        main_dec_id_list = categories_dec_id_list[1]
+        main_limit_dec_id_list = categories_dec_id_list[2]
+        add_limit_dec_id_list = categories_dec_id_list[3]
+        return categories_list, main_dec_id_list, main_limit_dec_id_list, add_limit_dec_id_list
     
     # def process_rows_and_history(self, data_rows):
     #     pool = mp.Pool(self.cpu_count)
-    #     brends_history_zip = list(pool.map(self.brend_dictionary.identify_brend_and_history, data_rows))
+    #     categories_history_zip = list(pool.map(self.category_directory.identify_category_and_history, data_rows))
     #     pool.close()
-    #     brends_history_lists = list(zip(*brends_history_zip))
-    #     brends_list = brends_history_lists[0]
-    #     history_list = brends_history_lists[1]
-    #     return brends_list, history_list
+    #     categories_history_lists = list(zip(*categories_history_zip))
+    #     categories_list = categories_history_lists[0]
+    #     history_list = categories_history_lists[1]
+    #     return categories_list, history_list
     
     def read_and_preprocess_pd_file_batches_pool(self, batches_starts_list):
         """
@@ -161,7 +161,7 @@ class BrendRecognizer:
 
     def process_data(self, output_data_path, gui_window):
         """
-        Распознование категорий по SKU из ридера self.sku_reader, в соотетствии справочнику self.brend_dictionary, по батчам, с применением self.cpu_count потоков одновременно и
+        Распознование категорий по SKU из ридера self.sku_reader, в соотетствии справочнику self.category_directory, по батчам, с применением self.cpu_count потоков одновременно и
         запись полученных результатов в csv-файл output_data_path
 
         :param output_data_path: путь к csv-файлу, в который будут записываться результаты распознования категорий
@@ -186,18 +186,18 @@ class BrendRecognizer:
         # Длина оптимальных батчей
         self.batch_len = int(np.ceil(rows_count / opt_batches_num))
 
-        #   Сообщение о создании исходящего файла
+        #   Сообщение о создании обработанного файла
         set_msg_in_gui('Обрабатываемый файл делится на ' + str(opt_batches_num) + ' батчей, приблизительно, по ' + str(self.batch_len) + ' строк', gui_window)
 
-        # Создание пустого исходящего файла, в который будут записываться результаты распознавания по батчам
-        output_file_header = pd.DataFrame({'SKU': [], 'ans': []})
+        # Создание пустого обработанного файла, в который будут записываться результаты распознавания по батчам
+        output_file_header = pd.DataFrame({'SKU': [], 'Возвращаемое значение': []})
         #   Добавление в создаваемый файл столбцов для записи определяющих идентификаторов, если это необходимо
         if self.get_dec_id:
-            dec_id_header = pd.DataFrame({'main identifier': [], 'main limiting identifier': [], 'additional limiting identifier': []})
+            dec_id_header = pd.DataFrame({'Главный идентификатор': [], 'Главный ограничивающий идентификатор': [], 'Дополнительный ограничивающий идентификатор': []})
             output_file_header = pd.concat([output_file_header, dec_id_header], axis=1)
         output_file_header.to_csv(output_data_path, sep='\t', index=False)
-        #   Сообщение о создании исходящего файла
-        set_msg_in_gui('Исходящий файл \"' + output_data_path + '\" создан', gui_window)
+        #   Сообщение о создании обработанного файла
+        set_msg_in_gui('Обработанный файл \"' + output_data_path + '\" создан', gui_window)
 
         # Вычисление по батчам
         #   Создание генератора, берущего по self.cpu_count первых строк батчей, то есть столько, сколько будут загружаться и сохраняться одновременно
@@ -222,7 +222,7 @@ class BrendRecognizer:
                 # Сообщение о окончании обработки батча
                 set_msg_in_gui('Батч обработан', gui_window)
             
-            # Добавление обработанных данных в исходящий файл
+            # Добавление обработанных данных в обработанный файл
             #   Запись временных файлов обработанных данных, полученных из каждого батча
             #       Сообщение о начале записи обработанных данных
             set_msg_in_gui('Сохранение полученных данных', gui_window)
@@ -241,21 +241,21 @@ class BrendRecognizer:
             # #       Запись путей к временным файлам
             # temp_files_list = os.listdir('temp')
             # temp_files_path_list = list(map(os.path.join, ['temp'] * len(temp_files_list), temp_files_list))
-            #   Запись исходящих данных из временых файлов в исходящий файл
-            #       Открытие исходящего файла для добавления
+            #   Запись исходящих данных из временых файлов в обработанный файл
+            #       Открытие обработанного файла для добавления
             with open(output_data_path, "ab") as out_file:
                 # Перебор временных файлов с исходящими данными
                 for temp_path in temp_files_path_list:
                     # Открытие временного файла для чтения
                     with open(temp_path, "rb") as temp_file:
-                        # Чтение данных из временного файла и их добавление в исходящий файл
+                        # Чтение данных из временного файла и их добавление в обработанный файл
                         out_file.write(temp_file.read())
                     # Удаление временного файла
                     os.remove(temp_path)
             #       Обновление количества обработанных батчей
             batches_done_num += len(batches_starts_list)
             #       Сообщение о завершении записи обработанных данных
-            set_msg_in_gui('(' + str(batches_done_num) + '/' + str(opt_batches_num) + ') ' + 'Полученные данные сохранены в исходящий файл', gui_window)
+            set_msg_in_gui('(' + str(batches_done_num) + '/' + str(opt_batches_num) + ') ' + 'Полученные данные сохранены в обработанный файл', gui_window)
 
             # Обновление project bar
             if gui_window is not None:

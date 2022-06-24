@@ -13,9 +13,9 @@ from PyQt5.QtGui import QIntValidator, QIcon
 import multiprocessing as mp
 from datetime import datetime
 
-from DataProcessing.DataProcessing import BrendRecognizer
+from DataProcessing.DataProcessing import CategoryRecognizer
 from DataProcessing.SKUPreprocessing import SKUReaderCSV, SKUReaderExcel
-from BrendDictionary.BrendDictionary import BrendDictionary, find_all_dict, load_dictionary
+from CategoryDirectory.CategoryDirectory import CategoryDirectory, find_all_dir, load_directory
 
 
 class Window(QWidget):
@@ -73,7 +73,7 @@ class Window(QWidget):
     
     def set_message(self, msg):
         """
-        Записывает заданное сообщение msg в текстовое окно интерфейса self.dict_sheet_name_line_edit
+        Записывает заданное сообщение msg в текстовое окно интерфейса self.dir_sheet_name_line_edit
         :param msg: строка сообщения (str)
         :return: записывает msg в окно сообщений
         """
@@ -124,15 +124,15 @@ class ProcessingWindow(Window):
 
         # Выбор справочника
         #   Подпись
-        self.select_dict_label = QLabel(self)
-        self.select_dict_label.setText('Справочник:')
-        self.select_dict_label.move(self.margin_hor, new_line_vert)
+        self.select_dir_label = QLabel(self)
+        self.select_dir_label.setText('Выберите справочник:')
+        self.select_dir_label.move(self.margin_hor, new_line_vert)
         new_line_vert += self.space_after_label_vert
         #   Комбо бокс
-        self.select_dict_combo = QComboBox(self)
-        self.select_dict_combo.move(self.margin_hor, new_line_vert)
-        self.select_dict_combo.resize(self.input_line_wight, self.input_line_high)
-        self.find_dictionaries()
+        self.select_dir_combo = QComboBox(self)
+        self.select_dir_combo.move(self.margin_hor, new_line_vert)
+        self.select_dir_combo.resize(self.input_line_wight, self.input_line_high)
+        self.find_directories()
         new_line_vert += self.input_line_high + self.space
 
         # Ввод пути к обрабатываемому файлу
@@ -152,10 +152,10 @@ class ProcessingWindow(Window):
         self.input_file_path_btn.clicked.connect(self.input_file_path_btn_click)
         new_line_vert += self.input_line_high + self.space
 
-        # Ввод названия страницы SKU в обрабатываемом excel-файле
+        # Ввод названия листа SKU в обрабатываемом excel-файле
         #   Подпись
         self.sku_sheet_name_label = QLabel(self)
-        self.sku_sheet_name_label.setText('Название страницы SKU в обрабатываемом файле (если файл excel):')
+        self.sku_sheet_name_label.setText('Название листа SKU в обрабатываемом файле (если файл excel):')
         self.sku_sheet_name_label.move(self.margin_hor, new_line_vert)
         new_line_vert += self.space_after_label_vert
         #   Строка ввода
@@ -176,10 +176,10 @@ class ProcessingWindow(Window):
         self.sku_col_name_text_edit.resize(self.input_line_wight, self.input_line_high)
         new_line_vert += self.input_line_high + self.space
 
-        # Ввод пути к исходящему файлу
+        # Ввод пути к обработанному файлу
         #   Подпись
         self.output_file_path_label = QLabel(self)
-        self.output_file_path_label.setText('Путь к исходящему файлу:')
+        self.output_file_path_label.setText('Путь к обработанному файлу:')
         self.output_file_path_label.move(self.margin_hor, new_line_vert)
         new_line_vert += self.space_after_label_vert
         #   Строка ввода
@@ -284,10 +284,10 @@ class ProcessingWindow(Window):
 
     def output_file_path_btn_click(self):
         """
-        Функция кнопки вызова диалогового окна выбора файла для строки ввода исходящеего файла
-        :return: в строку ввода исходящего файла вводится путь к выбраному файлу
+        Функция кнопки вызова диалогового окна выбора файла для строки ввода обработанного файла
+        :return: в строку ввода обработанного файла вводится путь к выбраному файлу
         """
-        choosed_file_path = self.get_path_from_file_dialog('Исходящий файл', existed=False)
+        choosed_file_path = self.get_path_from_file_dialog('бработанный файл', existed=False)
         if choosed_file_path != '':
             self.output_file_path_line_edit.setText(choosed_file_path)
 
@@ -298,67 +298,69 @@ class ProcessingWindow(Window):
         """
         self.use_threads_count_line_edit.setText(str(self.cpu_max))
     
-    def find_dictionaries(self):
+    def find_directories(self):
         """
         Находит названия доступных справочников и добавляет их в комбобокс выбора справочника
         :return: добавляет названия доступных справочников в комбобокс выбора справочника
         """
-        self.select_dict_combo.clear()
-        dict_list = find_all_dict()
-        self.select_dict_combo.addItems(dict_list)
+        self.select_dir_combo.clear()
+        dir_list = find_all_dir()
+        self.select_dir_combo.addItems(dir_list)
     
     def save_config(self):
         """
         Запись конфигурационного файла json, содержащего значения редактируемых элементов окна вычислений, которые будут воспроизводиться при открытии окна в следущую сессию
         :return: файл json, содержащий значения редактируемых элементов окна вычислений
         """
-        dict_win_config = {
-                           'sel_dict': self.select_dict_combo.currentText(),
-                           'input_data_path': self.input_file_path_line_edit.text(),
-                           'sku_sheet_name': self.sku_sheet_name_line_edit.text(),
-                           'sku_col_name': self.sku_col_name_text_edit.toPlainText(),
-                           'output_data_path': self.output_file_path_line_edit.text(),
-                           'use_threads_count': self.use_threads_count_line_edit.text(),
-                           'max_batch_len': self.max_batch_len_line_edit.text(),
-                           'dec_id': self.id_output_check.isChecked()
+        dir_win_config = {
+                          'sel_dir': self.select_dir_combo.currentText(),
+                          'input_data_path': self.input_file_path_line_edit.text(),
+                          'sku_sheet_name': self.sku_sheet_name_line_edit.text(),
+                          'sku_col_name': self.sku_col_name_text_edit.toPlainText(),
+                          'output_data_path': self.output_file_path_line_edit.text(),
+                          'use_threads_count': self.use_threads_count_line_edit.text(),
+                          'max_batch_len': self.max_batch_len_line_edit.text(),
+                          'dec_id': self.id_output_check.isChecked()
                           }
         with open(os.path.join('config', 'proc_win_config.json'), 'w') as config_file:
-            config_file.write(json.dumps(dict_win_config))
+            config_file.write(json.dumps(dir_win_config))
 
     def load_config(self):
         """
-        Заполнение редактируемых элементов окна составления словаря значениями из сохраненного конфигурационного файла config\\proc_win_config.json, если он есть
+        Заполнение редактируемых элементов окна составления справочника значениями из сохраненного конфигурационного файла config\\proc_win_config.json, если он есть
         """
         try:
             with open(os.path.join('config', 'proc_win_config.json')) as config_file:
-                dict_win_config = json.load(config_file)
-            self.select_dict_combo.setCurrentText(dict_win_config['sel_dict'])
-            self.input_file_path_line_edit.setText(dict_win_config['input_data_path'])
-            self.sku_col_name_text_edit.setText(dict_win_config['sku_col_name'])
-            self.output_file_path_line_edit.setText(dict_win_config['output_data_path'])
-            self.use_threads_count_line_edit.setText(dict_win_config['use_threads_count'])
-            self.max_batch_len_line_edit.setText(dict_win_config['max_batch_len'])
-            self.id_output_check.setChecked(dict_win_config['dec_id'])
-            self.sku_sheet_name_line_edit.setText(dict_win_config['sku_sheet_name'])
+                dir_win_config = json.load(config_file)
+            self.select_dir_combo.setCurrentText(dir_win_config['sel_dir'])
+            self.input_file_path_line_edit.setText(dir_win_config['input_data_path'])
+            self.sku_col_name_text_edit.setText(dir_win_config['sku_col_name'])
+            self.output_file_path_line_edit.setText(dir_win_config['output_data_path'])
+            self.use_threads_count_line_edit.setText(dir_win_config['use_threads_count'])
+            self.max_batch_len_line_edit.setText(dir_win_config['max_batch_len'])
+            self.id_output_check.setChecked(dir_win_config['dec_id'])
+            self.sku_sheet_name_line_edit.setText(dir_win_config['sku_sheet_name'])
         except:
             print()
     
     def run(self):
         try:
+            # Сообщение о начале обработки
+            self.set_message('Начато распознование категорий по SKU')
             # Обнуление progress bar
             self.pbar.setValue(0)
             # Начало отсчета таймера
             self.proc_begin_time = datetime.now()
             # Сбор данных из GUI и определение параметров файла с данными для обработки, подготовка к началу рассчетов
             #   Загрузка выбранного справочника, по нему будет идти распознавание категорий
-            sel_dict = load_dictionary(self.select_dict_combo.currentText())
+            sel_dir = load_directory(self.select_dir_combo.currentText())
             #   Сообщение о завершении загрузки справочника
-            self.set_message(self.countdown() + '\tСправочник \"' + self.select_dict_combo.currentText() + '\" загружен')
+            self.set_message(self.countdown() + '\tСправочник \"' + self.select_dir_combo.currentText() + '\" загружен')
             #   Путь к csv файлу, со строками SKU для обработки
             input_data_path = self.input_file_path_line_edit.text()
             #   Кодировка файла с данными
             encoding = None
-            #   Страница excel-файла, содержащей строки SKU для обработки
+            #   Лист excel-файла, содержащей строки SKU для обработки
             sku_sheet_name = None
             #   Определение расширения файла
             file_ext = input_data_path.split('.')[-1]
@@ -367,12 +369,12 @@ class ProcessingWindow(Window):
             #   Определение типа обрабатываемого файла и определение необходимых для полученного типа параметров
             if  file_ext in json.load(open(os.path.join('config', 'excel_ext.json')))['excel_ext']:
                 # Формат обрабатываемого файла - excel
-                # Название страницы, содержащей строки SKU для обработки, если строка пустая, то берется первая страница в заданном файле
+                # Название листа, содержащей строки SKU для обработки, если строка пустая, то берется первый лист в заданном файле
                 sku_sheet_name = self.sku_sheet_name_line_edit.text()
-                # Создание объекта-ридера SKU из excel-файла по пути input_data_path, из страницы sku_sheet_name (или первой страницы), из столбца sku_col_name (или первого столбца),
+                # Создание объекта-ридера SKU из excel-файла по пути input_data_path, из листа sku_sheet_name (или первого листа), из столбца sku_col_name (или первого столбца),
                 # осуществляющего чтение и предобработку SKU
                 sku_reader = SKUReaderExcel(input_data_path, sku_col_name, sku_sheet_name)
-                # Заполнение пустого значения названия страницы с SKU excel-файла
+                # Заполнение пустого значения названия листа с SKU excel-файла
                 if len(sku_sheet_name) == 0:
                     sku_sheet_name = sku_reader.sku_sheet_name
             else:
@@ -420,12 +422,12 @@ class ProcessingWindow(Window):
             self.set_message('\tкол-во задействованных потоков:\t' + str(use_threads_count) + ';')
             self.set_message('\tмакс. кол-во строк в батче:\t\t' + str(max_batch_len) + ';')
             self.set_message('\tрезультат обработки будет сохранен в файл:\t\"' + output_data_path + '\"')
-            #   Создание объекта, распознающего категории по SKU в соответствии справочнику sel_dict
-            br = BrendRecognizer(sku_reader, sel_dict, max_batch_len=max_batch_len, get_dec_id=self.id_output_check.isChecked(), cpu_count=use_threads_count)
+            #   Создание объекта, распознающего категории по SKU в соответствии справочнику sel_dir
+            br = CategoryRecognizer(sku_reader, sel_dir, max_batch_len=max_batch_len, get_dec_id=self.id_output_check.isChecked(), cpu_count=use_threads_count)
             #   Распознавание SKU из заданного файла в соответствии заданному справочнику
             br.process_data(output_data_path, gui_window=self)
             #   Сообщение о завершении обработки
-            self.set_message(self.countdown() + '\tРаспознвание категорий по SKU завершено, результаты сохранены в исходящий файл')
+            self.set_message(self.countdown() + '\tРаспознвание категорий по SKU завершено, результаты сохранены в обработанный файл')
             #   Запись содержания строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             self.save_config()
         except Exception as e:
@@ -433,9 +435,9 @@ class ProcessingWindow(Window):
             if os.path.exists('temp'):
                 os.rmdir('temp')
 
-class DictionaryWindow(Window):
+class DirectoryWindow(Window):
     """
-    Окно составления справочника брендов
+    Окно составления справочника категорий
     """
     def __init__(self, proc_wind):
         """
@@ -457,46 +459,46 @@ class DictionaryWindow(Window):
 
         # Ввод название записываемого
         #   Подпись
-        self.dict_name_label = QLabel(self)
-        self.dict_name_label.setText('Название нового справочника:')
-        self.dict_name_label.move(self.margin_hor, new_line_vert)
+        self.dir_name_label = QLabel(self)
+        self.dir_name_label.setText('Название нового справочника:')
+        self.dir_name_label.move(self.margin_hor, new_line_vert)
         new_line_vert += self.space_after_label_vert
         #   Строка ввода
-        self.dict_name_line_edit = QLineEdit(self)
-        self.dict_name_line_edit.move(self.margin_hor, new_line_vert)
-        self.dict_name_line_edit.resize(self.input_line_wight, self.input_line_high)
+        self.dir_name_line_edit = QLineEdit(self)
+        self.dir_name_line_edit.move(self.margin_hor, new_line_vert)
+        self.dir_name_line_edit.resize(self.input_line_wight, self.input_line_high)
         new_line_vert += self.input_line_high + self.space
 
         # Ввод пути к файлу со справочником
         #   Подпись
-        self.dict_file_path_label = QLabel(self)
-        self.dict_file_path_label.setText('Путь к excel файлу с информацией для справочника:')
-        self.dict_file_path_label.move(self.margin_hor, new_line_vert)
+        self.dir_file_path_label = QLabel(self)
+        self.dir_file_path_label.setText('Путь к excel файлу с информацией для справочника:')
+        self.dir_file_path_label.move(self.margin_hor, new_line_vert)
         new_line_vert += self.space_after_label_vert
         #   Строка ввода
-        self.dict_file_path_line_edit = QLineEdit(self)
-        self.dict_file_path_line_edit.move(self.margin_hor, new_line_vert)
-        self.dict_file_path_line_edit.resize(self.input_line_wight, self.input_line_high)
+        self.dir_file_path_line_edit = QLineEdit(self)
+        self.dir_file_path_line_edit.move(self.margin_hor, new_line_vert)
+        self.dir_file_path_line_edit.resize(self.input_line_wight, self.input_line_high)
         #   Кнопка вызова диалогового окна выбора файла
-        self.dict_file_path_btn = QPushButton('...', self)
-        self.dict_file_path_btn.move(self.input_line_wight + self.margin_vert + self.space, new_line_vert)
-        self.dict_file_path_btn.resize(self.file_path_btn_wight, self.file_path_btn_high)
-        self.dict_file_path_btn.clicked.connect(self.dict_file_path_btn_click)
+        self.dir_file_path_btn = QPushButton('...', self)
+        self.dir_file_path_btn.move(self.input_line_wight + self.margin_vert + self.space, new_line_vert)
+        self.dir_file_path_btn.resize(self.file_path_btn_wight, self.file_path_btn_high)
+        self.dir_file_path_btn.clicked.connect(self.dir_file_path_btn_click)
         new_line_vert += self.input_line_high + self.space
 
-        # Ввод названия книги excel-файла со справочником, в котором содержится справочник
+        # Ввод названия листа excel-файла со справочником, в котором содержится справочник
         #   Подпись
-        self.dict_sheet_name_label = QLabel(self)
-        self.dict_sheet_name_label.setText('Название книги содержащей информацию для справочника:')
-        self.dict_sheet_name_label.move(self.margin_hor, new_line_vert)
+        self.dir_sheet_name_label = QLabel(self)
+        self.dir_sheet_name_label.setText('Название листа содержащей информацию для справочника:')
+        self.dir_sheet_name_label.move(self.margin_hor, new_line_vert)
         new_line_vert += self.space_after_label_vert
         #   Строка ввода
-        self.dict_sheet_name_line_edit = QLineEdit(self)
-        self.dict_sheet_name_line_edit.move(self.margin_hor, new_line_vert)
-        self.dict_sheet_name_line_edit.resize(self.input_line_wight, self.input_line_high)
+        self.dir_sheet_name_line_edit = QLineEdit(self)
+        self.dir_sheet_name_line_edit.move(self.margin_hor, new_line_vert)
+        self.dir_sheet_name_line_edit.resize(self.input_line_wight, self.input_line_high)
         new_line_vert += self.input_line_high + self.space
 
-        # Ввод названия столбца справочника, содержащего название брендов
+        # Ввод названия столбца справочника, содержащего название категорий
         #   Подпись
         self.brand_rightholders_title_col_name_label = QLabel(self)
         self.brand_rightholders_title_col_name_label.setText('Название столбца обозначений категорий:')
@@ -578,48 +580,48 @@ class DictionaryWindow(Window):
         #   Заполнение редактирумых элементов окна значениями из конфигурационного файла, которыми эти элементы были заполнены при последнем успешном запуске вычислений
         self.load_config()
     
-    def dict_file_path_btn_click(self):
+    def dir_file_path_btn_click(self):
         """
         Функция кнопки вызова диалогового окна выбора файла со справочником для строки ввода excel файла со справочником
         :return: в строку ввода обрабатываемого файла вводится путь к выбраному файлу
         """
         choosed_file_path = self.get_path_from_file_dialog('Справочник')
         if choosed_file_path != '':
-            self.dict_file_path_line_edit.setText(choosed_file_path)
+            self.dir_file_path_line_edit.setText(choosed_file_path)
     
     def save_config(self):
         """
-        Запись конфигурационного файла json, содержащего значения редактируемых строк окна составления словаря, которые будут воспроизводиться при открытии окна в следующую сессию
-        :return: файл json, содержащий значения редактируемых строк окна составления словаря
+        Запись конфигурационного файла json, содержащего значения редактируемых строк окна составления справочника, которые будут воспроизводиться при открытии окна в следующую сессию
+        :return: файл json, содержащий значения редактируемых строк окна составления справочника
         """
-        dict_win_config = {
-                           'dict_name': self.dict_name_line_edit.text(),
-                           'data_path': self.dict_file_path_line_edit.text(),
-                           'dictinary_sheet_name': self.dict_sheet_name_line_edit.text(),
-                           'brand_rightholders_title': self.brand_rightholders_title_col_name_text_edit.toPlainText(),
-                           'main_identifires_title': self.main_id_title_col_name_text_edit.toPlainText(),
-                           'main_limit_identifires_title': self.main_limit_id_title_col_name_text_edit.toPlainText(),
-                           'add_limit_identifires_title': self.add_limit_id_title_col_name_text_edit.toPlainText(),
-                           'excluding_identifires_title': self.exclud_id_title_col_name_text_edit.toPlainText()
-                          }
-        with open(os.path.join('config', 'dict_win_config.json'), 'w') as config_file:
-            config_file.write(json.dumps(dict_win_config))
+        dir_win_config = {
+                          'dir_name': self.dir_name_line_edit.text(),
+                          'data_path': self.dir_file_path_line_edit.text(),
+                          'directory_sheet_name': self.dir_sheet_name_line_edit.text(),
+                          'brand_rightholders_title': self.brand_rightholders_title_col_name_text_edit.toPlainText(),
+                          'main_identifires_title': self.main_id_title_col_name_text_edit.toPlainText(),
+                          'main_limit_identifires_title': self.main_limit_id_title_col_name_text_edit.toPlainText(),
+                          'add_limit_identifires_title': self.add_limit_id_title_col_name_text_edit.toPlainText(),
+                          'excluding_identifires_title': self.exclud_id_title_col_name_text_edit.toPlainText()
+                         }
+        with open(os.path.join('config', 'dir_win_config.json'), 'w') as config_file:
+            config_file.write(json.dumps(dir_win_config))
 
     def load_config(self):
         """
-        Заполнение редактируемых элементов окна составления словаря значениями из сохраненного конфигурационного файла config\\dict_win_config.json, если он есть
+        Заполнение редактируемых элементов окна составления справочника значениями из сохраненного конфигурационного файла config\\dir_win_config.json, если он есть
         """
         try:
-            with open(os.path.join('config', 'dict_win_config.json')) as config_file:
-                dict_win_config = json.load(config_file)
-            self.dict_name_line_edit.setText(dict_win_config['dict_name'])
-            self.dict_file_path_line_edit.setText(dict_win_config['data_path'])
-            self.dict_sheet_name_line_edit.setText(dict_win_config['dictinary_sheet_name'])
-            self.brand_rightholders_title_col_name_text_edit.setText(dict_win_config['brand_rightholders_title'])
-            self.main_id_title_col_name_text_edit.setText(dict_win_config['main_identifires_title'])
-            self.main_limit_id_title_col_name_text_edit.setText(dict_win_config['main_limit_identifires_title'])
-            self.add_limit_id_title_col_name_text_edit.setText(dict_win_config['add_limit_identifires_title'])
-            self.exclud_id_title_col_name_text_edit.setText(dict_win_config['excluding_identifires_title'])
+            with open(os.path.join('config', 'dir_win_config.json')) as config_file:
+                dir_win_config = json.load(config_file)
+            self.dir_name_line_edit.setText(dir_win_config['dir_name'])
+            self.dir_file_path_line_edit.setText(dir_win_config['data_path'])
+            self.dir_sheet_name_line_edit.setText(dir_win_config['directory_sheet_name'])
+            self.brand_rightholders_title_col_name_text_edit.setText(dir_win_config['brand_rightholders_title'])
+            self.main_id_title_col_name_text_edit.setText(dir_win_config['main_identifires_title'])
+            self.main_limit_id_title_col_name_text_edit.setText(dir_win_config['main_limit_identifires_title'])
+            self.add_limit_id_title_col_name_text_edit.setText(dir_win_config['add_limit_identifires_title'])
+            self.exclud_id_title_col_name_text_edit.setText(dir_win_config['excluding_identifires_title'])
         except:
             print()
 
@@ -629,33 +631,35 @@ class DictionaryWindow(Window):
         :return: составляет и сохраняет новый справочника в saves
         """
         try:
+            # Сообщение о составления справочника
+            self.set_message('Начато составление справочника')
             # Начало отсчета таймера
             self.proc_begin_time = datetime.now()
             # Сбор данных из GUI
             #   Название составляемого справочника
-            dict_name = self.dict_name_line_edit.text()
+            dir_name = self.dir_name_line_edit.text()
             #   Путь к excel файлу, с информацией для справочника
-            data_path = self.dict_file_path_line_edit.text()
-            #   Название книги содержащей информацию для справочника, если строка пустая, то берется первая книга в заданном файле
-            dictinary_sheet_name = self.dict_sheet_name_line_edit.text()
-            #   Название столбца обозначений категорий, если строка пустая, то берется первый столбец в заданной книге заданного файла
+            data_path = self.dir_file_path_line_edit.text()
+            #   Название листа содержащей информацию для справочника, если строка пустая, то берется первый лист в заданном файле
+            directory_sheet_name = self.dir_sheet_name_line_edit.text()
+            #   Название столбца обозначений категорий, если строка пустая, то берется первый столбец в заданном листе заданного файла
             brand_rightholders_title = self.brand_rightholders_title_col_name_text_edit.toPlainText()
-            #   Название столбца основных идентификаторов, если строка пустая, то берется второй столбец в заданной книге заданного файла
+            #   Название столбца основных идентификаторов, если строка пустая, то берется второй столбец в заданном листе заданного файла
             main_identifires_title = self.main_id_title_col_name_text_edit.toPlainText()
-            #   Название столбца основных ограничивающих идентификаторов, если строка пустая, то берется третий столбец в заданной книге заданного файла
+            #   Название столбца основных ограничивающих идентификаторов, если строка пустая, то берется третий столбец в заданном листе заданного файла
             main_limit_identifires_title = self.main_limit_id_title_col_name_text_edit.toPlainText()
-            #   Название столбца дополнительных ограничивающих идентификаторов, если строка пустая, то берется четвертый столбец в заданной книге заданного файла
+            #   Название столбца дополнительных ограничивающих идентификаторов, если строка пустая, то берется четвертый столбец в заданном листе заданного файла
             add_limit_identifires_title = self.add_limit_id_title_col_name_text_edit.toPlainText()
-            #   Название столбца исключающих идентификаторов, если строка пустая, то берется пятый столбец в заданной книге заданного файла
+            #   Название столбца исключающих идентификаторов, если строка пустая, то берется пятый столбец в заданном листе заданного файла
             excluding_identifires_title = self.exclud_id_title_col_name_text_edit.toPlainText()
             
             # Чтение данных из файла data_path
             with pd.ExcelFile(data_path) as reader:
-                # Замена пустого значения страницы со справочником а название первой странице в файле
-                if len(dictinary_sheet_name) == 0:
-                    dictinary_sheet_name = reader.sheet_names[0]
-                # Чтение книги excel файла с названием dictinary_sheet_name, содержащей обозначения брендов и их идентификаторы
-                features_df = pd.read_excel(reader, sheet_name=dictinary_sheet_name)
+                # Замена пустого значения листа со справочником а название первого листа в файле
+                if len(directory_sheet_name) == 0:
+                    directory_sheet_name = reader.sheet_names[0]
+                # Чтение листа excel файла с названием directory_sheet_name, содержащей обозначения категорий и их идентификаторы
+                features_df = pd.read_excel(reader, sheet_name=directory_sheet_name)
                 # Замена значений пустых строк на соответствующие значения, если необходимо
                 if len(brand_rightholders_title) == 0:
                     brand_rightholders_title = features_df.columns[0]
@@ -669,32 +673,32 @@ class DictionaryWindow(Window):
                     excluding_identifires_title = features_df.columns[4]
                     
             # Сообщение о начале составления справочника
-            self.set_message(self.countdown() + '\tСоставление справочника ' + '\"' + dict_name + '\"')
+            self.set_message(self.countdown() + '\tСоставление справочника ' + '\"' + dir_name + '\"')
             self.set_message('\tпо файлу \"' + data_path + '\";')
-            self.set_message('\tпо книге \"' + dictinary_sheet_name + '\";')
+            self.set_message('\tпо листу \"' + directory_sheet_name + '\";')
             self.set_message('\tстолбец категорий:\t\"' + brand_rightholders_title + '\";')
             self.set_message('\tстолбец глав. ид-ов:\t\"' + main_identifires_title + '\";')
             self.set_message('\tстолбец глав. огран. ид-ов:\t\"' + main_limit_identifires_title + '\";')
             self.set_message('\tстолбец доп. огран. ид-ов:\t\"' + add_limit_identifires_title + '\";')
             self.set_message('\tстолбец искл. ид-ов:\t\"' + excluding_identifires_title + '\"')
             # Создание объекта справочника
-            brend_dict = BrendDictionary(features_df,
+            category_dir = CategoryDirectory(features_df,
                                          brand_rightholders_title,
                                          main_identifires_title,
                                          main_limit_identifires_title,
                                          add_limit_identifires_title,
                                          excluding_identifires_title)
             # Сообщение о завершении составлния спраочника
-            self.set_message(self.countdown() + '\tСправочник \"' + dict_name + '\" составлен')
+            self.set_message(self.countdown() + '\tСправочник \"' + dir_name + '\" составлен')
             # Сообщение о начале сохранения справочника
-            self.set_message(self.countdown() + '\tСохранение справочника \"' + dict_name + '\"')
+            self.set_message(self.countdown() + '\tСохранение справочника \"' + dir_name + '\"')
             # Сохранение справочника
-            brend_dict.save(dict_name)
+            category_dir.save(dir_name)
             # Обновление списка справочников
-            self.proc_wind.find_dictionaries()
+            self.proc_wind.find_directories()
             # Сообщение о завершении составлении справочника и его сохранение, вывод количества строк
-            self.set_message(self.countdown() + '\tСправочник \"' + dict_name + '\" составлен и сохранен;')
-            self.set_message('\tкол-во категорий в справочнике:\t' + str(len(brend_dict)))
+            self.set_message(self.countdown() + '\tСправочник \"' + dir_name + '\" составлен и сохранен;')
+            self.set_message('\tкол-во категорий в справочнике:\t' + str(len(category_dir)))
             # Запись содержания строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             self.save_config()
         except Exception as e:
@@ -708,12 +712,12 @@ class AppWindow(QWidget):
 
         # Создание вкладок приложения
         proc_wind_tab = ProcessingWindow()
-        dict_wind_tab = DictionaryWindow(proc_wind_tab)
+        dir_wind_tab = DirectoryWindow(proc_wind_tab)
 
         # Добавление владок в приложение
         self.tabs = QTabWidget()
         self.tabs.addTab(proc_wind_tab, "Вычисления")
-        self.tabs.addTab(dict_wind_tab, "Справочник")
+        self.tabs.addTab(dir_wind_tab, "Справочник")
 
         # Создание макета приложения
         self.layout = QVBoxLayout(self)

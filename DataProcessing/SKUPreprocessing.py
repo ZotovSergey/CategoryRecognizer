@@ -28,7 +28,7 @@ class SKUReaderCSV:
         """
         self.data_path = data_path
         self.sku_col = sku_col_name
-        # Если подается пустое название столбца с SKU, то используется первая строка заданного файла, заданной страницы
+        # Если подается пустое название столбца с SKU, то используется первая строка заданного файла, заданного листа
         if len(sku_col_name) == 0 or sku_col_name is None:
             self.sku_col = 0
         else:
@@ -71,22 +71,22 @@ class SKUReaderExcel:
         """
         :param data_path: путь к читаемому файлу csv, txt, excel, содержащему SKU для обработки (str)
         :param sku_col_name: имя столбца файла по пути data_path, содержащему SKU для обработки (str)
-        :param sku_sheet_name: название страницы читаемого excel-файла, содержащего SKU (str)
+        :param sku_sheet_name: название листа читаемого excel-файла, содержащего SKU (str)
         """
         # Чтение excel-файла по заданному пути
         ex_file = pd.ExcelFile(data_path)
 
-        # Если подается пустое название читаемой страницы excel-файла, то используется первая страница заданного файла
+        # Если подается пустое название читаемого листа excel-файла, то используется первый лист заданного файла
         if len(sku_sheet_name) == 0 or sku_sheet_name is None:
             self.sku_sheet_name = ex_file.sheet_names[0]
         else:
             self.sku_sheet_name = sku_sheet_name
-        # Если подается пустое название столбца с SKU, то используется первая строка заданного файла, заданной страницы
+        # Если подается пустое название столбца с SKU, то используется первая строка заданного файла, заданного листа
         if len(sku_col_name) == 0 or sku_col_name is None:
             sku_col = 0
         else:
             sku_col = sku_col_name
-        # Строк SKU из заданного файла, заданной страницы, заданной строки
+        # Строк SKU из заданного файла, заданного листа, заданной строки
         self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str').fillna('')
     
     def __len__(self):
@@ -102,7 +102,7 @@ class SKUReaderExcel:
         :param start: номер строки, с которой начинается читаемый батч, не считая заголовка (str)
         :param rows_count: количество строк, читаемых из файла начиная со start (str)
 
-        :return: self.batch_len строк из excel-файла self.file_path, страницы self.sheet_name, колонки self.rows_col_name
+        :return: self.batch_len строк из excel-файла self.file_path, листа self.sheet_name, колонки self.rows_col_name
         """
         return preprocess_sku_df(self.data[start : start + rows_count])
     
