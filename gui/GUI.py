@@ -729,7 +729,11 @@ class AppWindow(QWidget):
 
         # Название окна и логотип
         self.setWindowTitle('Category Recognizer')
-        self.setWindowIcon(QIcon('NTech_logo.png'))
+        try:
+            self.setWindowIcon(QIcon('NTech_logo.png'))
+        except:
+            print()
+        
         
 
 def run_app():
