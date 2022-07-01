@@ -159,18 +159,18 @@ class CategoryRecognizer:
 
         return temp_files_path_list
 
-    def process_data(self, output_data_path, gui_window):
+    def process_data(self, output_data_path, gui_tab):
         """
         Распознование категорий по SKU из ридера self.sku_reader, в соотетствии справочнику self.category_directory, по батчам, с применением self.cpu_count потоков одновременно и
         запись полученных результатов в csv-файл output_data_path
 
         :param output_data_path: путь к csv-файлу, в который будут записываться результаты распознования категорий
-        :param gui_window: графический интерфейс, из которого запускаются вычисления
+        :param gui_tab: графический интерфейс, из которого запускаются вычисления
 
         :return: в csv-файл output_data_path записываются категории, определенными по SKU из ридера self.sku_reader, а также идентификаторы определяющую полученную категорию, если self.get_dec_id
         """
         # Обнуление progress bar
-        gui_window.pbar.setValue(0)
+        gui_tab.pbar.setValue(0)
 
         # Количество обработанных батчей
         batches_done_num = 0
@@ -178,7 +178,7 @@ class CategoryRecognizer:
         # Определение количества строк в обрабатываемом файле
         rows_count = len(self.sku_reader)
         #   Сообщение о количестве строк в обрабатываемом файле
-        set_msg_in_gui('Обрабатываемый файл содержит ' + str(rows_count), gui_window)
+        gui_tab.app_win.info_win.set_massage_with_countdown('Обрабатываемый файл содержит ' + str(rows_count))
         
         # Определение оптиального количества батчей
         opt_batches_num = int(np.ceil(int(np.ceil(rows_count / self.max_batch_len)) / self.cpu_count) * self.cpu_count)
@@ -187,7 +187,7 @@ class CategoryRecognizer:
         self.batch_len = int(np.ceil(rows_count / opt_batches_num))
 
         #   Сообщение о создании обработанного файла
-        set_msg_in_gui('Обрабатываемый файл делится на ' + str(opt_batches_num) + ' батчей, приблизительно, по ' + str(self.batch_len) + ' строк', gui_window)
+        gui_tab.app_win.info_win.set_massage_with_countdown('Обрабатываемый файл делится на ' + str(opt_batches_num) + ' батчей, приблизительно, по ' + str(self.batch_len) + ' строк')
 
         # Создание пустого обработанного файла, в который будут записываться результаты распознавания по батчам
         output_file_header = pd.DataFrame({'SKU': [], 'Возвращаемое значение': []})
@@ -197,7 +197,7 @@ class CategoryRecognizer:
             output_file_header = pd.concat([output_file_header, dec_id_header], axis=1)
         output_file_header.to_csv(output_data_path, sep='\t', index=False)
         #   Сообщение о создании обработанного файла
-        set_msg_in_gui('Обработанный файл \"' + output_data_path + '\" создан', gui_window)
+        gui_tab.app_win.info_win.set_massage_with_countdown('Обработанный файл \"' + output_data_path + '\" создан')
 
         # Вычисление по батчам
         #   Создание генератора, берущего по self.cpu_count первых строк батчей, то есть столько, сколько будут загружаться и сохраняться одновременно
@@ -206,26 +206,26 @@ class CategoryRecognizer:
         for batches_starts_list in batch_starts_gen:
             # Загрузка и предобработка self.cpu_count батчей, вывод предобработанных строк SKU и исходных
             #   Сообщение о начале загрузки и предобработке батчей
-            set_msg_in_gui('Загружаются и предобрабатываются батчи №' + ', '.join(map(str, list(np.arange(batches_done_num + 1, batches_done_num + len(batches_starts_list) + 1)))), gui_window)
+            gui_tab.app_win.info_win.set_massage_with_countdown('Загружаются и предобрабатываются батчи №' + ', '.join(map(str, list(np.arange(batches_done_num + 1, batches_done_num + len(batches_starts_list) + 1)))))
             #   Процесс загрузки
             rows_batches_list, sku_batches_list = self.read_and_preprocess_pd_file_batches_pool(batches_starts_list)
             #   Сообщение о завершении загрузки и предобработке батчей
-            set_msg_in_gui('Батчи загружены и предобработаны', gui_window)
+            gui_tab.app_win.info_win.set_massage_with_countdown('Батчи загружены и предобработаны')
             
             # Обработка каждого батча
             proc_data_batches_list = []
             for i, rows_batch in enumerate(rows_batches_list):
                 # Сообщение о начале обработки батча
-                set_msg_in_gui('Обрабатывается батч №' + str(batches_done_num + 1 + i), gui_window)
+                gui_tab.app_win.info_win.set_massage_with_countdown('Обрабатывается батч №' + str(batches_done_num + 1 + i))
                 # Процесс обработки
                 proc_data_batches_list.append(self.proc_func(rows_batch))
                 # Сообщение о окончании обработки батча
-                set_msg_in_gui('Батч обработан', gui_window)
+                gui_tab.app_win.info_win.set_massage_with_countdown('Батч обработан')
             
             # Добавление обработанных данных в обработанный файл
             #   Запись временных файлов обработанных данных, полученных из каждого батча
             #       Сообщение о начале записи обработанных данных
-            set_msg_in_gui('Сохранение полученных данных', gui_window)
+            gui_tab.app_win.info_win.set_massage_with_countdown('Сохранение полученных данных')
             #       Состаление фреймов с исходящими данными
             #           Столбцы с исходными SKU
             df_list = [{'SKU': sku_batches_list[i]} for i in range(len(sku_batches_list))]
@@ -255,24 +255,11 @@ class CategoryRecognizer:
             #       Обновление количества обработанных батчей
             batches_done_num += len(batches_starts_list)
             #       Сообщение о завершении записи обработанных данных
-            set_msg_in_gui('(' + str(batches_done_num) + '/' + str(opt_batches_num) + ') ' + 'Полученные данные сохранены в обработанный файл', gui_window)
+            gui_tab.app_win.info_win.set_massage_with_countdown('(' + str(batches_done_num) + '/' + str(opt_batches_num) + ') ' + 'Полученные данные сохранены в обработанный файл')
 
             # Обновление project bar
-            if gui_window is not None:
-                pbar_value = int(batches_done_num / opt_batches_num * 100)
-                gui_window.pbar.setValue(pbar_value)
-                QApplication.processEvents()
+            pbar_value = int(batches_done_num / opt_batches_num * 100)
+            gui_tab.pbar.setValue(pbar_value)
+            QApplication.processEvents()
         # Удаление дериктории temp
         os.rmdir('temp')
-
-def set_msg_in_gui(msg, gui_window):
-        """
-        Вывод сообщения msg в окно хода вычислений в графическом интерфейсе self.set_message,если он был добавлен, вместе с отсетом времени от начала вычислений
-
-        :param msg: Сообщение для вывода в окно графического интерфеса gui_window
-        :param gui_window: графический интерфейс, из которого запускаются вычисления
-
-        :return: Выводит отсчет времени от начала вычислений, сообщение msg в окне "Ход обработки" графического интерфейса gui_window
-        """
-        if gui_window is not None:
-            gui_window.set_message(gui_window.countdown() + '\t' + msg)

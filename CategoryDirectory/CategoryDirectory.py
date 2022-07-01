@@ -342,7 +342,7 @@ class CategoryDirectory:
         """
         :return: сохраняет этот справочник в директорию saves; если директория saves отсутствует, создает ее
         """
-        if os.path.exists('saves'):
-                os.rmdir('saves')
+        if not os.path.exists('saves'):
+            os.makedirs('saves')
         with open(os.path.join('saves', dir_name), 'wb') as file:
             pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)

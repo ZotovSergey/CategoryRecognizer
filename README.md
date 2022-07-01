@@ -1,12 +1,14 @@
 # BrendRecognizing
 Программа, распознающая бренд/категорию по краткому неструктурированному описанию, используя словарь идентификаторов
 ## CategoryDirectory
-python setup.py build_ext --inplace
+python CategoryDirectory\setup.py build_ext --inplace
 ## exe-приложение CategoryRecognizer.exe
-### Создание exe-приложения CategoryRecognizer.exe с помощью pyinstaller
-Для создания exe-приложения CategoryRecognizer.exe используется пакет pyinstaller.
-Чтобы создать exe-приложние CategoryRecognizer.exe необходимо из директории проекта набрать команду:
-pyinstaller --onefile --noconsole --icon=NTech_logo.ico -F CategoryRecognizer.py
+### Создание exe-приложения CategoryRecognizer.exe с помощью cx_freeze
+Для создания exe-приложения CategoryRecognizer.exe используется пакет cx_freeze.
+Параметры создания exe-приложения CategoryRecognizer.exe написны в файле setup.py
+Чтобы создать exe-приложение CategoryRecognizer.exe необходимо из директории проекта набрать команду:
+python setup.py build
+Приложение будет создно в директории build
 ### Файлы и деректории, необходимые для работы exe-приложения CategoryRecognizer.exe
 CategoryRecognizer.exe использует некоторые файлы и директории для своей корректной работы:
 * NTech_logo.png - иконка приложения; если файл отсутствует в директории приложения, то будет использоваться иконка по-умолчанию
