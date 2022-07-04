@@ -523,10 +523,10 @@ class DirectoryTab(AppGUI):
             self.dir_file_path_line_edit.setText(dir_tab_config['data_path'])
             self.dir_sheet_name_line_edit.setText(dir_tab_config['directory_sheet_name'])
             self.brand_rightholders_title_col_name_text_edit.setText(dir_tab_config['brand_rightholders_title'])
-            self.main_id_title_col_name_text_edit.setText(dir_tab_config['main_identifires_title'])
-            self.main_limit_id_title_col_name_text_edit.setText(dir_tab_config['main_limit_identifires_title'])
-            self.add_limit_id_title_col_name_text_edit.setText(dir_tab_config['add_limit_identifires_title'])
-            self.exclud_id_title_col_name_text_edit.setText(dir_tab_config['excluding_identifires_title'])
+            self.main_id_title_col_name_text_edit.setText(dir_tab_config['main_identifiers_title'])
+            self.main_limit_id_title_col_name_text_edit.setText(dir_tab_config['main_limit_identifiers_title'])
+            self.add_limit_id_title_col_name_text_edit.setText(dir_tab_config['add_limit_identifiers_title'])
+            self.exclud_id_title_col_name_text_edit.setText(dir_tab_config['excluding_identifiers_title'])
         except:
             print()
     
@@ -540,10 +540,10 @@ class DirectoryTab(AppGUI):
                           'data_path': self.dir_file_path_line_edit.text(),
                           'directory_sheet_name': self.dir_sheet_name_line_edit.text(),
                           'brand_rightholders_title': self.brand_rightholders_title_col_name_text_edit.toPlainText(),
-                          'main_identifires_title': self.main_id_title_col_name_text_edit.toPlainText(),
-                          'main_limit_identifires_title': self.main_limit_id_title_col_name_text_edit.toPlainText(),
-                          'add_limit_identifires_title': self.add_limit_id_title_col_name_text_edit.toPlainText(),
-                          'excluding_identifires_title': self.exclud_id_title_col_name_text_edit.toPlainText()
+                          'main_identifiers_title': self.main_id_title_col_name_text_edit.toPlainText(),
+                          'main_limit_identifiers_title': self.main_limit_id_title_col_name_text_edit.toPlainText(),
+                          'add_limit_identifiers_title': self.add_limit_id_title_col_name_text_edit.toPlainText(),
+                          'excluding_identifiers_title': self.exclud_id_title_col_name_text_edit.toPlainText()
                          }
         if not os.path.exists('config'):
             os.makedirs('config')
@@ -577,13 +577,13 @@ class DirectoryTab(AppGUI):
             #   Название столбца обозначений категорий, если строка пустая, то берется первый столбец в заданном листе заданного файла
             brand_rightholders_title = self.brand_rightholders_title_col_name_text_edit.toPlainText()
             #   Название столбца основных идентификаторов, если строка пустая, то берется второй столбец в заданном листе заданного файла
-            main_identifires_title = self.main_id_title_col_name_text_edit.toPlainText()
+            main_identifiers_title = self.main_id_title_col_name_text_edit.toPlainText()
             #   Название столбца основных ограничивающих идентификаторов, если строка пустая, то берется третий столбец в заданном листе заданного файла
-            main_limit_identifires_title = self.main_limit_id_title_col_name_text_edit.toPlainText()
+            main_limit_identifiers_title = self.main_limit_id_title_col_name_text_edit.toPlainText()
             #   Название столбца дополнительных ограничивающих идентификаторов, если строка пустая, то берется четвертый столбец в заданном листе заданного файла
-            add_limit_identifires_title = self.add_limit_id_title_col_name_text_edit.toPlainText()
+            add_limit_identifiers_title = self.add_limit_id_title_col_name_text_edit.toPlainText()
             #   Название столбца исключающих идентификаторов, если строка пустая, то берется пятый столбец в заданном листе заданного файла
-            excluding_identifires_title = self.exclud_id_title_col_name_text_edit.toPlainText()
+            excluding_identifiers_title = self.exclud_id_title_col_name_text_edit.toPlainText()
 
             # Чтение данных из файла data_path
             with pd.ExcelFile(data_path) as reader:
@@ -595,31 +595,31 @@ class DirectoryTab(AppGUI):
                 # Замена значений пустых строк на соответствующие значения, если необходимо
                 if len(brand_rightholders_title) == 0:
                     brand_rightholders_title = features_df.columns[0]
-                if len(main_identifires_title) == 0:
-                    main_identifires_title = features_df.columns[1]
-                if len(main_limit_identifires_title) == 0:
-                    main_limit_identifires_title = features_df.columns[2]
-                if len(add_limit_identifires_title) == 0:
-                    add_limit_identifires_title = features_df.columns[3]
-                if len(excluding_identifires_title) == 0:
-                    excluding_identifires_title = features_df.columns[4]
+                if len(main_identifiers_title) == 0:
+                    main_identifiers_title = features_df.columns[1]
+                if len(main_limit_identifiers_title) == 0:
+                    main_limit_identifiers_title = features_df.columns[2]
+                if len(add_limit_identifiers_title) == 0:
+                    add_limit_identifiers_title = features_df.columns[3]
+                if len(excluding_identifiers_title) == 0:
+                    excluding_identifiers_title = features_df.columns[4]
                     
             # Сообщение о начале составления справочника
             self.app_win.info_win.set_massage_with_countdown('Составление справочника ' + '\"' + dir_name + '\"')
             self.app_win.info_win.set_massage_with_tab('по файлу \"' + data_path + '\";')
             self.app_win.info_win.set_massage_with_tab('по листу \"' + directory_sheet_name + '\";')
             self.app_win.info_win.set_massage_with_tab('столбец категорий:\t\"' + brand_rightholders_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец глав. ид-ов:\t\"' + main_identifires_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец глав. огран. ид-ов:\t\"' + main_limit_identifires_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец доп. огран. ид-ов:\t\"' + add_limit_identifires_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец искл. ид-ов:\t\"' + excluding_identifires_title + '\"')
+            self.app_win.info_win.set_massage_with_tab('столбец глав. ид-ов:\t\"' + main_identifiers_title + '\";')
+            self.app_win.info_win.set_massage_with_tab('столбец глав. огран. ид-ов:\t\"' + main_limit_identifiers_title + '\";')
+            self.app_win.info_win.set_massage_with_tab('столбец доп. огран. ид-ов:\t\"' + add_limit_identifiers_title + '\";')
+            self.app_win.info_win.set_massage_with_tab('столбец искл. ид-ов:\t\"' + excluding_identifiers_title + '\"')
             # Создание объекта справочника
             category_dir = CategoryDirectory(features_df,
                                          brand_rightholders_title,
-                                         main_identifires_title,
-                                         main_limit_identifires_title,
-                                         add_limit_identifires_title,
-                                         excluding_identifires_title)
+                                         main_identifiers_title,
+                                         main_limit_identifiers_title,
+                                         add_limit_identifiers_title,
+                                         excluding_identifiers_title)
             # Сообщение о завершении составлния спраочника
             self.app_win.info_win.set_massage_with_countdown('Справочник \"' + dir_name + '\" составлен')
             # Сообщение о начале сохранения справочника

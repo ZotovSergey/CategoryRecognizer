@@ -1,4 +1,4 @@
-# BrendRecognizing
+# CategoryRecognizing
 Программа, распознающая бренд/категорию по краткому неструктурированному описанию, используя словарь идентификаторов
 ## CategoryDirectory
 python CategoryDirectory\setup.py build_ext --inplace
