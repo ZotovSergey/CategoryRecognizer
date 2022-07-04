@@ -1182,37 +1182,37 @@ static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_sku_row[] = "sku_row";
-static const char __pyx_k_main_identifires[] = "main_identifires";
+static const char __pyx_k_main_identifiers[] = "main_identifiers";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_add_limit_identifires[] = "add_limit_identifires";
+static const char __pyx_k_add_limit_identifiers[] = "add_limit_identifiers";
 static const char __pyx_k_category_rightholders[] = "category_rightholders";
-static const char __pyx_k_excluding_identifires[] = "excluding_identifires";
-static const char __pyx_k_main_limit_identifires[] = "main_limit_identifires";
+static const char __pyx_k_excluding_identifiers[] = "excluding_identifiers";
+static const char __pyx_k_main_limit_identifiers[] = "main_limit_identifiers";
 static PyObject *__pyx_kp_s_;
-static PyObject *__pyx_n_s_add_limit_identifires;
+static PyObject *__pyx_n_s_add_limit_identifiers;
 static PyObject *__pyx_n_s_category_rightholders;
 static PyObject *__pyx_n_s_cline_in_traceback;
-static PyObject *__pyx_n_s_excluding_identifires;
+static PyObject *__pyx_n_s_excluding_identifiers;
 static PyObject *__pyx_n_s_main;
-static PyObject *__pyx_n_s_main_identifires;
-static PyObject *__pyx_n_s_main_limit_identifires;
+static PyObject *__pyx_n_s_main_identifiers;
+static PyObject *__pyx_n_s_main_limit_identifiers;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_sku_row;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_17identify_category_identify_category(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires); /* proto */
-static PyObject *__pyx_pf_17identify_category_2identify_category_and_dec_id(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires); /* proto */
+static PyObject *__pyx_pf_17identify_category_identify_category(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifiers, PyObject *__pyx_v_main_limit_identifiers, PyObject *__pyx_v_add_limit_identifiers, PyObject *__pyx_v_excluding_identifiers); /* proto */
+static PyObject *__pyx_pf_17identify_category_2identify_category_and_dec_id(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifiers, PyObject *__pyx_v_main_limit_identifiers, PyObject *__pyx_v_add_limit_identifiers, PyObject *__pyx_v_excluding_identifiers); /* proto */
 static PyObject *__pyx_tuple__2;
 /* Late includes */
 
 /* "identify_category.pyx":1
- * cpdef str identify_category(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):             # <<<<<<<<<<<<<<
+ * cpdef str identify_category(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):             # <<<<<<<<<<<<<<
  *     """
  *         SKU.
  */
 
 static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifiers, PyObject *__pyx_v_main_limit_identifiers, PyObject *__pyx_v_add_limit_identifiers, PyObject *__pyx_v_excluding_identifiers, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_v_i;
   int __pyx_v_limit_id_found;
   int __pyx_v_excluding_id_found;
@@ -1247,7 +1247,7 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
  *     #
  *     for i in range(len(category_rightholders)):             # <<<<<<<<<<<<<<
  *         #
- *         for main_id in main_identifires[i]:
+ *         for main_id in main_identifiers[i]:
  */
   if (unlikely(__pyx_v_category_rightholders == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
@@ -1261,15 +1261,15 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
     /* "identify_category.pyx":25
  *     for i in range(len(category_rightholders)):
  *         #
- *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
+ *         for main_id in main_identifiers[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
  *             #
  */
-    if (unlikely(__pyx_v_main_identifires == Py_None)) {
+    if (unlikely(__pyx_v_main_identifiers == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(0, 25, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
       __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5); __pyx_t_6 = 0;
@@ -1331,22 +1331,22 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
  *                 #  "  "
  *                 limit_id_found = False             # <<<<<<<<<<<<<<
  *                 #
- *                 if len(main_limit_identifires[i]) > 0:
+ *                 if len(main_limit_identifiers[i]) > 0:
  */
         __pyx_v_limit_id_found = 0;
 
         /* "identify_category.pyx":32
  *                 limit_id_found = False
  *                 #
- *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                 if len(main_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:
+ *                     for main_limit_id in main_limit_identifiers[i]:
  */
-        if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
+        if (unlikely(__pyx_v_main_limit_identifiers == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           __PYX_ERR(0, 32, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __pyx_t_10 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_10 == ((Py_ssize_t)-1))) __PYX_ERR(0, 32, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -1354,17 +1354,17 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
         if (__pyx_t_9) {
 
           /* "identify_category.pyx":34
- *                 if len(main_limit_identifires[i]) > 0:
+ *                 if len(main_limit_identifiers[i]) > 0:
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for main_limit_id in main_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
  *                         #
  */
-          if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
+          if (unlikely(__pyx_v_main_limit_identifiers == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
             __PYX_ERR(0, 34, __pyx_L1_error)
           }
-          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
             __pyx_t_11 = __pyx_t_4; __Pyx_INCREF(__pyx_t_11); __pyx_t_10 = 0;
@@ -1415,7 +1415,7 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
  *                         #
  *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  */
             __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 37, __pyx_L1_error)
             __pyx_t_8 = (__pyx_t_9 != 0);
@@ -1424,15 +1424,15 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
               /* "identify_category.pyx":39
  *                         if main_limit_id in sku_row:
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                             if len(add_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:
+ *                                 for add_limit_id in add_limit_identifiers[i]:
  */
-              if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
+              if (unlikely(__pyx_v_add_limit_identifiers == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
                 __PYX_ERR(0, 39, __pyx_L1_error)
               }
-              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 39, __pyx_L1_error)
+              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 39, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
               __pyx_t_13 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 39, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -1440,17 +1440,17 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
               if (__pyx_t_8) {
 
                 /* "identify_category.pyx":41
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                                 for add_limit_id in add_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
  *                                     #
  */
-                if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
+                if (unlikely(__pyx_v_add_limit_identifiers == Py_None)) {
                   PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
                   __PYX_ERR(0, 41, __pyx_L1_error)
                 }
-                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
                   __pyx_t_14 = __pyx_t_4; __Pyx_INCREF(__pyx_t_14); __pyx_t_13 = 0;
@@ -1535,9 +1535,9 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
                   }
 
                   /* "identify_category.pyx":41
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                                 for add_limit_id in add_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
  *                                     #
  */
@@ -1548,9 +1548,9 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
                 /* "identify_category.pyx":39
  *                         if main_limit_id in sku_row:
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                             if len(add_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:
+ *                                 for add_limit_id in add_limit_identifiers[i]:
  */
                 goto __pyx_L12;
               }
@@ -1572,7 +1572,7 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
  *                         #
  *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  */
             }
 
@@ -1605,9 +1605,9 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
             }
 
             /* "identify_category.pyx":34
- *                 if len(main_limit_identifires[i]) > 0:
+ *                 if len(main_limit_identifiers[i]) > 0:
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for main_limit_id in main_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
  *                         #
  */
@@ -1618,9 +1618,9 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
           /* "identify_category.pyx":32
  *                 limit_id_found = False
  *                 #
- *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                 if len(main_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:
+ *                     for main_limit_id in main_limit_identifiers[i]:
  */
           goto __pyx_L8;
         }
@@ -1652,22 +1652,22 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
  *                     #  "  "
  *                     excluding_id_found = False             # <<<<<<<<<<<<<<
  *                     #
- *                     for excluding_id in excluding_identifires[i]:
+ *                     for excluding_id in excluding_identifiers[i]:
  */
           __pyx_v_excluding_id_found = 0;
 
           /* "identify_category.pyx":64
  *                     excluding_id_found = False
  *                     #
- *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for excluding_id in excluding_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
  *                         #
  */
-          if (unlikely(__pyx_v_excluding_identifires == Py_None)) {
+          if (unlikely(__pyx_v_excluding_identifiers == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
             __PYX_ERR(0, 64, __pyx_L1_error)
           }
-          __pyx_t_11 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 64, __pyx_L1_error)
+          __pyx_t_11 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 64, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_11);
           if (likely(PyList_CheckExact(__pyx_t_11)) || PyTuple_CheckExact(__pyx_t_11)) {
             __pyx_t_14 = __pyx_t_11; __Pyx_INCREF(__pyx_t_14); __pyx_t_10 = 0;
@@ -1754,7 +1754,7 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
             /* "identify_category.pyx":64
  *                     excluding_id_found = False
  *                     #
- *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for excluding_id in excluding_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
  *                         #
  */
@@ -1830,7 +1830,7 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
       /* "identify_category.pyx":25
  *     for i in range(len(category_rightholders)):
  *         #
- *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
+ *         for main_id in main_identifiers[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
  *             #
  */
@@ -1843,7 +1843,7 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
  *     #       ,
  *     return ''             # <<<<<<<<<<<<<<
  * 
- * cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):
+ * cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_kp_s_);
@@ -1851,7 +1851,7 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
   goto __pyx_L0;
 
   /* "identify_category.pyx":1
- * cpdef str identify_category(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):             # <<<<<<<<<<<<<<
+ * cpdef str identify_category(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):             # <<<<<<<<<<<<<<
  *     """
  *         SKU.
  */
@@ -1876,14 +1876,14 @@ static PyObject *__pyx_f_17identify_category_identify_category(PyObject *__pyx_v
 
 /* Python wrapper */
 static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_17identify_category_identify_category[] = "\n    \320\236\320\277\321\200\320\265\320\264\320\265\320\273\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\277\320\276 \320\267\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU.\n    \320\227\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\320\265\321\202 \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\270\320\267 category_rightholders, \320\265\321\201\320\273\320\270 \320\276\320\275 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_identifires,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifires, \320\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320""\264\320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifires, \320\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\275\320\265 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\275\320\270 \320\276\320\264\320\275\320\276\320\263\320\276 \320\270\320\267 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 excluding_identifires.\n    \320\240\320\260\320\261\320\276\321\202\320\260\320\265\321\202 \320\260\320\275\320\260\320\273\320\276\320\263\320\270\321\207\320\275\320\276 \321\204\321\203\320\275\320\272\321\206\320\270\320\270 identify_category, \320\275\320\276 \320\261\321\213\321\201\321\202\321\200\320\265\320\265 \320\267\320\260\321\201\321\207\320\265\321\202 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\320\275\320\270\321\217 Cython\n\n    :param sku_row: SKU, \320\277\320\276 \320\272\320\276\321\202\320\276\321\200\320\276\320\274\321\203 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\321\217\320\265\321\202\321\201\321\217 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217\n    :param category_rightholders: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\320\261\320\276\320\267\320\275\320\260""\321\207\320\265\320\275\320\270\320\271 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270\n    :param main_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param main_limit_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param add_limit_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param excluding_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :return: \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\270\320\267 category_rightholders \320\270\320\273\320\270 \320\277\321\203\321\201\321\202\320\260\321\217 \321\201\321\202\321\200\320\276\320\272\320\260, \320\265\321\201\320\273\320\270 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217 \320\275\320\265 \321\203\320\264\320\260\320\265\321\202\321\201""\321\217 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\270\321\202\321\214\n    ";
+static char __pyx_doc_17identify_category_identify_category[] = "\n    \320\236\320\277\321\200\320\265\320\264\320\265\320\273\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\277\320\276 \320\267\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU.\n    \320\227\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\320\265\321\202 \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\270\320\267 category_rightholders, \320\265\321\201\320\273\320\270 \320\276\320\275 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_identifiers,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifiers, \320\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320""\264\320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifiers, \320\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\275\320\265 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\275\320\270 \320\276\320\264\320\275\320\276\320\263\320\276 \320\270\320\267 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 excluding_identifiers.\n    \320\240\320\260\320\261\320\276\321\202\320\260\320\265\321\202 \320\260\320\275\320\260\320\273\320\276\320\263\320\270\321\207\320\275\320\276 \321\204\321\203\320\275\320\272\321\206\320\270\320\270 identify_category, \320\275\320\276 \320\261\321\213\321\201\321\202\321\200\320\265\320\265 \320\267\320\260\321\201\321\207\320\265\321\202 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\320\275\320\270\321\217 Cython\n\n    :param sku_row: SKU, \320\277\320\276 \320\272\320\276\321\202\320\276\321\200\320\276\320\274\321\203 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\321\217\320\265\321\202\321\201\321\217 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217\n    :param category_rightholders: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\320\261\320\276\320\267\320\275\320\260""\321\207\320\265\320\275\320\270\320\271 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270\n    :param main_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param main_limit_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param add_limit_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param excluding_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :return: \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\270\320\267 category_rightholders \320\270\320\273\320\270 \320\277\321\203\321\201\321\202\320\260\321\217 \321\201\321\202\321\200\320\276\320\272\320\260, \320\265\321\201\320\273\320\270 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217 \320\275\320\265 \321\203\320\264\320\260\320\265\321\202\321\201""\321\217 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\270\321\202\321\214\n    ";
 static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_sku_row = 0;
   PyObject *__pyx_v_category_rightholders = 0;
-  PyObject *__pyx_v_main_identifires = 0;
-  PyObject *__pyx_v_main_limit_identifires = 0;
-  PyObject *__pyx_v_add_limit_identifires = 0;
-  PyObject *__pyx_v_excluding_identifires = 0;
+  PyObject *__pyx_v_main_identifiers = 0;
+  PyObject *__pyx_v_main_limit_identifiers = 0;
+  PyObject *__pyx_v_add_limit_identifiers = 0;
+  PyObject *__pyx_v_excluding_identifiers = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1891,7 +1891,7 @@ static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("identify_category (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sku_row,&__pyx_n_s_category_rightholders,&__pyx_n_s_main_identifires,&__pyx_n_s_main_limit_identifires,&__pyx_n_s_add_limit_identifires,&__pyx_n_s_excluding_identifires,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sku_row,&__pyx_n_s_category_rightholders,&__pyx_n_s_main_identifiers,&__pyx_n_s_main_limit_identifiers,&__pyx_n_s_add_limit_identifiers,&__pyx_n_s_excluding_identifiers,0};
     PyObject* values[6] = {0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -1925,25 +1925,25 @@ static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_identifires)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category", 1, 6, 6, 2); __PYX_ERR(0, 1, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_limit_identifires)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_limit_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category", 1, 6, 6, 3); __PYX_ERR(0, 1, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_add_limit_identifires)) != 0)) kw_args--;
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_add_limit_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category", 1, 6, 6, 4); __PYX_ERR(0, 1, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_excluding_identifires)) != 0)) kw_args--;
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_excluding_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category", 1, 6, 6, 5); __PYX_ERR(0, 1, __pyx_L3_error)
         }
@@ -1963,10 +1963,10 @@ static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx
     }
     __pyx_v_sku_row = ((PyObject*)values[0]);
     __pyx_v_category_rightholders = ((PyObject*)values[1]);
-    __pyx_v_main_identifires = ((PyObject*)values[2]);
-    __pyx_v_main_limit_identifires = ((PyObject*)values[3]);
-    __pyx_v_add_limit_identifires = ((PyObject*)values[4]);
-    __pyx_v_excluding_identifires = ((PyObject*)values[5]);
+    __pyx_v_main_identifiers = ((PyObject*)values[2]);
+    __pyx_v_main_limit_identifiers = ((PyObject*)values[3]);
+    __pyx_v_add_limit_identifiers = ((PyObject*)values[4]);
+    __pyx_v_excluding_identifiers = ((PyObject*)values[5]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -1978,11 +1978,11 @@ static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sku_row), (&PyString_Type), 1, "sku_row", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_category_rightholders), (&PyList_Type), 1, "category_rightholders", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_identifires), (&PyList_Type), 1, "main_identifires", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_limit_identifires), (&PyList_Type), 1, "main_limit_identifires", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_add_limit_identifires), (&PyList_Type), 1, "add_limit_identifires", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_excluding_identifires), (&PyList_Type), 1, "excluding_identifires", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_r = __pyx_pf_17identify_category_identify_category(__pyx_self, __pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifires, __pyx_v_main_limit_identifires, __pyx_v_add_limit_identifires, __pyx_v_excluding_identifires);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_identifiers), (&PyList_Type), 1, "main_identifiers", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_limit_identifiers), (&PyList_Type), 1, "main_limit_identifiers", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_add_limit_identifiers), (&PyList_Type), 1, "add_limit_identifiers", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_excluding_identifiers), (&PyList_Type), 1, "excluding_identifiers", 1))) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_r = __pyx_pf_17identify_category_identify_category(__pyx_self, __pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifiers, __pyx_v_main_limit_identifiers, __pyx_v_add_limit_identifiers, __pyx_v_excluding_identifiers);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1993,7 +1993,7 @@ static PyObject *__pyx_pw_17identify_category_1identify_category(PyObject *__pyx
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_17identify_category_identify_category(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires) {
+static PyObject *__pyx_pf_17identify_category_identify_category(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifiers, PyObject *__pyx_v_main_limit_identifiers, PyObject *__pyx_v_add_limit_identifiers, PyObject *__pyx_v_excluding_identifiers) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2002,7 +2002,7 @@ static PyObject *__pyx_pf_17identify_category_identify_category(CYTHON_UNUSED Py
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("identify_category", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_17identify_category_identify_category(__pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifires, __pyx_v_main_limit_identifires, __pyx_v_add_limit_identifires, __pyx_v_excluding_identifires, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_17identify_category_identify_category(__pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifiers, __pyx_v_main_limit_identifiers, __pyx_v_add_limit_identifiers, __pyx_v_excluding_identifiers, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2022,13 +2022,13 @@ static PyObject *__pyx_pf_17identify_category_identify_category(CYTHON_UNUSED Py
 /* "identify_category.pyx":78
  *     return ''
  * 
- * cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):             # <<<<<<<<<<<<<<
+ * cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):             # <<<<<<<<<<<<<<
  *     """
  *         SKU,    ,      ,   SKU
  */
 
 static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifiers, PyObject *__pyx_v_main_limit_identifiers, PyObject *__pyx_v_add_limit_identifiers, PyObject *__pyx_v_excluding_identifiers, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_v_i;
   int __pyx_v_limit_id_found;
   int __pyx_v_excluding_id_found;
@@ -2065,7 +2065,7 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
  *     #
  *     for i in range(len(category_rightholders)):             # <<<<<<<<<<<<<<
  *         #
- *         for main_id in main_identifires[i]:
+ *         for main_id in main_identifiers[i]:
  */
   if (unlikely(__pyx_v_category_rightholders == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
@@ -2079,15 +2079,15 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
     /* "identify_category.pyx":105
  *     for i in range(len(category_rightholders)):
  *         #
- *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
+ *         for main_id in main_identifiers[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
  *             #
  */
-    if (unlikely(__pyx_v_main_identifires == Py_None)) {
+    if (unlikely(__pyx_v_main_identifiers == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(0, 105, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
       __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5); __pyx_t_6 = 0;
@@ -2149,22 +2149,22 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
  *                 #  "  "
  *                 limit_id_found = False             # <<<<<<<<<<<<<<
  *                 #
- *                 if len(main_limit_identifires[i]) > 0:
+ *                 if len(main_limit_identifiers[i]) > 0:
  */
         __pyx_v_limit_id_found = 0;
 
         /* "identify_category.pyx":112
  *                 limit_id_found = False
  *                 #
- *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                 if len(main_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:
+ *                     for main_limit_id in main_limit_identifiers[i]:
  */
-        if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
+        if (unlikely(__pyx_v_main_limit_identifiers == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           __PYX_ERR(0, 112, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 112, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 112, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __pyx_t_10 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_10 == ((Py_ssize_t)-1))) __PYX_ERR(0, 112, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -2172,17 +2172,17 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
         if (__pyx_t_9) {
 
           /* "identify_category.pyx":114
- *                 if len(main_limit_identifires[i]) > 0:
+ *                 if len(main_limit_identifiers[i]) > 0:
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for main_limit_id in main_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
  *                         #
  */
-          if (unlikely(__pyx_v_main_limit_identifires == Py_None)) {
+          if (unlikely(__pyx_v_main_limit_identifiers == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
             __PYX_ERR(0, 114, __pyx_L1_error)
           }
-          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_main_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
             __pyx_t_11 = __pyx_t_4; __Pyx_INCREF(__pyx_t_11); __pyx_t_10 = 0;
@@ -2233,7 +2233,7 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
  *                         #
  *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  */
             __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_main_limit_id, __pyx_v_sku_row, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
             __pyx_t_8 = (__pyx_t_9 != 0);
@@ -2242,15 +2242,15 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
               /* "identify_category.pyx":119
  *                         if main_limit_id in sku_row:
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                             if len(add_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:
+ *                                 for add_limit_id in add_limit_identifiers[i]:
  */
-              if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
+              if (unlikely(__pyx_v_add_limit_identifiers == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
                 __PYX_ERR(0, 119, __pyx_L1_error)
               }
-              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+              __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
               __pyx_t_13 = PyObject_Length(__pyx_t_4); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 119, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -2258,17 +2258,17 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
               if (__pyx_t_8) {
 
                 /* "identify_category.pyx":121
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                                 for add_limit_id in add_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
  *                                     #
  */
-                if (unlikely(__pyx_v_add_limit_identifires == Py_None)) {
+                if (unlikely(__pyx_v_add_limit_identifiers == Py_None)) {
                   PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
                   __PYX_ERR(0, 121, __pyx_L1_error)
                 }
-                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
+                __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_add_limit_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
                   __pyx_t_14 = __pyx_t_4; __Pyx_INCREF(__pyx_t_14); __pyx_t_13 = 0;
@@ -2373,9 +2373,9 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
                   }
 
                   /* "identify_category.pyx":121
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                                 for add_limit_id in add_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                                     # ,        SKU
  *                                     #
  */
@@ -2386,9 +2386,9 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
                 /* "identify_category.pyx":119
  *                         if main_limit_id in sku_row:
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                             if len(add_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                                 #
- *                                 for add_limit_id in add_limit_identifires[i]:
+ *                                 for add_limit_id in add_limit_identifiers[i]:
  */
                 goto __pyx_L12;
               }
@@ -2430,7 +2430,7 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
  *                         #
  *                         if main_limit_id in sku_row:             # <<<<<<<<<<<<<<
  *                             #
- *                             if len(add_limit_identifires[i]) > 0:
+ *                             if len(add_limit_identifiers[i]) > 0:
  */
             }
 
@@ -2463,9 +2463,9 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
             }
 
             /* "identify_category.pyx":114
- *                 if len(main_limit_identifires[i]) > 0:
+ *                 if len(main_limit_identifiers[i]) > 0:
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for main_limit_id in main_limit_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,        SKU
  *                         #
  */
@@ -2476,9 +2476,9 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
           /* "identify_category.pyx":112
  *                 limit_id_found = False
  *                 #
- *                 if len(main_limit_identifires[i]) > 0:             # <<<<<<<<<<<<<<
+ *                 if len(main_limit_identifiers[i]) > 0:             # <<<<<<<<<<<<<<
  *                     #
- *                     for main_limit_id in main_limit_identifires[i]:
+ *                     for main_limit_id in main_limit_identifiers[i]:
  */
           goto __pyx_L8;
         }
@@ -2530,22 +2530,22 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
  *                     #  "  "
  *                     excluding_id_found = False             # <<<<<<<<<<<<<<
  *                     #
- *                     for excluding_id in excluding_identifires[i]:
+ *                     for excluding_id in excluding_identifiers[i]:
  */
           __pyx_v_excluding_id_found = 0;
 
           /* "identify_category.pyx":153
  *                     excluding_id_found = False
  *                     #
- *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for excluding_id in excluding_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
  *                         #
  */
-          if (unlikely(__pyx_v_excluding_identifires == Py_None)) {
+          if (unlikely(__pyx_v_excluding_identifiers == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
             __PYX_ERR(0, 153, __pyx_L1_error)
           }
-          __pyx_t_11 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifires, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 153, __pyx_L1_error)
+          __pyx_t_11 = __Pyx_GetItemInt_List(__pyx_v_excluding_identifiers, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 153, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_11);
           if (likely(PyList_CheckExact(__pyx_t_11)) || PyTuple_CheckExact(__pyx_t_11)) {
             __pyx_t_14 = __pyx_t_11; __Pyx_INCREF(__pyx_t_14); __pyx_t_10 = 0;
@@ -2632,7 +2632,7 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
             /* "identify_category.pyx":153
  *                     excluding_id_found = False
  *                     #
- *                     for excluding_id in excluding_identifires[i]:             # <<<<<<<<<<<<<<
+ *                     for excluding_id in excluding_identifiers[i]:             # <<<<<<<<<<<<<<
  *                         # ,       SKU
  *                         #
  */
@@ -2723,7 +2723,7 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
       /* "identify_category.pyx":105
  *     for i in range(len(category_rightholders)):
  *         #
- *         for main_id in main_identifires[i]:             # <<<<<<<<<<<<<<
+ *         for main_id in main_identifiers[i]:             # <<<<<<<<<<<<<<
  *             # ,       SKU
  *             #
  */
@@ -2744,7 +2744,7 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
   /* "identify_category.pyx":78
  *     return ''
  * 
- * cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):             # <<<<<<<<<<<<<<
+ * cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):             # <<<<<<<<<<<<<<
  *     """
  *         SKU,    ,      ,   SKU
  */
@@ -2771,14 +2771,14 @@ static PyObject *__pyx_f_17identify_category_identify_category_and_dec_id(PyObje
 
 /* Python wrapper */
 static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_17identify_category_2identify_category_and_dec_id[] = "\n    \320\236\320\277\321\200\320\265\320\264\320\265\320\273\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\277\320\276 \320\267\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU, \320\260 \321\202\320\260\320\272\320\266\320\265 \320\262\321\213\320\262\320\276\320\264 \320\263\320\273\320\260\320\262\320\275\320\276\320\263\320\276, \320\263\320\273\320\260\320\262\320\275\320\276\320\263\320\276 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\265\320\263\320\276 \320\270 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\320\276\320\263\320\276 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\265\320\263\320\276 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262, \320\275\320\260\320\271\320\264\320\265\320\275\320\275\321\213\321\205 \320\262 SKU \320\270 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\270\320\262\321\210\320\270\321\205\n    \320\277\321\200\320\265\320\264\320\260\320\264\320\273\320\265\320\266\320\275\320\276\321\201\321\202\321\214 \320\262\321\213\320\261\321\200\320\260\320\275\320\275\320\276\320\271 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270, \320\265\321\201\320\273\320\270 \320\276\320\275\320\270 \320\265\321\201\321\202\321\214, \320\260 \320\270\320\275\320\260\321\207\320\265 \320\277\321\203\321\201\321\202\321\203\321\216 \321\201\321\202\321\200\320\276\320\272\321\203.\n    \320\227\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\320\265\321\202 \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\260\321\202\320\265\320\263\320\276\321""\200\320\270\320\270 \320\270\320\267 category_rightholders, \320\265\321\201\320\273\320\270 \320\276\320\275 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 self.main_identifires,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifires, \320\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifires, \320""\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\275\320\265 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\275\320\270 \320\276\320\264\320\275\320\276\320\263\320\276 \320\270\320\267 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 excluding_identifires.\n    \320\240\320\260\320\261\320\276\321\202\320\260\320\265\321\202 \320\260\320\275\320\260\320\273\320\276\320\263\320\270\321\207\320\275\320\276 \321\204\321\203\320\275\320\272\321\206\320\270\320\270 identify_category_and_dec_id, \320\275\320\276 \320\261\321\213\321\201\321\202\321\200\320\265\320\265 \320\267\320\260\321\201\321\207\320\265\321\202 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\320\275\320\270\321\217 Cython\n\n    :param sku_row: SKU, \320\277\320\276 \320\272\320\276\321\202\320\276\321\200\320\276\320\274\321\203 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\321\217\320\265\321\202\321\201\321\217 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217\n    :param category_rightholders: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\271 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\271\n    :param main_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param main_limit_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321""\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param add_limit_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param excluding_identifires: \321\201\320\277\320\270\321\201\320\276\320\272 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param sku_row: SKU, \320\277\320\276 \320\272\320\276\321\202\320\276\321\200\320\276\320\274\321\203 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\321\217\320\265\321\202\321\201\321\217 \320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217\n    :return: \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\270\320\267 category_rightholders \320\270\320\273\320\270 \320\277\321\203\321\201\321\202\320\260\321\217 \321\201\321\202\321\200\320\276\320\272\320\260, \320\265\321\201\320\273\320\270 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217 \320\275\320\265 \321\203\320\264\320\260\320\265\321\202\321\201\321\217 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\270\321\202\321\214; \320\263\320\273\320\260\320\262\320\275\321\213\320\271 \321\200\320\265\321\210\320\260\321\216\321\211\320\270\320\271 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276""\321\200; \320\263\320\273\320\260\320\262\320\275\321\213\320\271 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\320\271 \321\200\320\265\321\210\320\260\321\216\321\211\320\270\320\271\n    \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200; \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\320\271 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\320\271 \321\200\320\265\321\210\320\260\321\216\321\211\320\270\320\271 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\n    ";
+static char __pyx_doc_17identify_category_2identify_category_and_dec_id[] = "\n    \320\236\320\277\321\200\320\265\320\264\320\265\320\273\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\277\320\276 \320\267\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU, \320\260 \321\202\320\260\320\272\320\266\320\265 \320\262\321\213\320\262\320\276\320\264 \320\263\320\273\320\260\320\262\320\275\320\276\320\263\320\276, \320\263\320\273\320\260\320\262\320\275\320\276\320\263\320\276 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\265\320\263\320\276 \320\270 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\320\276\320\263\320\276 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\265\320\263\320\276 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262, \320\275\320\260\320\271\320\264\320\265\320\275\320\275\321\213\321\205 \320\262 SKU \320\270 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\270\320\262\321\210\320\270\321\205\n    \320\277\321\200\320\265\320\264\320\260\320\264\320\273\320\265\320\266\320\275\320\276\321\201\321\202\321\214 \320\262\321\213\320\261\321\200\320\260\320\275\320\275\320\276\320\271 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270, \320\265\321\201\320\273\320\270 \320\276\320\275\320\270 \320\265\321\201\321\202\321\214, \320\260 \320\270\320\275\320\260\321\207\320\265 \320\277\321\203\321\201\321\202\321\203\321\216 \321\201\321\202\321\200\320\276\320\272\321\203.\n    \320\227\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 SKU \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\320\265\321\202 \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\260\321\202\320\265\320\263\320\276\321""\200\320\270\320\270 \320\270\320\267 category_rightholders, \320\265\321\201\320\273\320\270 \320\276\320\275 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 self.main_identifiers,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifiers, \320\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\276\320\264\320\270\320\275 \320\270\320\267 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\265\320\263\320\276 \321\201\320\277\320\270\321\201\320\272\320\260 \320\270\320\267 main_limit_identifiers, \320""\265\321\201\320\273\320\270 \320\276\320\275 \320\275\320\265 \320\277\321\203\321\201\321\202\320\276\320\271,\n    \320\275\320\265 \321\201\320\276\320\264\320\265\321\200\320\266\320\270\321\202 \320\275\320\270 \320\276\320\264\320\275\320\276\320\263\320\276 \320\270\320\267 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262 \320\270\320\267 excluding_identifiers.\n    \320\240\320\260\320\261\320\276\321\202\320\260\320\265\321\202 \320\260\320\275\320\260\320\273\320\276\320\263\320\270\321\207\320\275\320\276 \321\204\321\203\320\275\320\272\321\206\320\270\320\270 identify_category_and_dec_id, \320\275\320\276 \320\261\321\213\321\201\321\202\321\200\320\265\320\265 \320\267\320\260\321\201\321\207\320\265\321\202 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\320\275\320\270\321\217 Cython\n\n    :param sku_row: SKU, \320\277\320\276 \320\272\320\276\321\202\320\276\321\200\320\276\320\274\321\203 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\321\217\320\265\321\202\321\201\321\217 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217\n    :param category_rightholders: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\271 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\271\n    :param main_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param main_limit_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\276\321\201\320\275\320\276\320\262\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321""\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param add_limit_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\321\205 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param excluding_identifiers: \321\201\320\277\320\270\321\201\320\276\320\272 \320\270\321\201\320\272\320\273\321\216\321\207\320\260\321\216\321\211\320\270\321\205 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\320\276\320\262\n    :param sku_row: SKU, \320\277\320\276 \320\272\320\276\321\202\320\276\321\200\320\276\320\274\321\203 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\321\217\320\265\321\202\321\201\321\217 \320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217\n    :return: \320\276\320\261\320\276\320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\320\270 \320\270\320\267 category_rightholders \320\270\320\273\320\270 \320\277\321\203\321\201\321\202\320\260\321\217 \321\201\321\202\321\200\320\276\320\272\320\260, \320\265\321\201\320\273\320\270 \320\272\320\260\321\202\320\265\320\263\320\276\321\200\320\270\321\217 \320\275\320\265 \321\203\320\264\320\260\320\265\321\202\321\201\321\217 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\270\321\202\321\214; \320\263\320\273\320\260\320\262\320\275\321\213\320\271 \321\200\320\265\321\210\320\260\321\216\321\211\320\270\320\271 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276""\321\200; \320\263\320\273\320\260\320\262\320\275\321\213\320\271 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\320\271 \321\200\320\265\321\210\320\260\321\216\321\211\320\270\320\271\n    \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200; \320\264\320\276\320\277\320\276\320\273\320\275\320\270\321\202\320\265\320\273\321\214\320\275\321\213\320\271 \320\276\320\263\321\200\320\260\320\275\320\270\321\207\320\270\320\262\320\260\321\216\321\211\320\270\320\271 \321\200\320\265\321\210\320\260\321\216\321\211\320\270\320\271 \320\270\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200\n    ";
 static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_sku_row = 0;
   PyObject *__pyx_v_category_rightholders = 0;
-  PyObject *__pyx_v_main_identifires = 0;
-  PyObject *__pyx_v_main_limit_identifires = 0;
-  PyObject *__pyx_v_add_limit_identifires = 0;
-  PyObject *__pyx_v_excluding_identifires = 0;
+  PyObject *__pyx_v_main_identifiers = 0;
+  PyObject *__pyx_v_main_limit_identifiers = 0;
+  PyObject *__pyx_v_add_limit_identifiers = 0;
+  PyObject *__pyx_v_excluding_identifiers = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2786,7 +2786,7 @@ static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyOb
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("identify_category_and_dec_id (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sku_row,&__pyx_n_s_category_rightholders,&__pyx_n_s_main_identifires,&__pyx_n_s_main_limit_identifires,&__pyx_n_s_add_limit_identifires,&__pyx_n_s_excluding_identifires,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sku_row,&__pyx_n_s_category_rightholders,&__pyx_n_s_main_identifiers,&__pyx_n_s_main_limit_identifiers,&__pyx_n_s_add_limit_identifiers,&__pyx_n_s_excluding_identifiers,0};
     PyObject* values[6] = {0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -2820,25 +2820,25 @@ static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyOb
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_identifires)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category_and_dec_id", 1, 6, 6, 2); __PYX_ERR(0, 78, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_limit_identifires)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_main_limit_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category_and_dec_id", 1, 6, 6, 3); __PYX_ERR(0, 78, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_add_limit_identifires)) != 0)) kw_args--;
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_add_limit_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category_and_dec_id", 1, 6, 6, 4); __PYX_ERR(0, 78, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_excluding_identifires)) != 0)) kw_args--;
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_excluding_identifiers)) != 0)) kw_args--;
         else {
           __Pyx_RaiseArgtupleInvalid("identify_category_and_dec_id", 1, 6, 6, 5); __PYX_ERR(0, 78, __pyx_L3_error)
         }
@@ -2858,10 +2858,10 @@ static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyOb
     }
     __pyx_v_sku_row = ((PyObject*)values[0]);
     __pyx_v_category_rightholders = ((PyObject*)values[1]);
-    __pyx_v_main_identifires = ((PyObject*)values[2]);
-    __pyx_v_main_limit_identifires = ((PyObject*)values[3]);
-    __pyx_v_add_limit_identifires = ((PyObject*)values[4]);
-    __pyx_v_excluding_identifires = ((PyObject*)values[5]);
+    __pyx_v_main_identifiers = ((PyObject*)values[2]);
+    __pyx_v_main_limit_identifiers = ((PyObject*)values[3]);
+    __pyx_v_add_limit_identifiers = ((PyObject*)values[4]);
+    __pyx_v_excluding_identifiers = ((PyObject*)values[5]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -2873,11 +2873,11 @@ static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyOb
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sku_row), (&PyString_Type), 1, "sku_row", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_category_rightholders), (&PyList_Type), 1, "category_rightholders", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_identifires), (&PyList_Type), 1, "main_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_limit_identifires), (&PyList_Type), 1, "main_limit_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_add_limit_identifires), (&PyList_Type), 1, "add_limit_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_excluding_identifires), (&PyList_Type), 1, "excluding_identifires", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
-  __pyx_r = __pyx_pf_17identify_category_2identify_category_and_dec_id(__pyx_self, __pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifires, __pyx_v_main_limit_identifires, __pyx_v_add_limit_identifires, __pyx_v_excluding_identifires);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_identifiers), (&PyList_Type), 1, "main_identifiers", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_main_limit_identifiers), (&PyList_Type), 1, "main_limit_identifiers", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_add_limit_identifiers), (&PyList_Type), 1, "add_limit_identifiers", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_excluding_identifiers), (&PyList_Type), 1, "excluding_identifiers", 1))) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_r = __pyx_pf_17identify_category_2identify_category_and_dec_id(__pyx_self, __pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifiers, __pyx_v_main_limit_identifiers, __pyx_v_add_limit_identifiers, __pyx_v_excluding_identifiers);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2888,7 +2888,7 @@ static PyObject *__pyx_pw_17identify_category_3identify_category_and_dec_id(PyOb
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_17identify_category_2identify_category_and_dec_id(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifires, PyObject *__pyx_v_main_limit_identifires, PyObject *__pyx_v_add_limit_identifires, PyObject *__pyx_v_excluding_identifires) {
+static PyObject *__pyx_pf_17identify_category_2identify_category_and_dec_id(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sku_row, PyObject *__pyx_v_category_rightholders, PyObject *__pyx_v_main_identifiers, PyObject *__pyx_v_main_limit_identifiers, PyObject *__pyx_v_add_limit_identifiers, PyObject *__pyx_v_excluding_identifiers) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2897,7 +2897,7 @@ static PyObject *__pyx_pf_17identify_category_2identify_category_and_dec_id(CYTH
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("identify_category_and_dec_id", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_17identify_category_identify_category_and_dec_id(__pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifires, __pyx_v_main_limit_identifires, __pyx_v_add_limit_identifires, __pyx_v_excluding_identifires, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_17identify_category_identify_category_and_dec_id(__pyx_v_sku_row, __pyx_v_category_rightholders, __pyx_v_main_identifiers, __pyx_v_main_limit_identifiers, __pyx_v_add_limit_identifiers, __pyx_v_excluding_identifiers, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2963,13 +2963,13 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_, __pyx_k_, sizeof(__pyx_k_), 0, 0, 1, 0},
-  {&__pyx_n_s_add_limit_identifires, __pyx_k_add_limit_identifires, sizeof(__pyx_k_add_limit_identifires), 0, 0, 1, 1},
+  {&__pyx_n_s_add_limit_identifiers, __pyx_k_add_limit_identifiers, sizeof(__pyx_k_add_limit_identifiers), 0, 0, 1, 1},
   {&__pyx_n_s_category_rightholders, __pyx_k_category_rightholders, sizeof(__pyx_k_category_rightholders), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
-  {&__pyx_n_s_excluding_identifires, __pyx_k_excluding_identifires, sizeof(__pyx_k_excluding_identifires), 0, 0, 1, 1},
+  {&__pyx_n_s_excluding_identifiers, __pyx_k_excluding_identifiers, sizeof(__pyx_k_excluding_identifiers), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-  {&__pyx_n_s_main_identifires, __pyx_k_main_identifires, sizeof(__pyx_k_main_identifires), 0, 0, 1, 1},
-  {&__pyx_n_s_main_limit_identifires, __pyx_k_main_limit_identifires, sizeof(__pyx_k_main_limit_identifires), 0, 0, 1, 1},
+  {&__pyx_n_s_main_identifiers, __pyx_k_main_identifiers, sizeof(__pyx_k_main_identifiers), 0, 0, 1, 1},
+  {&__pyx_n_s_main_limit_identifiers, __pyx_k_main_limit_identifiers, sizeof(__pyx_k_main_limit_identifiers), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_sku_row, __pyx_k_sku_row, sizeof(__pyx_k_sku_row), 0, 0, 1, 1},
@@ -3274,7 +3274,7 @@ if (!__Pyx_RefNanny) {
   #endif
 
   /* "identify_category.pyx":1
- * cpdef str identify_category(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):             # <<<<<<<<<<<<<<
+ * cpdef str identify_category(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):             # <<<<<<<<<<<<<<
  *     """
  *         SKU.
  */

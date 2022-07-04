@@ -50,28 +50,28 @@ class CategoryDirectory:
     """
     def __init__(self, features_df,
                  category_rightholders_title='ЗНАЧЕНИЕ К ВОЗВРАЩЕНИЮ',
-                 main_identifires_title='ОСНОВНЫЕ ИДЕНТИФИКАТОРЫ КАТЕГОРИИ\n (СОДЕРЖИТ)',
-                 main_limit_identifires_title='ОСНОВНЫЕ ОГРАНИЧИВАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (И ОБЯЗАТЕЛЬНО СОДЕРЖИТ)',
-                 add_limit_identifires_title='ДОПОЛНИТЕЛЬНЫЕ ОГРАНИЧИВАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (И ТАКЖЕ ОБЯЗАТЕЛЬНО СОДЕРЖИТ)',
-                 excluding_identifires_title='ИСКЛЮЧАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (НЕ СОДЕРЖИТ)'):
+                 main_identifiers_title='ОСНОВНЫЕ ИДЕНТИФИКАТОРЫ КАТЕГОРИИ\n (СОДЕРЖИТ)',
+                 main_limit_identifiers_title='ОСНОВНЫЕ ОГРАНИЧИВАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (И ОБЯЗАТЕЛЬНО СОДЕРЖИТ)',
+                 add_limit_identifiers_title='ДОПОЛНИТЕЛЬНЫЕ ОГРАНИЧИВАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (И ТАКЖЕ ОБЯЗАТЕЛЬНО СОДЕРЖИТ)',
+                 excluding_identifiers_title='ИСКЛЮЧАЮЩИЕ ИДЕНТИФИКАТОРЫ\n (НЕ СОДЕРЖИТ)'):
         """
         :param features_df: справочник в формате pandas.DataFrame с заголовком
         :param category_rightholders_title: название колонки, содержащей обозначения категорий
-        :param main_identifires_title: название колонки, содержащей основные идентификаторы
-        :param main_limit_identifires_title: название колонки, содержащей основные ограничивающие идентификаторы
-        :param add_limit_identifires_title: название колонки, содержащей дополнительные ограничивающие идентификаторы
-        :param excluding_identifires_title: название колонки, содержащей исключающие идентификаторы
+        :param main_identifiers_title: название колонки, содержащей основные идентификаторы
+        :param main_limit_identifiers_title: название колонки, содержащей основные ограничивающие идентификаторы
+        :param add_limit_identifiers_title: название колонки, содержащей дополнительные ограничивающие идентификаторы
+        :param excluding_identifiers_title: название колонки, содержащей исключающие идентификаторы
         """
         # Запись списка обозначений категории из features_df
         self.category_rightholders = list(features_df[category_rightholders_title])
         # Предобработка и запись списка основных идентификаторов из features_df
-        self.main_identifires = features_preprocessing(features_df[main_identifires_title])
+        self.main_identifiers = features_preprocessing(features_df[main_identifiers_title])
         # Предобработка и запись списка основных ограничивающих идентификаторов из features_df
-        self.main_limit_identifires = features_preprocessing(features_df[main_limit_identifires_title])
+        self.main_limit_identifiers = features_preprocessing(features_df[main_limit_identifiers_title])
         # Предобработка и запись списка дополнительных ограничивающих идентификаторов из features_df
-        self.add_limit_identifires = features_preprocessing(features_df[add_limit_identifires_title])
+        self.add_limit_identifiers = features_preprocessing(features_df[add_limit_identifiers_title])
         # Предобработка и запись списка исключающих идентификаторов из features_df
-        self.excluding_identifires = features_preprocessing(features_df[excluding_identifires_title])
+        self.excluding_identifiers = features_preprocessing(features_df[excluding_identifiers_title])
     
     def __len__(self):
         """
@@ -82,10 +82,10 @@ class CategoryDirectory:
     def identify_category(self, sku_row):
         """
         Определение категории по заданному SKU.
-        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifires,
-        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        один из дополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        не содержит ни одного из исключающих идентификаторов из self.excluding_identifires.
+        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifiers,
+        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        один из дополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        не содержит ни одного из исключающих идентификаторов из self.excluding_identifiers.
         Работает аналогично функции identify_category_cython, но медленнее
 
         :param sku_row: SKU, по которому определяется категория
@@ -94,23 +94,23 @@ class CategoryDirectory:
         # Перебор всех категорий из справочника
         for i in range(len(self.category_rightholders)):
             # Перебор основых идентификаторов
-            for main_id in self.main_identifires[i]:
+            for main_id in self.main_identifiers[i]:
                 # Определение, содержатся ли основной идентификатор в заданном SKU
                 #   Если основной идентификатор найден
                 if main_id in sku_row:
                     # Флаг "ограничивающие идентификаторы найдены"
                     limit_id_found = False
                     # Если есть основные ограничивающие идентификаторы
-                    if len(self.main_limit_identifires[i]) > 0:
+                    if len(self.main_limit_identifiers[i]) > 0:
                         # Перебор основных ограничивающих идентификаторов
-                        for main_limit_id in self.main_limit_identifires[i]:
+                        for main_limit_id in self.main_limit_identifiers[i]:
                             # Определение, содержатся ли основной ограничивающий идентификатор в заданном SKU
                             #   Если основной ограничивающий идентификатор найден
                             if main_limit_id in sku_row:
                                 # Если есть дополнительные ограничивающие идентификаторы
-                                if len(self.add_limit_identifires[i]) > 0:
+                                if len(self.add_limit_identifiers[i]) > 0:
                                     # Перебор дополнительных ограничивающих идентификаторов
-                                    for add_limit_id in self.add_limit_identifires[i]:
+                                    for add_limit_id in self.add_limit_identifiers[i]:
                                         # Определение, содержатся ли дополнительный ограничивающий идентификатор в заданном SKU
                                         #    Если дополнительный ограничивающий идентификатор найден
                                         if add_limit_id in sku_row:
@@ -133,7 +133,7 @@ class CategoryDirectory:
                         # Флаг "исключающий дентификатор найден"
                         excluding_id_found = False
                         # Перебор исключающих идентификаторов
-                        for excluding_id in self.excluding_identifires[i]:
+                        for excluding_id in self.excluding_identifiers[i]:
                             # Определение, содержатся ли исключающий идентификатор в заданном SKU
                             #   Если исключающий идентификатор найден
                             if excluding_id in sku_row:
@@ -151,10 +151,10 @@ class CategoryDirectory:
         """
         Определение категории по заданному SKU, а также вывод главного, главного ограничивающего и дополнительного ограничивающего идентификаторов, найденных в SKU и определивших
         предадлежность выбранной категории, если они есть, а иначе пустую строку.
-        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifires,
-        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        один из дополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        не содержит ни одного из исключающих идентификаторов из self.excluding_identifires.
+        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifiers,
+        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        один из дополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        не содержит ни одного из исключающих идентификаторов из self.excluding_identifiers.
         Работает аналогично функции identify_category_and_dec_id, но медленнее
 
         :param sku_row: SKU, по которому определяется категория
@@ -164,23 +164,23 @@ class CategoryDirectory:
         # Перебор всех категорий из справочника
         for i in range(len(self.cat_rightholders)):
             # Перебор основых идентификаторов
-            for main_id in self.main_identifires[i]:
+            for main_id in self.main_identifiers[i]:
                 # Определение, содержатся ли основной идентификатор в заданном SKU
                 #   Если основной идентификатор найден
                 if main_id in sku_row:
                     # Флаг "ограничивающие идентификаторы найдены"
                     limit_id_found = False
                     # Если есть основные ограничивающие идентификаторы
-                    if len(self.main_limit_identifires[i]) > 0:
+                    if len(self.main_limit_identifiers[i]) > 0:
                         # Перебор основных ограничивающих идентификаторов
-                        for main_limit_id in self.main_limit_identifires[i]:
+                        for main_limit_id in self.main_limit_identifiers[i]:
                             # Определение, содержатся ли основной ограничивающий идентификатор в заданном SKU
                             #   Если основной ограничивающий идентификатор найден
                             if main_limit_id in sku_row:
                                 # Если есть дополнительные ограничивающие идентификаторы
-                                if len(self.add_limit_identifires[i]) > 0:
+                                if len(self.add_limit_identifiers[i]) > 0:
                                     # Перебор дополнительных ограничивающих идентификаторов
-                                    for add_limit_id in self.add_limit_identifires[i]:
+                                    for add_limit_id in self.add_limit_identifiers[i]:
                                         # Определение, содержатся ли дополнительный ограничивающий идентификатор в заданном SKU
                                         #   Если дополнительный ограничивающий идентификатор найден
                                         if add_limit_id in sku_row:
@@ -212,7 +212,7 @@ class CategoryDirectory:
                         # Флаг "исключающий дентификатор найден"
                         excluding_id_found = False
                         # Перебор исключающих идентификаторов
-                        for excluding_id in self.excluding_identifires[i]:
+                        for excluding_id in self.excluding_identifiers[i]:
                             # Определение, содержатся ли исключающий идентификатор в заданном SKU
                             #   Если исключающий идентификатор найден
                             if excluding_id in sku_row:
@@ -234,7 +234,7 @@ class CategoryDirectory:
         # Перебор всех категорий из справочника
         for i in range(len(self.category_rightholders)):
             # Перебор основых идентификаторов
-            for main_id in self.main_identifires[i]:
+            for main_id in self.main_identifiers[i]:
                 # Определение, содержатся ли основной идентификатор в заданном SKU
                 #   Если основной идентификатор найден
                 if main_id in sku_row:
@@ -244,17 +244,17 @@ class CategoryDirectory:
                     # Флаг "исключающий дентификатор найден"
                     excluding_id_found = False
                     # Если есть основные ограничивающие идентификаторы
-                    if len(self.main_limit_identifires[i]) > 0:
+                    if len(self.main_limit_identifiers[i]) > 0:
                         # Перебор основных ограничивающих идентификаторов
-                        for main_limit_id in self.main_limit_identifires[i]:
+                        for main_limit_id in self.main_limit_identifiers[i]:
                             # Определение, содержатся ли основной ограничивающий идентификатор в заданном SKU
                             #   Если основной ограничивающий идентификатор найден
                             if main_limit_id in sku_row:
                                 main_limit_id_found = True
                                 # Если есть дополнительные ограничивающие идентификаторы
-                                if len(self.add_limit_identifires[i]) > 0:
+                                if len(self.add_limit_identifiers[i]) > 0:
                                     # Перебор дополнительных ограничивающих идентификаторов
-                                    for add_limit_id in self.add_limit_identifires[i]:
+                                    for add_limit_id in self.add_limit_identifiers[i]:
                                         # Определение, содержатся ли дополнительный ограничивающий идентификатор в заданном SKU
                                         #   Если дополнительный ограничивающий идентификатор найден
                                         if add_limit_id in sku_row:
@@ -277,7 +277,7 @@ class CategoryDirectory:
                         # Флаг "исключающий дентификатор найден"
                         excluding_id_found = False
                         # Перебор исключающих идентификаторов
-                        for excluding_id in self.excluding_identifires[i]:
+                        for excluding_id in self.excluding_identifiers[i]:
                             # Определение, содержатся ли исключающий идентификатор в заданном SKU
                             #   Если исключающий идентификатор найден
                             if excluding_id in sku_row:
@@ -285,13 +285,13 @@ class CategoryDirectory:
                                 excluding_id_found = True
                                 break
                     history_note = 'Кондидат: \"' + self.category_rightholders[i] + '\"; Осн. ид.: ' + main_id
-                    if len(self.main_limit_identifires[i]) > 0:
+                    if len(self.main_limit_identifiers[i]) > 0:
                         history_note += '; Осн. огр. ид.: '
                         if main_limit_id_found:
                             history_note += main_limit_id
                         else:
                             history_note += 'не найден'
-                        if len(self.add_limit_identifires[i]) > 0:
+                        if len(self.add_limit_identifiers[i]) > 0:
                             history_note += '; Доп. огр. ид.: '
                             if limit_id_found:
                                 history_note += add_limit_id
@@ -310,31 +310,31 @@ class CategoryDirectory:
     def identify_category_cython(self, sku_row):
         """
         Определение категории по заданному SKU.
-        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifires,
-        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        один из ддополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        не содержит ни одного из исключающих идентификаторов из self.excluding_identifires.
+        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifiers,
+        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        один из ддополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        не содержит ни одного из исключающих идентификаторов из self.excluding_identifiers.
         Работает аналогично функции identify_category, но быстрее засчет использования Cython
 
         :param sku_row: SKU, по которому определяется категория
         :return: обозначение категории из self.category_rightholders или пустая строка, если категория не удается определить
         """
-        return identify_category_cython.identify_category(sku_row, self.category_rightholders, self.main_identifires, self.main_limit_identifires, self.add_limit_identifires, self.excluding_identifires)
+        return identify_category_cython.identify_category(sku_row, self.category_rightholders, self.main_identifiers, self.main_limit_identifiers, self.add_limit_identifiers, self.excluding_identifiers)
 
     def identify_category_and_dec_id_cython(self, sku_row):
         """
         Определение категории по заданному SKU, а также вывод главного, главного ограничивающего и дополнительного ограничивающего идентификаторов, найденных в SKU и определивших
         предадлежность выбранной категории, если они есть, а иначе пустую строку.
-        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifires,
-        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        один из дополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifires, если он не пустой,
-        не содержит ни одного из исключающих идентификаторов из self.excluding_identifires.
+        Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifiers,
+        один из основных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        один из дополнительных ограничивающих идентификаторов из соответствующего списка из self.main_limit_identifiers, если он не пустой,
+        не содержит ни одного из исключающих идентификаторов из self.excluding_identifiers.
         Работает аналогично функции identify_category_and_dec_id, но быстрее засчет использования Cython
 
         :param sku_row: SKU, по которому определяется категория
         :return: обозначение категории из self.bcategory_rightholders или пустая строка, если категория не удается определить
         """
-        ret_tuple = identify_category_cython.identify_category_and_dec_id(sku_row, self.category_rightholders, self.main_identifires, self.main_limit_identifires, self.add_limit_identifires, self.excluding_identifires)
+        ret_tuple = identify_category_cython.identify_category_and_dec_id(sku_row, self.category_rightholders, self.main_identifiers, self.main_limit_identifiers, self.add_limit_identifiers, self.excluding_identifiers)
         return ret_tuple[0], ret_tuple[1], ret_tuple[2], ret_tuple[3]
 
 

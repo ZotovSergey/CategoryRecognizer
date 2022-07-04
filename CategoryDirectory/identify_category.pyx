@@ -1,18 +1,18 @@
-cpdef str identify_category(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):
+cpdef str identify_category(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):
     """
     Определение категории по заданному SKU.
-    Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из main_identifires,
-    один из основных ограничивающих идентификаторов из соответствующего списка из main_limit_identifires, если он не пустой,
-    один из ддополнительных ограничивающих идентификаторов из соответствующего списка из main_limit_identifires, если он не пустой,
-    не содержит ни одного из исключающих идентификаторов из excluding_identifires.
+    Заданному SKU соответствует обозначение категории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из main_identifiers,
+    один из основных ограничивающих идентификаторов из соответствующего списка из main_limit_identifiers, если он не пустой,
+    один из ддополнительных ограничивающих идентификаторов из соответствующего списка из main_limit_identifiers, если он не пустой,
+    не содержит ни одного из исключающих идентификаторов из excluding_identifiers.
     Работает аналогично функции identify_category, но быстрее засчет использования Cython
 
     :param sku_row: SKU, по которому определяется категория
     :param category_rightholders: список обозначений категории
-    :param main_identifires: список основных идентификаторов
-    :param main_limit_identifires: список основных ограничивающих идентификаторов
-    :param add_limit_identifires: список дополнительных ограничивающих идентификаторов
-    :param excluding_identifires: список исключающих идентификаторов
+    :param main_identifiers: список основных идентификаторов
+    :param main_limit_identifiers: список основных ограничивающих идентификаторов
+    :param add_limit_identifiers: список дополнительных ограничивающих идентификаторов
+    :param excluding_identifiers: список исключающих идентификаторов
     :return: обозначение категории из category_rightholders или пустая строка, если категория не удается определить
     """
     # Типизация используемых переменных
@@ -22,23 +22,23 @@ cpdef str identify_category(str sku_row, list category_rightholders, list main_i
     # Перебор всех категорий из словаря
     for i in range(len(category_rightholders)):
         # Перебор основых идентификаторов
-        for main_id in main_identifires[i]:
+        for main_id in main_identifiers[i]:
             # Определение, содержатся ли основной идентификатор в заднном SKU
             #   Если основной идентификатор найден
             if main_id in sku_row:
                 # Флаг "ограничивающие идентификаторы найдены"
                 limit_id_found = False
                 # Если есть основные ограничивающие идентификаторы
-                if len(main_limit_identifires[i]) > 0:
+                if len(main_limit_identifiers[i]) > 0:
                     # Перебор основных ограничивающих идентификаторов
-                    for main_limit_id in main_limit_identifires[i]:
+                    for main_limit_id in main_limit_identifiers[i]:
                         # Определение, содержатся ли основной ограничивающий идентификатор в заднном SKU
                         #    Если основной ограничивающий идентификатор найден
                         if main_limit_id in sku_row:
                             # Если есть дополнительные ограничивающие идентификаторы
-                            if len(add_limit_identifires[i]) > 0:
+                            if len(add_limit_identifiers[i]) > 0:
                                 # Перебор дополнительных ограничивающих идентификаторов
-                                for add_limit_id in add_limit_identifires[i]:
+                                for add_limit_id in add_limit_identifiers[i]:
                                     # Определение, содержатся ли дополнительный ограничивающий идентификатор в заднном SKU
                                     #   Если дополнительный ограничивающий идентификатор найден
                                     if add_limit_id in sku_row:
@@ -61,7 +61,7 @@ cpdef str identify_category(str sku_row, list category_rightholders, list main_i
                     # Флаг "исключающий дентификатор найден"
                     excluding_id_found = False
                     # Перебор исключающих идентификаторов
-                    for excluding_id in excluding_identifires[i]:
+                    for excluding_id in excluding_identifiers[i]:
                         # Определение, содержатся ли исключающий идентификатор в заднном SKU
                         #   Если исключающий идентификатор найден
                         if excluding_id in sku_row:
@@ -75,22 +75,22 @@ cpdef str identify_category(str sku_row, list category_rightholders, list main_i
     # Если не найдено ни одной подходящего категории, возвращается пустая строка
     return ''
 
-cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifires, list main_limit_identifires, list add_limit_identifires, list excluding_identifires):
+cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders, list main_identifiers, list main_limit_identifiers, list add_limit_identifiers, list excluding_identifiers):
     """
     Определение категории по заданному SKU, а также вывод главного, главного ограничивающего и дополнительного ограничивающего идентификаторов, найденных в SKU и определивших
     предадлежность выбранной категории, если они есть, а иначе пустую строку.
-    Заданному SKU соответствует обозначение атегории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifires,
-    один из основных ограничивающих идентификаторов из соответствующего списка из main_limit_identifires, если он не пустой,
-    один из дополнительных ограничивающих идентификаторов из соответствующего списка из main_limit_identifires, если он не пустой,
-    не содержит ни одного из исключающих идентификаторов из excluding_identifires.
+    Заданному SKU соответствует обозначение атегории из category_rightholders, если он содержит один из основных идентификаторов из соответствующего списка из self.main_identifiers,
+    один из основных ограничивающих идентификаторов из соответствующего списка из main_limit_identifiers, если он не пустой,
+    один из дополнительных ограничивающих идентификаторов из соответствующего списка из main_limit_identifiers, если он не пустой,
+    не содержит ни одного из исключающих идентификаторов из excluding_identifiers.
     Работает аналогично функции identify_category_and_dec_id, но быстрее засчет использования Cython
 
     :param sku_row: SKU, по которому определяется категория
     :param category_rightholders: список обозначений категорий
-    :param main_identifires: список основных идентификаторов
-    :param main_limit_identifires: список основных ограничивающих идентификаторов
-    :param add_limit_identifires: список дополнительных ограничивающих идентификаторов
-    :param excluding_identifires: список исключающих идентификаторов
+    :param main_identifiers: список основных идентификаторов
+    :param main_limit_identifiers: список основных ограничивающих идентификаторов
+    :param add_limit_identifiers: список дополнительных ограничивающих идентификаторов
+    :param excluding_identifiers: список исключающих идентификаторов
     :param sku_row: SKU, по которому определяется атегория
     :return: обозначение категории из category_rightholders или пустая строка, если категория не удается определить; главный решающий идентификатор; главный ограничивающий решающий
     идентификатор; дополнительный ограничивающий решающий идентификатор
@@ -102,23 +102,23 @@ cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders
     # Перебор всех категорий из словаря
     for i in range(len(category_rightholders)):
         # Перебор основых идентификаторов
-        for main_id in main_identifires[i]:
+        for main_id in main_identifiers[i]:
             # Определение, содержатся ли основной идентификатор в заднном SKU
             #   Если основной идентификатор найден
             if main_id in sku_row:
                 # Флаг "ограничивающие идентификаторы найдены"
                 limit_id_found = False
                 # Если есть основные ограничивающие идентификаторы
-                if len(main_limit_identifires[i]) > 0:
+                if len(main_limit_identifiers[i]) > 0:
                     # Перебор основных ограничивающих идентификаторов
-                    for main_limit_id in main_limit_identifires[i]:
+                    for main_limit_id in main_limit_identifiers[i]:
                         # Определение, содержатся ли основной ограничивающий идентификатор в заднном SKU
                         #   Если основной ограничивающий идентификатор найден
                         if main_limit_id in sku_row:
                             # Если есть дополнительные ограничивающие идентификаторы
-                            if len(add_limit_identifires[i]) > 0:
+                            if len(add_limit_identifiers[i]) > 0:
                                 # Перебор дополнительных ограничивающих идентификаторов
-                                for add_limit_id in add_limit_identifires[i]:
+                                for add_limit_id in add_limit_identifiers[i]:
                                     # Определение, содержатся ли дополнительный ограничивающий идентификатор в заднном SKU
                                     #   Если дополнительный ограничивающий идентификатор найден
                                     if add_limit_id in sku_row:
@@ -150,7 +150,7 @@ cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders
                     # Флаг "исключающий дентификатор найден"
                     excluding_id_found = False
                     # Перебор исключающих идентификаторов
-                    for excluding_id in excluding_identifires[i]:
+                    for excluding_id in excluding_identifiers[i]:
                         # Определение, содержатся ли исключающий идентификатор в заднном SKU
                         #    Если исключающий идентификатор найден
                         if excluding_id in sku_row:
