@@ -1,4 +1,3 @@
-import pandas as pd
 import os
 import pickle
 
@@ -26,6 +25,8 @@ def features_preprocessing(features):
     """
     # Замена пустых строк серии на ''
     new_features = features.fillna('')
+    # Приведение идетификаторов к верхнему регистру
+    new_features = new_features.str.upper()
     # Разделение строк с идентификаторами на списки с отдельными идентификаторами по разделителю ';'
     new_features = new_features.str.split(';')
     # Удаление всех пустых идентификаторов
