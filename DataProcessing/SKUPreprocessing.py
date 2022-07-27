@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import csv
 
@@ -9,11 +10,19 @@ import csv
 def preprocess_sku_df(sku_df):
     """
     Предобработка SKU для распознования категории
+
+    :param sku_df: фрейм, содержащий строки SKU
+
+    :return: список предобработанных SKU, список исходный SKU
     """
-    sku_rows = sku_df.squeeze()
-    # Приведение SKU к верхнему регистру и расставление пробелов в начале и в конце строк
-    preprocessed_rows = list(' ' + sku_rows.str.upper() + ' ')
-    return preprocessed_rows, sku_rows
+    if len(sku_df) > 0:
+        # Удаление пустых строк
+        sku_rows = sku_df.replace(r'^\s*$', np.nan, regex=True).dropna()
+        sku_rows = pd.Series(sku_rows.squeeze())
+        # Приведение SKU к верхнему регистру и расставление пробелов в начале и в конце строк
+        preprocessed_rows = list(' ' + sku_rows.str.upper() + ' ')
+        return preprocessed_rows, list(sku_rows)
+    return [], []
 
 
 class SKUReaderCSV:
@@ -22,13 +31,13 @@ class SKUReaderCSV:
     """
     def __init__(self, data_path, sku_col_name, encoding):
         """
-        :param data_path: путь к читаемому файлу csv, txt, excel, содержащему SKU для обработки (str)
+        :param data_path: путь к читаемому файлу csv, txt содержащему SKU для обработки (str)
         :param sku_col_name: имя столбца файла по пути data_path, содержащему SKU для обработки (str)
         :param encoding: обозначение кодировки, использующейся в csv, txt-файле (str)
         """
         self.data_path = data_path
         self.sku_col = sku_col_name
-        # Если подается пустое название столбца с SKU, то используется первая строка заданного файла, заданного листа
+        # Если подается пустое название столбца с SKU, то используется первая строка заданного файла
         if len(sku_col_name) == 0 or sku_col_name is None:
             self.sku_col = 0
         else:
@@ -46,15 +55,15 @@ class SKUReaderCSV:
     
     def read(self, start, rows_count):
         """
-        Чтение rows_count строк SKU из csv-файла по пути self.data_path, колонки self.rows_col_name, с кодировкой self.encoding, начиная со строки под номером batch_start, не считая заголовка и предобработка для
-        дальнейшего распознование категорий
+        Чтение rows_count строк SKU из csv-файла по пути self.data_path, колонки self.rows_col_name с заменой нестандартного символа переноса строки на \n, с кодировкой self.encoding, начиная со строки под
+        номером batch_start, не считая заголовка и предобработка для дальнейшего распознование категорий
         
         :param start: номер строки, с которой начинается читаемый батч, не считая заголовка (str)
         :param rows_count: количество строк, читаемых из файла начиная со start (str)
 
-        :return: self.batch_len строк из файла из csv-файла self.file_path, колонки self.rows_col_name
+        :return: rows_count строк из файла из csv-файла self.file_path, колонки self.rows_col_name
         """
-        return preprocess_sku_df(pd.read_csv(self.data_path, header=None, usecols=[self.sku_col], skiprows=start + 1, nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding).fillna(''))
+        return preprocess_sku_df(pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna())
 
     def column_name(self):
         """
@@ -87,7 +96,7 @@ class SKUReaderExcel:
         else:
             sku_col = sku_col_name
         # Строк SKU из заданного файла, заданного листа, заданной строки
-        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str').fillna('')
+        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str', keep_default_na=False).fillna('')
     
     def __len__(self):
         """

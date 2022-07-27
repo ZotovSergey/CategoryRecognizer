@@ -1,5 +1,6 @@
 import sys
 import os
+import shutil
 import pandas as pd
 import json
 
@@ -295,7 +296,7 @@ class ProcessingTab(AppGUI):
             # Начало отсчета таймера
             self.app_win.info_win.reset_timer()
             # Сообщение о начале обработки
-            self.app_win.info_win.set_massage('Начато распознование категорий по SKU')
+            self.app_win.info_win.set_massage('Распознование категорий по SKU')
             # Обнуление progress bar
             self.pbar.setValue(0)
             # Сбор данных из GUI и определение параметров файла с данными для обработки, подготовка к началу рассчетов
@@ -365,10 +366,10 @@ class ProcessingTab(AppGUI):
                 id_output_add_msg = ''
             self.app_win.info_win.set_massage_with_countdown('Распознование категорий по SKU' + id_output_add_msg)
             self.app_win.info_win.set_massage_with_tab('из файла \"' + input_data_path + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец SKU:\t\t\t\"' + sku_col_name + '\";')
-            self.app_win.info_win.set_massage_with_tab('кол-во задействованных потоков:\t' + str(use_threads_count) + ';')
-            self.app_win.info_win.set_massage_with_tab('макс. кол-во строк в батче:\t\t' + str(max_batch_len) + ';')
-            self.app_win.info_win.set_massage_with_tab('результат обработки будет сохранен в файл:\t\"' + output_data_path + '\"')
+            self.app_win.info_win.set_massage_with_tab('столбец SKU: \"' + sku_col_name + '\";')
+            self.app_win.info_win.set_massage_with_tab('кол-во задействованных потоков: ' + str(use_threads_count) + ';')
+            self.app_win.info_win.set_massage_with_tab('макс. кол-во строк в батче: ' + str(max_batch_len) + ';')
+            self.app_win.info_win.set_massage_with_tab('результат обработки будет сохранен в файл: \"' + output_data_path + '\"')
             #   Создание объекта, распознающего категории по SKU в соответствии справочнику sel_dir
             br = CategoryRecognizer(sku_reader, sel_dir, max_batch_len=max_batch_len, get_dec_id=self.id_output_check.isChecked(), cpu_count=use_threads_count)
             #   Распознавание SKU из заданного файла в соответствии заданному справочнику
@@ -380,7 +381,7 @@ class ProcessingTab(AppGUI):
         except Exception as e:
             self.app_win.info_win.set_massage('ERROR!!!\t' + str(e))
             if os.path.exists('temp'):
-                os.rmdir('temp')
+                shutil.rmtree('temp')
 
 
 class DirectoryTab(AppGUI):
@@ -417,7 +418,7 @@ class DirectoryTab(AppGUI):
         # Ввод пути к файлу со справочником
         #   Подпись
         self.dir_file_path_label = QLabel(self)
-        self.dir_file_path_label.setText('Путь к excel файлу с информацией для справочника:')
+        self.dir_file_path_label.setText('Путь к excel-файлу с информацией для справочника:')
         tab_layout.addWidget(self.dir_file_path_label)
         #   Макет строки ввода
         dir_file_path_box = QHBoxLayout()
@@ -442,13 +443,13 @@ class DirectoryTab(AppGUI):
 
         # Ввод названия столбца справочника, содержащего название категорий
         #   Подпись
-        self.brand_rightholders_title_col_name_label = QLabel(self)
-        self.brand_rightholders_title_col_name_label.setText('Название столбца обозначений категорий:')
-        tab_layout.addWidget(self.brand_rightholders_title_col_name_label)
+        self.category_rightholders_title_col_name_label = QLabel(self)
+        self.category_rightholders_title_col_name_label.setText('Название столбца обозначений категорий:')
+        tab_layout.addWidget(self.category_rightholders_title_col_name_label)
         #   Строка ввода
-        self.brand_rightholders_title_col_name_text_edit = QTextEdit(self)
-        self.brand_rightholders_title_col_name_text_edit.setFixedHeight(self.col_name_text_edit_high)
-        tab_layout.addWidget(self.brand_rightholders_title_col_name_text_edit)
+        self.category_rightholders_title_col_name_text_edit = QTextEdit(self)
+        self.category_rightholders_title_col_name_text_edit.setFixedHeight(self.col_name_text_edit_high)
+        tab_layout.addWidget(self.category_rightholders_title_col_name_text_edit)
 
         # Ввод названия столбца справочника, содержащего основные идентификаторы
         #   Подпись
@@ -522,7 +523,7 @@ class DirectoryTab(AppGUI):
             self.dir_name_line_edit.setText(dir_tab_config['dir_name'])
             self.dir_file_path_line_edit.setText(dir_tab_config['data_path'])
             self.dir_sheet_name_line_edit.setText(dir_tab_config['directory_sheet_name'])
-            self.brand_rightholders_title_col_name_text_edit.setText(dir_tab_config['brand_rightholders_title'])
+            self.category_rightholders_title_col_name_text_edit.setText(dir_tab_config['category_rightholders_title'])
             self.main_id_title_col_name_text_edit.setText(dir_tab_config['main_identifiers_title'])
             self.main_limit_id_title_col_name_text_edit.setText(dir_tab_config['main_limit_identifiers_title'])
             self.add_limit_id_title_col_name_text_edit.setText(dir_tab_config['add_limit_identifiers_title'])
@@ -539,7 +540,7 @@ class DirectoryTab(AppGUI):
                           'dir_name': self.dir_name_line_edit.text(),
                           'data_path': self.dir_file_path_line_edit.text(),
                           'directory_sheet_name': self.dir_sheet_name_line_edit.text(),
-                          'brand_rightholders_title': self.brand_rightholders_title_col_name_text_edit.toPlainText(),
+                          'category_rightholders_title': self.category_rightholders_title_col_name_text_edit.toPlainText(),
                           'main_identifiers_title': self.main_id_title_col_name_text_edit.toPlainText(),
                           'main_limit_identifiers_title': self.main_limit_id_title_col_name_text_edit.toPlainText(),
                           'add_limit_identifiers_title': self.add_limit_id_title_col_name_text_edit.toPlainText(),
@@ -565,8 +566,8 @@ class DirectoryTab(AppGUI):
         try:
             # Начало отсчета таймера
             self.app_win.info_win.reset_timer()
-            # Сообщение о составления справочника
-            self.app_win.info_win.set_massage('Начато составление справочника')
+            # Сообщение о начале составления справочника
+            self.app_win.info_win.set_massage('Составление справочника')
             # Сбор данных из GUI
             #   Название составляемого справочника
             dir_name = self.dir_name_line_edit.text()
@@ -575,7 +576,7 @@ class DirectoryTab(AppGUI):
             #   Название листа содержащей информацию для справочника, если строка пустая, то берется первый лист в заданном файле
             directory_sheet_name = self.dir_sheet_name_line_edit.text()
             #   Название столбца обозначений категорий, если строка пустая, то берется первый столбец в заданном листе заданного файла
-            brand_rightholders_title = self.brand_rightholders_title_col_name_text_edit.toPlainText()
+            category_rightholders_title = self.category_rightholders_title_col_name_text_edit.toPlainText()
             #   Название столбца основных идентификаторов, если строка пустая, то берется второй столбец в заданном листе заданного файла
             main_identifiers_title = self.main_id_title_col_name_text_edit.toPlainText()
             #   Название столбца основных ограничивающих идентификаторов, если строка пустая, то берется третий столбец в заданном листе заданного файла
@@ -593,8 +594,8 @@ class DirectoryTab(AppGUI):
                 # Чтение листа excel файла с названием directory_sheet_name, содержащей обозначения категорий и их идентификаторы
                 features_df = pd.read_excel(reader, sheet_name=directory_sheet_name)
                 # Замена значений пустых строк на соответствующие значения, если необходимо
-                if len(brand_rightholders_title) == 0:
-                    brand_rightholders_title = features_df.columns[0]
+                if len(category_rightholders_title) == 0:
+                    category_rightholders_title = features_df.columns[0]
                 if len(main_identifiers_title) == 0:
                     main_identifiers_title = features_df.columns[1]
                 if len(main_limit_identifiers_title) == 0:
@@ -608,14 +609,14 @@ class DirectoryTab(AppGUI):
             self.app_win.info_win.set_massage_with_countdown('Составление справочника ' + '\"' + dir_name + '\"')
             self.app_win.info_win.set_massage_with_tab('по файлу \"' + data_path + '\";')
             self.app_win.info_win.set_massage_with_tab('по листу \"' + directory_sheet_name + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец категорий:\t\"' + brand_rightholders_title + '\";')
+            self.app_win.info_win.set_massage_with_tab('столбец категорий:\t\"' + category_rightholders_title + '\";')
             self.app_win.info_win.set_massage_with_tab('столбец глав. ид-ов:\t\"' + main_identifiers_title + '\";')
             self.app_win.info_win.set_massage_with_tab('столбец глав. огран. ид-ов:\t\"' + main_limit_identifiers_title + '\";')
             self.app_win.info_win.set_massage_with_tab('столбец доп. огран. ид-ов:\t\"' + add_limit_identifiers_title + '\";')
             self.app_win.info_win.set_massage_with_tab('столбец искл. ид-ов:\t\"' + excluding_identifiers_title + '\"')
             # Создание объекта справочника
             category_dir = CategoryDirectory(features_df,
-                                         brand_rightholders_title,
+                                         category_rightholders_title,
                                          main_identifiers_title,
                                          main_limit_identifiers_title,
                                          add_limit_identifiers_title,
@@ -693,7 +694,7 @@ class InfoWindow(AppGUI):
         # Вычисление времени от начала отсчета self.proc_begin_time
         time = datetime.now() - self.calc_begin_time
         # Вычисление целых часов, минут и секунд в time
-        hours, reminder = divmod(time.total_seconds(), 60)
+        hours, reminder = divmod(time.total_seconds(), 3600)
         minutes, seconds = divmod(reminder, 60)
         hours_str = str(floor(hours))
         minutes_str = str(floor(minutes))

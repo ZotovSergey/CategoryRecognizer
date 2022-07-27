@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import shutil
 import multiprocessing as mp
 
 from PyQt5.QtWidgets import QApplication
@@ -22,7 +23,7 @@ class CategoryRecognizer:
     def __init__(self, sku_reader, category_directory, max_batch_len=100000, get_dec_id=False, cpu_count=None):
         """
         :param sku_reader: ридер SKU из заданого файла (SKUReaderCSV, SKUReaderExcel)
-        :param category_directory: справочник категорий, в соотвтствии с которым определяется категория по SKU (CategoryDirectory)
+        :param category_directory: справочник категорий, в соответствии с которым определяется категория по SKU (CategoryDirectory)
         :param max_batch_len: максимальное количество строк SKU, содержащихся в одном обрабатываемом батче
         :param get_dec_id: флаг, означающий, что нужно выводить определяющие идентификаторы (bool)
         :param cpu_count: количество потоков, использумых для обработки, если превышает максимально доступное оличество потоков, то применяетс максимально доступное количество (int)
@@ -109,14 +110,17 @@ class CategoryRecognizer:
     
     def read_and_preprocess_pd_file_batches_pool(self, batches_starts_list):
         """
-        Чтение self.cpu_count батчей из ридера self.sku_reader, начинающихся с batches_starts_list
+        Чтение len(batches_starts_list) батчей строк из ридера self.sku_reader, начинающихся с batches_starts_list и их предобработка
 
         :param batches_starts_list: список номеров строк читаемого файла, с которых начинаются читаемые батчи (list)
 
-        :return: self.cpu_count списков (батчей) прочитанных предобработанных и не предобработанных SKU, соответствено
+        :return: len(batches_starts_list) списков (батчей) прочитанных предобработанных и не предобработанных SKU, соответствено
         """
         # Создание пула потоков для len(batches_starts_list) потоков
         pool = mp.Pool(len(batches_starts_list))
+
+
+
         # Одновременное чтение и предобработка заданных батчей
         data_batches_list = list(pool.map(self.read_batch, batches_starts_list))
         # Закрытие пула потоков
@@ -135,7 +139,7 @@ class CategoryRecognizer:
         :return: csv-файл по пути df_path_zip[1] с записанным фрймом данных df_path_zip[0]
         """
         df = df_path_zip[0]
-        df.to_csv(df_path_zip[1], sep='\t', index=False, header=False)
+        df.to_csv(df_path_zip[1], sep='\t', index=False, header=False, )
 
     def write_csv_temp_files_batch(self, df_batch):
         """
@@ -143,7 +147,7 @@ class CategoryRecognizer:
 
         :param df_batch: список фремов данных для записи во вреенные файлы (list)
 
-        :return: csv-файлы в директории для временных файлов с фремами из df_batch
+        :return: csv-файлы в директории для временных файлов с фреймами из df_batch
         """
         # Создание директории для временных файлов, если ее еще нет
         if not os.path.exists('temp'):
@@ -161,7 +165,7 @@ class CategoryRecognizer:
 
     def process_data(self, output_data_path, gui_tab):
         """
-        Распознование категорий по SKU из ридера self.sku_reader, в соотетствии справочнику self.category_directory, по батчам, с применением self.cpu_count потоков одновременно и
+        Распознование категорий по SKU из ридера self.sku_reader, в соответствии справочнику self.category_directory, по батчам, с применением self.cpu_count потоков одновременно и
         запись полученных результатов в csv-файл output_data_path
 
         :param output_data_path: путь к csv-файлу, в который будут записываться результаты распознования категорий
@@ -178,9 +182,9 @@ class CategoryRecognizer:
         # Определение количества строк в обрабатываемом файле
         rows_count = len(self.sku_reader)
         #   Сообщение о количестве строк в обрабатываемом файле
-        gui_tab.app_win.info_win.set_massage_with_countdown('Обрабатываемый файл содержит ' + str(rows_count))
+        gui_tab.app_win.info_win.set_massage_with_countdown(" ".join(['Обрабатываемый файл содержит', str(rows_count), 'строк']))
         
-        # Определение оптиального количества батчей
+        # Определение оптимального количества батчей
         opt_batches_num = int(np.ceil(int(np.ceil(rows_count / self.max_batch_len)) / self.cpu_count) * self.cpu_count)
         
         # Длина оптимальных батчей
@@ -238,7 +242,7 @@ class CategoryRecognizer:
             df_list = list(map(pd.DataFrame, df_list))
             #       Запись временных файлов с исходящими данными
             temp_files_path_list = self.write_csv_temp_files_batch(df_list)
-            # #       Запись путей к временным файлам
+            #       Запись путей к временным файлам
             # temp_files_list = os.listdir('temp')
             # temp_files_path_list = list(map(os.path.join, ['temp'] * len(temp_files_list), temp_files_list))
             #   Запись исходящих данных из временых файлов в обработанный файл
@@ -262,4 +266,4 @@ class CategoryRecognizer:
             gui_tab.pbar.setValue(pbar_value)
             QApplication.processEvents()
         # Удаление дериктории temp
-        os.rmdir('temp')
+        shutil.rmtree('temp')
