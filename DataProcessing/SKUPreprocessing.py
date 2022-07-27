@@ -1,38 +1,20 @@
 import numpy as np
 import pandas as pd
 import csv
-
-# def clear_sku(sku_rows):
-#     cleaned_sku_rows = sku_rows.str.replace(r'\s{2,}', ' ')
-#     cleaned_sku_rows = cleaned_sku_rows.str.replace.str.replace(r'^\[[^\[\]]*\]|^{[^{}]*}|^<[^<>]*>|~|^#|^\'|^\?|^\*|^\.|^\,|^_|^-|^–|{|}', '')
-#     return cleaned_sku_rows
-
-def preprocess_sku_df(sku_df):
-    """
-    Предобработка SKU для распознования категории
-
-    :param sku_df: фрейм, содержащий строки SKU
-
-    :return: список предобработанных SKU, список исходный SKU
-    """
-    if len(sku_df) > 0:
-        # Удаление пустых строк
-        sku_rows = sku_df.replace(r'^\s*$', np.nan, regex=True).dropna()
-        sku_rows = pd.Series(sku_rows.squeeze())
-        # Приведение SKU к верхнему регистру и расставление пробелов в начале и в конце строк
-        preprocessed_rows = list(' ' + sku_rows.str.upper() + ' ')
-        return preprocessed_rows, list(sku_rows)
-    return [], []
-
+import json
+import os
+import chardet
+import re
 
 class SKUReaderCSV:
     """
     Ридер и предобработчик SKU. Читает строки SKU из заданного csv-файла и предобрабатывает их для дальнейшего распозавания категорий
     """
-    def __init__(self, data_path, sku_col_name, encoding):
+    def __init__(self, data_path, sku_col_name=None, encoding=None):
         """
         :param data_path: путь к читаемому файлу csv, txt содержащему SKU для обработки (str)
-        :param sku_col_name: имя столбца файла по пути data_path, содержащему SKU для обработки (str)
+        :param sku_col_name: имя столбца файла по пути data_path, содержащему SKU для обработки, если подается пустое название столбца с SKU, то используется первая строка заданного
+        файла (str)
         :param encoding: обозначение кодировки, использующейся в csv, txt-файле (str)
         """
         self.data_path = data_path
@@ -56,20 +38,26 @@ class SKUReaderCSV:
     def read(self, start, rows_count):
         """
         Чтение rows_count строк SKU из csv-файла по пути self.data_path, колонки self.rows_col_name с заменой нестандартного символа переноса строки на \n, с кодировкой self.encoding, начиная со строки под
-        номером batch_start, не считая заголовка и предобработка для дальнейшего распознование категорий
+        номером batch_start, не считая заголовка, удаление пустых строк
         
         :param start: номер строки, с которой начинается читаемый батч, не считая заголовка (str)
         :param rows_count: количество строк, читаемых из файла начиная со start (str)
 
         :return: rows_count строк из файла из csv-файла self.file_path, колонки self.rows_col_name
         """
-        return preprocess_sku_df(pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna())
+        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna().squeeze().values.tolist()
 
-    def column_name(self):
+    def get_sku_column_name(self):
         """
         :return: название колонки с SKU читаемого файла
         """
         return pd.read_csv(self.data_path, header=None, usecols=[self.sku_col], nrows=1, sep='\t', dtype='str', encoding=self.encoding).fillna('')[0][0]
+    
+    def get_sku_excel_sheet(self):
+        """
+        :return: None, так как csv не имеет листа
+        """
+        return None
 
 
 class SKUReaderExcel:
@@ -79,8 +67,8 @@ class SKUReaderExcel:
     def __init__(self, data_path, sku_col_name=None, sku_sheet_name=None):
         """
         :param data_path: путь к читаемому файлу csv, txt, excel, содержащему SKU для обработки (str)
-        :param sku_col_name: имя столбца файла по пути data_path, содержащему SKU для обработки (str)
-        :param sku_sheet_name: название листа читаемого excel-файла, содержащего SKU (str)
+        :param sku_col_name: имя столбца файла по пути data_path, содержащему SKU для обработки; если подается пустое название столбца с SKU, то используется первая строка заданного файла (str)
+        :param sku_sheet_name: название листа читаемого excel-файла, содержащего SKU; если подается пустое название листа с SKU, то используется первый лист заданного файла (str)
         """
         # Чтение excel-файла по заданному пути
         ex_file = pd.ExcelFile(data_path)
@@ -96,7 +84,11 @@ class SKUReaderExcel:
         else:
             sku_col = sku_col_name
         # Строк SKU из заданного файла, заданного листа, заданной строки
-        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str', keep_default_na=False).fillna('')
+        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str', keep_default_na=False).replace(r'^\s*$', np.nan, regex=True).dropna()
+        
+        self.column_name = self.data.columns[0]
+
+        self.data = self.data.squeeze().values.tolist()
     
     def __len__(self):
         """
@@ -106,17 +98,215 @@ class SKUReaderExcel:
 
     def read(self, start, rows_count):
         """
-        Чтение rows_count строк SKU из self.data, начиная со строки под номером batch_start, не считая заголовка и предобработка для дальнейшего распознование категорий
+        Чтение rows_count строк SKU из self.data, начиная со строки под номером batch_start, не считая заголовка
 
         :param start: номер строки, с которой начинается читаемый батч, не считая заголовка (str)
         :param rows_count: количество строк, читаемых из файла начиная со start (str)
 
         :return: self.batch_len строк из excel-файла self.file_path, листа self.sheet_name, колонки self.rows_col_name
         """
-        return preprocess_sku_df(self.data[start : start + rows_count])
+        return self.data[start : start + rows_count]
     
-    def column_name(self):
+    def get_sku_column_name(self):
         """
-        :return: название колонки с SKU читаемого файла
+        :return: название столбца с SKU читаемого файла
         """
-        return self.data.columns[0]
+        return self.column_name
+    
+    def get_sku_excel_sheet(self):
+        """
+        :return: название листа с SKU читаемого файла
+        """
+        return self.sku_sheet_name
+
+def init_sku_reader(data_path, sku_col_name=None, sku_sheet_name=None):
+    """
+    Создание ридера и предобработчика батчей SKU из csv, txt или excel-файла, в зависимости от расширения файла
+
+    :param file_path: путь к читаемому файлу содержащему SKU для обработки (str)
+    :param sku_sheet_name: название листа читаемого excel-файла, содержащего SKU (если данные читаются из excel-файла); если подается пустое название столбца с SKU, то используется первая строка заданного файла (str)
+    :param sku_col_name: имя столбца файла по пути data_path, содержащему SKU для обработки; если подается пустое название листа с SKU, то используется первый лист заданного файла (str)
+
+    :return: ридер и предобработчик батчей SKU из csv, txt или excel-файла, в зависимости от расширени файла (SKUReaderCSV или SKUReaderExcel)
+    """
+    #   Определение расширения файла
+    file_ext = data_path.split('.')[-1]
+    #   Определение типа обрабатываемого файла и определение необходимых для полученного типа параметров
+    if  file_ext in json.load(open(os.path.join('config', 'file_ext.json')))['excel_ext']:
+        # Формат обрабатываемого файла - excel
+        # Создание объекта-ридера SKU из excel-файла по пути input_data_path, из листа sku_sheet_name (или первого листа), из столбца sku_col_name (или первого столбца),
+        # осуществляющего чтение и предобработку SKU
+        sku_reader = SKUReaderExcel(data_path, sku_col_name, sku_sheet_name)
+        # Заполнение пустого значения названия листа с SKU excel-файла
+        if len(sku_sheet_name) == 0:
+            sku_sheet_name = sku_reader.sku_sheet_name
+    else:
+        # Формат обрабатываемого файла - csv, txt
+        # Определение кодировки обрабатываемого файла
+        #   Сообщение о начале определния кодировки
+        encoding = chardet.detect(open(data_path, 'rb').read())['encoding']
+        # Создание объекта-ридера SKU из csv-файла по пути input_data_path, из столбца sku_col_name (или первого столбца), осуществляющего чтение и предобработку SKU
+        sku_reader = SKUReaderCSV(data_path, sku_col_name, encoding)
+    return sku_reader
+
+def preprocess_sku_for_recognizing(sku):
+    """
+    Предобработка SKU для распознования категории
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return add_spaces_at_start_end(sku.upper())
+
+def main_clean(sku):
+    """
+    Общая очистка SKU от лишней информации, характерной для любых случаев и приведенеи к более общему виду
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    # Замена нечитаемых пробелов на обычные
+    cleared_sku = replace_non_breaking_space(sku)
+    # Замена некоторых символов строки на пробелы
+    cleared_sku = replace_symb2_all(cleared_sku)
+    # Замена всех скобок на обычные
+    cleared_sku = replace_brackets(cleared_sku)
+    # Замена обратных слэшей на обычные и их сжатие
+    cleared_sku = replace_slashes(cleared_sku)
+    # Ряд трансформация идут по тех пор, пока не прекратятся изменения строки
+    start_is_clear = False
+    while not start_is_clear:
+        # Удаление ряда символов перед двоеточием в начале строки
+        new_cleared_sku = remove_eight_symb_before_colon_at_start(cleared_sku)
+        # Удаление некоторых символов из начала строки
+        new_cleared_sku = remove_symb1_at_start(new_cleared_sku)
+        # Удаление записей в скобках <> из начала строки
+        new_cleared_sku = remove_note_between_angle_brackets_at_start(new_cleared_sku)
+        # Проверка изменения в строке
+        if cleared_sku == new_cleared_sku:
+            start_is_clear = True
+        cleared_sku = new_cleared_sku
+    # Удаление цифр после двоеточия в конце
+    cleared_sku = remove_num_symb_after_colon_at_end(cleared_sku)
+    # Удаление обозначения "КНОПКА" в конце строки
+    cleared_sku = remove_buton_note_at_end(cleared_sku)
+    # Сжатие пробелов
+    cleared_sku = replace_squeeze_spaces(cleared_sku)
+
+    return cleared_sku
+
+def add_spaces_at_start_end(sku):
+    """
+    Добавление пробелов в начало и конец строки
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return "".join([' ', sku, ' '])
+
+def replace_non_breaking_space(sku):
+    """
+    Замена пробела с кодировкой &#160 или \u00a0 на обычный
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\u00a0', ' ', sku)
+
+def replace_squeeze_spaces(sku):
+    """
+    Замена множественных пробелов на одинарные (сжимание пробелов)
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\s{2,}', ' ', sku)
+
+def remove_eight_symb_before_colon_at_start(sku):
+    """
+    Удаление символов левее двоеточие, если двоеточие не более, чем на восьмой позиции слева
+    
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'^.{0,7}:', '', sku)
+
+def remove_symb1_at_start(sku):
+    """
+    Удаление символов " ", "‘", ".", ",", "_", "-", "–" в начале SKU на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'^[\s‘\.\,_\-–]{1,}', '', sku)
+
+def remove_note_between_angle_brackets_at_start(sku):
+    """
+    Замена символов записи между скобками "<", ">" в начале SKU на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'^<.{0,}>', '', sku)
+
+def replace_symb2_all(sku):
+    """
+    Замена символов "~", "«", "»", "“", "”", "#", "*", "?", "<", ">" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'[~«»“”#*?<>]', ' ', sku)
+
+def replace_brackets(sku):
+    """
+    Замена символов "~", "«", "»", "“", "”", "#", "*", "?", "<", ">" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'[}\]]', ')', re.sub(r'[{\[]', '(', sku))
+
+def replace_slashes(sku):
+    """
+    Замена символов "~", "«", "»", "“", "”", "#", "*", "?", "<", ">" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'/{2,}', '/', re.sub(r'[\\]', '/', sku))
+
+def remove_num_symb_after_colon_at_end(sku):
+    """
+    Удаление всех цифровых символов (а таке пробелов, слэшей) после двоеточия в конце строки
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r':[0-9/\s.,]{0,}$', '', sku)
+
+def remove_buton_note_at_end(sku):
+    """
+    Удаление записи "КНОПКА" и цифры с дефисом в конце SKU
+    
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'КНОПКА[0-9-\s]{0,}$', '', sku)
+
+CLEAR_PATTERNS_DICT = {
+                      'Общий': main_clean
+                      }

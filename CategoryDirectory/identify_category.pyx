@@ -13,7 +13,7 @@ cpdef str identify_category(str sku_row, list category_rightholders, list main_i
     :param main_limit_identifiers: список основных ограничивающих идентификаторов
     :param add_limit_identifiers: список дополнительных ограничивающих идентификаторов
     :param excluding_identifiers: список исключающих идентификаторов
-    :return: обозначение категории из category_rightholders или пустая строка, если категория не удается определить
+    :return: обозначение категории из category_rightholders или пустая строка, если категория не удается определить (list)
     """
     # Типизация используемых переменных
     cdef int i
@@ -93,7 +93,7 @@ cpdef tuple identify_category_and_dec_id(str sku_row, list category_rightholders
     :param excluding_identifiers: список исключающих идентификаторов
     :param sku_row: SKU, по которому определяется атегория
     :return: обозначение категории из category_rightholders или пустая строка, если категория не удается определить; главный решающий идентификатор; главный ограничивающий решающий
-    идентификатор; дополнительный ограничивающий решающий идентификатор
+    идентификатор; дополнительный ограничивающий решающий идентификатор (list)
     """
     # Типизация используемых переменных
     cdef int i
