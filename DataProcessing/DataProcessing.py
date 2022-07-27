@@ -93,7 +93,7 @@ class SKUProcessorInterface:
     def process(self):
         try:
             # Вычисление по батчам
-            #   Создание генератора, берущего по self.use_threads_count первых строк батчей, то есть столько, сколько будут загружаться и сохраняться одновременно
+            #   Список начал батчей
             batches_starts = np.arange(self.batches_num) * self.sku_processor.batch_len
             #   Обработка батчей по self.cpu_count штук
             for i, batch_start in enumerate(batches_starts):
@@ -117,11 +117,10 @@ class SKUProcessorInterface:
                 set_message_with_countdown('Батч обработан', self.timer_start, self.set_msg_func)
 
                 # Добавление обработанных данных в обработанный файл
-                #   Запись временных файлов обработанных данных, полученных из каждого батча
                 #       Сообщение о начале записи обработанных данных
                 set_message_with_countdown('Сохранение полученных данных', self.timer_start, self.set_msg_func)
                 
-                #   Запись исходящих данных из временых файлов в обработанный файл
+                #   Запись исходящих данных в обработанный файл
                 self.sku_processor.write_rows_to_csv_file(proc_data_batch)
 
                 #       Обновление количества обработанных строк
