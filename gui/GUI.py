@@ -1,21 +1,15 @@
 import sys
 import os
-import pandas as pd
 import json
 
-import chardet
-
-from math import floor
-
-from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QHBoxLayout, QGridLayout, QGroupBox, QTabWidget, QFileDialog, QLabel, QLineEdit, QTextEdit, QPushButton, QComboBox, QCheckBox, QProgressBar
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIntValidator, QIcon
-#from PyQt5.QtCore import QRunnable, QThreadPool, pyqtSlot
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
 
 import multiprocessing as mp
-from datetime import datetime
 
-from DataProcessing.DataProcessing import CategoryRecognizer
-from DataProcessing.SKUPreprocessing import SKUReaderCSV, SKUReaderExcel
+from DataProcessing.DataProcessing import CategoryRecognizer, SKUCleaner
+from DataProcessing.SKUPreprocessing import CLEAR_PATTERNS_DICT, preprocess_sku_for_recognizing
 from CategoryDirectory.CategoryDirectory import CategoryDirectory, find_all_dir, load_directory
 
 
@@ -62,7 +56,7 @@ class ProcessingTab(AppGUI):
     """
     def __init__(self, app_win):
         """
-        
+        :param app_win: окно приложения
         """
         super().__init__()
         
@@ -190,13 +184,13 @@ class ProcessingTab(AppGUI):
         # Отображение progress bar обработки
         #   Подпись
         self.pbar_label = QLabel(self)
-        self.pbar_label.setText('Прогресс рапознавания:')
+        self.pbar_label.setText('Прогресс раcпознавания:')
         tab_layout.addWidget(self.pbar_label)
         #   Progress bar
-        self.pbar = QProgressBar(self)
-        tab_layout.addWidget(self.pbar)
+        self.pbar = ProgressBar(QProgressBar(self))
+        tab_layout.addWidget(self.pbar.pbar)
         #       Обнуление progress bar
-        self.pbar.setValue(0)
+        self.pbar.reset(1)
         
         # Кнопки управления вычислениями
         #   Макет
@@ -205,7 +199,7 @@ class ProcessingTab(AppGUI):
         calc_command_btms_box.addStretch(1)
         #       Кнопка запуска вычислений
         self.run_btn = QPushButton('ЗАПУСК', self)
-        self.run_btn.clicked.connect(self.run_calc)
+        self.run_btn.clicked.connect(self.start_thread)
         calc_command_btms_box.addWidget(self.run_btn)
 
         #   Заполнение редактирумых элементов окна значениями из конфигурационного файла, которыми эти элементы были заполнены при последнем успешном запуске вычислений
@@ -261,127 +255,101 @@ class ProcessingTab(AppGUI):
             self.id_output_check.setChecked(dir_tab_config['dec_id'])
             self.sku_sheet_name_line_edit.setText(dir_tab_config['sku_sheet_name'])
         except:
-            print()
+            pass
     
-    def save_config(self):
+    def catch_config(self):
         """
         Запись конфигурационного файла json, содержащего значения редактируемых элементов окна вычислений, которые будут воспроизводиться при открытии окна в следущую сессию
         :return: файл json, содержащий значения редактируемых элементов окна вычислений; если директория config отсутствует, создает ее
         """
-        dir_tab_config = {
-                          'sel_dir': self.select_dir_combo.currentText(),
-                          'input_data_path': self.input_file_path_line_edit.text(),
-                          'sku_sheet_name': self.sku_sheet_name_line_edit.text(),
-                          'sku_col_name': self.sku_col_name_text_edit.toPlainText(),
-                          'output_data_path': self.output_file_path_line_edit.text(),
-                          'use_threads_count': self.use_threads_count_line_edit.text(),
-                          'max_batch_len': self.max_batch_len_line_edit.text(),
-                          'dec_id': self.id_output_check.isChecked()
+        self.tab_config = {
+                           'sel_dir': self.select_dir_combo.currentText(),
+                           'input_data_path': self.input_file_path_line_edit.text(),
+                           'sku_sheet_name': self.sku_sheet_name_line_edit.text(),
+                           'sku_col_name': self.sku_col_name_text_edit.toPlainText(),
+                           'output_data_path': self.output_file_path_line_edit.text(),
+                           'use_threads_count': self.use_threads_count_line_edit.text(),
+                           'max_batch_len': self.max_batch_len_line_edit.text(),
+                           'dec_id': self.id_output_check.isChecked()
                           }
+
+    def save_config(self):
+        """
+        Запись конфигурационного файла json, содержащего значения редактируемых элементов окна вычислений, которые будут воспроизводиться при открытии окна в следущую сессию.
+        Значения редактируемых элементов окна вычислений берутся из self.tab_config, которая предварительно записывается функцией self.catch_config()
+        :return: файл json, содержащий значения редактируемых элементов окна вычислений; если директория config отсутствует, создает ее
+        """
         if not os.path.exists('config'):
             os.makedirs('config')
         with open(os.path.join('config', 'proc_tab_config.json'), 'w') as config_file:
-            config_file.write(json.dumps(dir_tab_config))
+            config_file.write(json.dumps(self.tab_config))
 
-    def run_calc(self):
-        self.run_func()
+    def start_thread(self):
+        """
+        Запускает функцию self.run() в отдельном потоке через функцию self.app_win.run_tab_func
+        """
+        self.app_win.run_tab_func(self)
 
-        # worker = Worker(self.app_win, self.run_func)
-
-        # self.app_win.threadpool.start(worker)
-
-    def run_func(self):
+    def run(self):
+        """
+        Запускает распознавание категорий по SKU из заданного обрабатываемого файла по выбранному справочнику. Обрабатывает SKU из обрабатываемого файла по батчам заданного размера
+        используя заданный справочник категорий и записывает наименования категорий в csv файл по заданному пути.
+        """
         try:
-            # Начало отсчета таймера
-            self.app_win.info_win.reset_timer()
-            # Сообщение о начале обработки
-            self.app_win.info_win.set_massage('Начато распознование категорий по SKU')
-            # Обнуление progress bar
-            self.pbar.setValue(0)
-            # Сбор данных из GUI и определение параметров файла с данными для обработки, подготовка к началу рассчетов
-            #   Загрузка выбранного справочника, по нему будет идти распознавание категорий
-            sel_dir = load_directory(self.select_dir_combo.currentText())
-            #   Сообщение о завершении загрузки справочника
-            self.app_win.info_win.set_massage_with_countdown('Справочник \"' + self.select_dir_combo.currentText() + '\" загружен')
-            #   Путь к csv файлу, со строками SKU для обработки
-            input_data_path = self.input_file_path_line_edit.text()
-            #   Кодировка файла с данными
-            encoding = None
-            #   Лист excel-файла, содержащей строки SKU для обработки
-            sku_sheet_name = None
-            #   Определение расширения файла
-            file_ext = input_data_path.split('.')[-1]
-            #   Название столбца, содержащего строки SKU для обработки, если строка пустая, то берется первый столбец в заданном файле
-            sku_col_name = self.sku_col_name_text_edit.toPlainText()
-            #   Определение типа обрабатываемого файла и определение необходимых для полученного типа параметров
-            if  file_ext in json.load(open(os.path.join('config', 'excel_ext.json')))['excel_ext']:
-                # Формат обрабатываемого файла - excel
+            try:
+                # Сбор данных из GUI и определение параметров файла с данными для обработки, подготовка к началу рассчетов
+                #   Загрузка выбранного справочника, по нему будет идти распознавание категорий
+                sel_dir = load_directory(self.select_dir_combo.currentText())
+                #   Сообщение о завершении загрузки справочника
+                self.app_win.worker.set_message_to_gui_from_thread("".join(['Справочник \"', self.select_dir_combo.currentText(), '\" загружен для использования в дальнейшей обработки SKU']))
+                #   Путь к файлу, со строками SKU для обработки
+                input_data_path = self.input_file_path_line_edit.text()
                 # Название листа, содержащей строки SKU для обработки, если строка пустая, то берется первый лист в заданном файле
                 sku_sheet_name = self.sku_sheet_name_line_edit.text()
-                # Создание объекта-ридера SKU из excel-файла по пути input_data_path, из листа sku_sheet_name (или первого листа), из столбца sku_col_name (или первого столбца),
-                # осуществляющего чтение и предобработку SKU
-                sku_reader = SKUReaderExcel(input_data_path, sku_col_name, sku_sheet_name)
-                # Заполнение пустого значения названия листа с SKU excel-файла
-                if len(sku_sheet_name) == 0:
-                    sku_sheet_name = sku_reader.sku_sheet_name
-            else:
-                # Формат обрабатываемого файла - csv, txt
-                # Определение кодировки обрабатываемого файла
-                #   Сообщение о начале определния кодировки
-                self.app_win.info_win.set_massage_with_countdown('Определение кодировки обрабатываемого файла')
-                encoding = chardet.detect(open(input_data_path, 'rb').read())['encoding']
-                #   Сообщение о определенной кодировки
-                self.app_win.info_win.set_massage_with_countdown('Кодировка обрабатываемого файла:\t\"' + encoding + '\"')
-                # Создание объекта-ридера SKU из csv-файла по пути input_data_path, из столбца sku_col_name (или первого столбца), осуществляющего чтение и предобработку SKU
-                sku_reader = SKUReaderCSV(input_data_path, sku_col_name, encoding)
-            #   Заполнение пустого значения названия столбца с SKU
-            if len(sku_col_name) == 0:
-                sku_col_name = sku_reader.column_name()
-            #   Путь к файлу, в который будут выводиться результаты распознавания
-            output_data_path = self.output_file_path_line_edit.text()
-            #   Количество задействованых в вычислении потоков, если строка пустая, то берется максимальное доступное количество потоков
-            use_threads_count = self.use_threads_count_line_edit.text()
-            if len(use_threads_count) == 0:
-                use_threads_count == self.cpu_max
-                # Заполнение пустой строки значением по умолчанию
-                self.use_threads_count_line_edit.setText(str(use_threads_count))
-            else:
-                use_threads_count = int(use_threads_count)
-            #   Максимальное количество строк в одном батче, если строка пустая, то берется значение потоков по умолчанию
-            max_batch_len = self.max_batch_len_line_edit.text()
-            if len(max_batch_len) == 0:
-                max_batch_len == self.default_max_batch_len
-                # Заполнение пустой строки значением по умолчанию
-                self.max_batch_len_line_edit.setText(str(use_threads_count))
-            else:
-                max_batch_len = int(max_batch_len)
-            
-            # Обработка
-            #   Сообщение о начале обработки
-            #   Добавочное сообщение о том, что выводятся определяющие идентификаторы
-            if self.id_output_check.isChecked():
-                id_output_add_msg = ' с выводом определяющих идентификаторов'
-            else:
-                id_output_add_msg = ''
-            self.app_win.info_win.set_massage_with_countdown('Распознование категорий по SKU' + id_output_add_msg)
-            self.app_win.info_win.set_massage_with_tab('из файла \"' + input_data_path + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец SKU:\t\t\t\"' + sku_col_name + '\";')
-            self.app_win.info_win.set_massage_with_tab('кол-во задействованных потоков:\t' + str(use_threads_count) + ';')
-            self.app_win.info_win.set_massage_with_tab('макс. кол-во строк в батче:\t\t' + str(max_batch_len) + ';')
-            self.app_win.info_win.set_massage_with_tab('результат обработки будет сохранен в файл:\t\"' + output_data_path + '\"')
-            #   Создание объекта, распознающего категории по SKU в соответствии справочнику sel_dir
-            br = CategoryRecognizer(sku_reader, sel_dir, max_batch_len=max_batch_len, get_dec_id=self.id_output_check.isChecked(), cpu_count=use_threads_count)
-            #   Распознавание SKU из заданного файла в соответствии заданному справочнику
-            br.process_data(output_data_path, self)
-            #   Сообщение о завершении обработки
-            self.app_win.info_win.set_massage_with_countdown('Распознвание категорий по SKU завершено, результаты сохранены в обработанный файл')
-            #   Запись содержания строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
-            self.save_config()
-        except Exception as e:
-            self.app_win.info_win.set_massage('ERROR!!!\t' + str(e))
-            if os.path.exists('temp'):
-                os.rmdir('temp')
+                #   Название столбца, содержащего строки SKU для обработки, если строка пустая, то берется первый столбец в заданном файле
+                sku_col_name = self.sku_col_name_text_edit.toPlainText()
+                #   Путь к файлу, в который будут выводиться результаты распознавания
+                output_data_path = self.output_file_path_line_edit.text()
+                #   Количество задействованых в вычислении потоков, если строка пустая, то берется максимальное доступное количество потоков
+                use_threads_count = self.use_threads_count_line_edit.text()
+                if len(use_threads_count) == 0 or int(use_threads_count) > self.cpu_max:
+                    use_threads_count == self.cpu_max
+                    # Заполнение пустой строки значением по умолчанию
+                    self.use_threads_count_line_edit.setText(str(use_threads_count))
+                else:
+                    use_threads_count = int(use_threads_count)
+                #   Максимальное количество строк в одном батче, если строка пустая, то берется значение потоков по умолчанию
+                max_batch_len = self.max_batch_len_line_edit.text()
+                if len(max_batch_len) == 0:
+                    max_batch_len == self.default_max_batch_len
+                    # Заполнение пустой строки значением по умолчанию
+                    self.max_batch_len_line_edit.setText(str(use_threads_count))
+                else:
+                    max_batch_len = int(max_batch_len)
+                # Флаг, означающий, что нужно выводить определяющие идентификаторы
+                get_dec_id = self.id_output_check.isChecked()
+                # Считывание содержания строк окна
+                self.catch_config()
+            except Exception as e:
+                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                raise Exception("ERROR!!!")
 
+            # Распознавание SKU из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
+            CategoryRecognizer(input_data_path, sku_sheet_name, sku_col_name, output_data_path, sel_dir, max_batch_len, get_dec_id, use_threads_count,
+            self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
+
+            #   Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
+            try:
+                self.save_config()
+            except Exception as e:
+                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                raise Exception("ERROR!!!")
+        except Exception as e:
+            pass
+        finally:
+            # Сигнал о завершении процесса
+            self.app_win.worker.finished.emit()
+            
 
 class DirectoryTab(AppGUI):
     """
@@ -389,7 +357,7 @@ class DirectoryTab(AppGUI):
     """
     def __init__(self, app_win):
         """
-
+        :param app_win: окно приложения
         """
         super().__init__()
 
@@ -417,7 +385,7 @@ class DirectoryTab(AppGUI):
         # Ввод пути к файлу со справочником
         #   Подпись
         self.dir_file_path_label = QLabel(self)
-        self.dir_file_path_label.setText('Путь к excel файлу с информацией для справочника:')
+        self.dir_file_path_label.setText('Путь к excel-файлу с информацией для справочника:')
         tab_layout.addWidget(self.dir_file_path_label)
         #   Макет строки ввода
         dir_file_path_box = QHBoxLayout()
@@ -442,13 +410,13 @@ class DirectoryTab(AppGUI):
 
         # Ввод названия столбца справочника, содержащего название категорий
         #   Подпись
-        self.brand_rightholders_title_col_name_label = QLabel(self)
-        self.brand_rightholders_title_col_name_label.setText('Название столбца обозначений категорий:')
-        tab_layout.addWidget(self.brand_rightholders_title_col_name_label)
+        self.category_rightholders_title_col_name_label = QLabel(self)
+        self.category_rightholders_title_col_name_label.setText('Название столбца обозначений категорий:')
+        tab_layout.addWidget(self.category_rightholders_title_col_name_label)
         #   Строка ввода
-        self.brand_rightholders_title_col_name_text_edit = QTextEdit(self)
-        self.brand_rightholders_title_col_name_text_edit.setFixedHeight(self.col_name_text_edit_high)
-        tab_layout.addWidget(self.brand_rightholders_title_col_name_text_edit)
+        self.category_rightholders_title_col_name_text_edit = QTextEdit(self)
+        self.category_rightholders_title_col_name_text_edit.setFixedHeight(self.col_name_text_edit_high)
+        tab_layout.addWidget(self.category_rightholders_title_col_name_text_edit)
 
         # Ввод названия столбца справочника, содержащего основные идентификаторы
         #   Подпись
@@ -497,7 +465,7 @@ class DirectoryTab(AppGUI):
         calc_command_btms_box.addStretch(1)
         #       Кнопка запуска вычислений
         self.run_btn = QPushButton('ЗАПУСК', self)
-        self.run_btn.clicked.connect(self.run_calc)
+        self.run_btn.clicked.connect(self.start_thread)
         calc_command_btms_box.addWidget(self.run_btn)
 
         #   Заполнение редактирумых элементов окна значениями из конфигурационного файла, которыми эти элементы были заполнены при последнем успешном запуске вычислений
@@ -522,60 +490,62 @@ class DirectoryTab(AppGUI):
             self.dir_name_line_edit.setText(dir_tab_config['dir_name'])
             self.dir_file_path_line_edit.setText(dir_tab_config['data_path'])
             self.dir_sheet_name_line_edit.setText(dir_tab_config['directory_sheet_name'])
-            self.brand_rightholders_title_col_name_text_edit.setText(dir_tab_config['brand_rightholders_title'])
+            self.category_rightholders_title_col_name_text_edit.setText(dir_tab_config['category_rightholders_title'])
             self.main_id_title_col_name_text_edit.setText(dir_tab_config['main_identifiers_title'])
             self.main_limit_id_title_col_name_text_edit.setText(dir_tab_config['main_limit_identifiers_title'])
             self.add_limit_id_title_col_name_text_edit.setText(dir_tab_config['add_limit_identifiers_title'])
             self.exclud_id_title_col_name_text_edit.setText(dir_tab_config['excluding_identifiers_title'])
         except:
-            print()
+            pass
     
-    def save_config(self):
+    def catch_config(self):
         """
         Запись конфигурационного файла json, содержащего значения редактируемых строк окна составления справочника, которые будут воспроизводиться при открытии окна в следующую сессию
         :return: файл json, содержащий значения редактируемых строк окна составления справочника; если директория config отсутствует, создает ее
         """
-        dir_tab_config = {
-                          'dir_name': self.dir_name_line_edit.text(),
-                          'data_path': self.dir_file_path_line_edit.text(),
-                          'directory_sheet_name': self.dir_sheet_name_line_edit.text(),
-                          'brand_rightholders_title': self.brand_rightholders_title_col_name_text_edit.toPlainText(),
-                          'main_identifiers_title': self.main_id_title_col_name_text_edit.toPlainText(),
-                          'main_limit_identifiers_title': self.main_limit_id_title_col_name_text_edit.toPlainText(),
-                          'add_limit_identifiers_title': self.add_limit_id_title_col_name_text_edit.toPlainText(),
-                          'excluding_identifiers_title': self.exclud_id_title_col_name_text_edit.toPlainText()
-                         }
+        self.tab_config = {
+                           'dir_name': self.dir_name_line_edit.text(),
+                           'data_path': self.dir_file_path_line_edit.text(),
+                           'directory_sheet_name': self.dir_sheet_name_line_edit.text(),
+                           'category_rightholders_title': self.category_rightholders_title_col_name_text_edit.toPlainText(),
+                           'main_identifiers_title': self.main_id_title_col_name_text_edit.toPlainText(),
+                           'main_limit_identifiers_title': self.main_limit_id_title_col_name_text_edit.toPlainText(),
+                           'add_limit_identifiers_title': self.add_limit_id_title_col_name_text_edit.toPlainText(),
+                           'excluding_identifiers_title': self.exclud_id_title_col_name_text_edit.toPlainText()
+                          }
+    
+    def save_config(self):
+        """
+        Запись конфигурационного файла json, содержащего значения редактируемых элементов окна вычислений, которые будут воспроизводиться при открытии окна в следущую сессию.
+        Значения редактируемых элементов окна вычислений берутся из self.tab_config, которая предварительно записывается функцией self.catch_config()
+        :return: файл json, содержащий значения редактируемых элементов окна вычислений; если директория config отсутствует, создает ее
+        """
         if not os.path.exists('config'):
             os.makedirs('config')
         with open(os.path.join('config', 'dir_tab_config.json'), 'w') as config_file:
-            config_file.write(json.dumps(dir_tab_config))
+            config_file.write(json.dumps(self.tab_config))
 
-    def run_calc(self):
-        self.run_func()
-
-        # worker = Worker(self.app_win, self.run_func)
-
-        # self.app_win.threadpool.start(worker)
-
-    def run_func(self):
+    def start_thread(self):
+        """
+        Запускает функцию self.run() в отдельном потоке через функцию self.app_win.run_tab_func
+        """
+        self.app_win.run_tab_func(self)
+    
+    def run(self):
         """
         Составление и сохранение справочника по параметрам, заданным в GUI, активируется кнопкой "ЗАПУСК"
         :return: составляет и сохраняет новый справочника в saves
         """
         try:
-            # Начало отсчета таймера
-            self.app_win.info_win.reset_timer()
-            # Сообщение о составления справочника
-            self.app_win.info_win.set_massage('Начато составление справочника')
             # Сбор данных из GUI
             #   Название составляемого справочника
             dir_name = self.dir_name_line_edit.text()
-            #   Путь к excel файлу, с информацией для справочника
+            #   Путь к excel-файлу, с данными для справочника
             data_path = self.dir_file_path_line_edit.text()
             #   Название листа содержащей информацию для справочника, если строка пустая, то берется первый лист в заданном файле
             directory_sheet_name = self.dir_sheet_name_line_edit.text()
             #   Название столбца обозначений категорий, если строка пустая, то берется первый столбец в заданном листе заданного файла
-            brand_rightholders_title = self.brand_rightholders_title_col_name_text_edit.toPlainText()
+            category_rightholders_title = self.category_rightholders_title_col_name_text_edit.toPlainText()
             #   Название столбца основных идентификаторов, если строка пустая, то берется второй столбец в заданном листе заданного файла
             main_identifiers_title = self.main_id_title_col_name_text_edit.toPlainText()
             #   Название столбца основных ограничивающих идентификаторов, если строка пустая, то берется третий столбец в заданном листе заданного файла
@@ -584,57 +554,338 @@ class DirectoryTab(AppGUI):
             add_limit_identifiers_title = self.add_limit_id_title_col_name_text_edit.toPlainText()
             #   Название столбца исключающих идентификаторов, если строка пустая, то берется пятый столбец в заданном листе заданного файла
             excluding_identifiers_title = self.exclud_id_title_col_name_text_edit.toPlainText()
+            # Считывание содержания строк окна
+            self.catch_config()
 
-            # Чтение данных из файла data_path
-            with pd.ExcelFile(data_path) as reader:
-                # Замена пустого значения листа со справочником а название первого листа в файле
-                if len(directory_sheet_name) == 0:
-                    directory_sheet_name = reader.sheet_names[0]
-                # Чтение листа excel файла с названием directory_sheet_name, содержащей обозначения категорий и их идентификаторы
-                features_df = pd.read_excel(reader, sheet_name=directory_sheet_name)
-                # Замена значений пустых строк на соответствующие значения, если необходимо
-                if len(brand_rightholders_title) == 0:
-                    brand_rightholders_title = features_df.columns[0]
-                if len(main_identifiers_title) == 0:
-                    main_identifiers_title = features_df.columns[1]
-                if len(main_limit_identifiers_title) == 0:
-                    main_limit_identifiers_title = features_df.columns[2]
-                if len(add_limit_identifiers_title) == 0:
-                    add_limit_identifiers_title = features_df.columns[3]
-                if len(excluding_identifiers_title) == 0:
-                    excluding_identifiers_title = features_df.columns[4]
-                    
-            # Сообщение о начале составления справочника
-            self.app_win.info_win.set_massage_with_countdown('Составление справочника ' + '\"' + dir_name + '\"')
-            self.app_win.info_win.set_massage_with_tab('по файлу \"' + data_path + '\";')
-            self.app_win.info_win.set_massage_with_tab('по листу \"' + directory_sheet_name + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец категорий:\t\"' + brand_rightholders_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец глав. ид-ов:\t\"' + main_identifiers_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец глав. огран. ид-ов:\t\"' + main_limit_identifiers_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец доп. огран. ид-ов:\t\"' + add_limit_identifiers_title + '\";')
-            self.app_win.info_win.set_massage_with_tab('столбец искл. ид-ов:\t\"' + excluding_identifiers_title + '\"')
             # Создание объекта справочника
-            category_dir = CategoryDirectory(features_df,
-                                         brand_rightholders_title,
-                                         main_identifiers_title,
-                                         main_limit_identifiers_title,
-                                         add_limit_identifiers_title,
-                                         excluding_identifiers_title)
-            # Сообщение о завершении составлния спраочника
-            self.app_win.info_win.set_massage_with_countdown('Справочник \"' + dir_name + '\" составлен')
-            # Сообщение о начале сохранения справочника
-            self.app_win.info_win.set_massage_with_countdown('Сохранение справочника \"' + dir_name + '\"')
-            # Сохранение справочника
-            category_dir.save(dir_name)
-            # Обновление списка справочников
-            self.app_win.proc_tab.find_directories()
-            # Сообщение о завершении составлении справочника и его сохранение, вывод количества строк
-            self.app_win.info_win.set_massage_with_countdown('Справочник \"' + dir_name + '\" составлен и сохранен;')
-            self.app_win.info_win.set_massage_with_tab('кол-во категорий в справочнике:\t' + str(len(category_dir)))
-            # Запись содержания строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
-            self.save_config()
-        except Exception as e:
-            self.app_win.info_win.set_massage('ERROR!!!\t' + str(e))
+            category_dir = CategoryDirectory(
+                                            dir_name,
+                                            data_path,
+                                            directory_sheet_name,
+                                            category_rightholders_title,
+                                            main_identifiers_title,
+                                            main_limit_identifiers_title,
+                                            add_limit_identifiers_title,
+                                            excluding_identifiers_title,
+                                            preprocess_sku_for_recognizing,
+                                            self.app_win.worker.set_message_to_gui_from_thread
+                                            )
+            try:
+                # Сообщение о начале сохранения справочника
+                self.app_win.worker.set_message_to_gui_from_thread("".join(['Сохранение справочника \"', dir_name, '\"']))
+                # Сохранение справочника
+                category_dir.save(dir_name)
+                # Обновление списка справочников
+                self.worker.update_dir_list_from_thread()
+                # Сообщение о завершении составлении справочника и его сохранение, вывод количества строк
+                self.app_win.worker.set_message_to_gui_from_thread("".join(['Справочник \"', dir_name, '\" составлен и сохранен']))
+                # Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
+                self.save_config()
+            except Exception as e:
+                # Сообщение об ошибке
+                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                raise Exception("ERROR!!!")
+        except:
+            pass
+        finally:
+            # Сигнал о завершении процесса
+            self.app_win.worker.finished.emit()
+
+
+class SKUCleanTab(AppGUI):
+    """
+    Вкладка очистки SKU. Наследует AppGUI.
+    """
+    def __init__(self, app_win):
+        """
+        :param app_win: окно приложения
+        """
+        super().__init__()
+        
+        # Максимальное число потоков
+        self.cpu_max = mp.cpu_count()
+        # Максимальная длина батча по умолчанию
+        self.default_max_batch_len = 100000
+
+        self.app_win = app_win
+        # Создание окна
+        self.initUI()
+    
+    def initUI(self):
+        """
+        Создание вкладки
+        """
+        # Макет вкладки
+        tab_layout = QVBoxLayout(self)
+
+        # Выбор справочника
+        #   Подпись
+        self.select_pattern_label = QLabel(self)
+        self.select_pattern_label.setText('Выберите шаблон:')
+        tab_layout.addWidget(self.select_pattern_label)
+        #   Комбобокс
+        self.select_pattern_combo = QComboBox(self)
+        #       Заполнение комбобокса названиями сохраненных в saves справочников
+        self.fill_pattern_combo()
+        tab_layout.addWidget(self.select_pattern_combo)
+
+        # Ввод пути к обрабатываемому файлу
+        #   Подпись
+        self.input_file_path_label = QLabel(self)
+        self.input_file_path_label.setText('Путь к обрабатываемому файлу:')
+        tab_layout.addWidget(self.input_file_path_label)
+        #   Макет строки ввода
+        input_file_path_box = QHBoxLayout()
+        tab_layout.addLayout(input_file_path_box)
+        #       Строка ввода
+        self.input_file_path_line_edit = QLineEdit(self)
+        input_file_path_box.addWidget(self.input_file_path_line_edit)
+        #       Кнопка вызова диалогового окна выбора файла
+        self.input_file_path_btn = QPushButton('...', self)
+        self.input_file_path_btn.clicked.connect(self.input_file_path_btn_click)
+        self.input_file_path_btn.setFixedWidth(self.file_path_btn_wight)
+        input_file_path_box.addWidget(self.input_file_path_btn)
+
+        # Ввод названия листа SKU в обрабатываемом excel-файле
+        #   Подпись
+        self.sku_sheet_name_label = QLabel(self)
+        self.sku_sheet_name_label.setText('Название листа SKU в обрабатываемом файле (если файл excel):')
+        tab_layout.addWidget(self.sku_sheet_name_label)
+        #   Строка ввода
+        self.sku_sheet_name_line_edit = QLineEdit(self)
+        tab_layout.addWidget(self.sku_sheet_name_line_edit)
+
+        # Ввод названия столбца SKU в обрабатываемом файле
+        #   Подпись
+        self.sku_col_name_label = QLabel(self)
+        self.sku_col_name_label.setText('Название столбца SKU в обрабатываемом файле:')
+        tab_layout.addWidget(self.sku_col_name_label)
+        #   Строка ввода
+        self.sku_col_name_text_edit = QTextEdit(self)
+        self.sku_col_name_text_edit.setFixedHeight(self.col_name_text_edit_high)
+        tab_layout.addWidget(self.sku_col_name_text_edit)
+        
+        # Ввод пути к обработанному файлу
+        #   Подпись
+        self.output_file_path_label = QLabel(self)
+        self.output_file_path_label.setText('Путь к обработанному файлу:')
+        tab_layout.addWidget(self.output_file_path_label)
+        #   Макет строки ввода
+        output_file_path_box = QHBoxLayout()
+        tab_layout.addLayout(output_file_path_box)
+        #       Строка ввода
+        self.output_file_path_line_edit = QLineEdit(self)
+        output_file_path_box.addWidget(self.output_file_path_line_edit)
+        #       Кнопка вызова диалогового окна выбора файла
+        self.output_file_path_btn = QPushButton('...', self)
+        self.output_file_path_btn.clicked.connect(self.output_file_path_btn_click)
+        self.output_file_path_btn.setFixedWidth(self.file_path_btn_wight)
+        output_file_path_box.addWidget(self.output_file_path_btn)
+        
+        # Блок параметров вычислений
+        #   Макет-сетка
+        calc_param_block_grid = QGridLayout()
+        calc_param_block_grid.setSpacing(2)
+        tab_layout.addLayout(calc_param_block_grid)
+        #   Ввод количества потоков, использующихся при вычислениях
+        #       Подпись
+        self.use_threads_count_label = QLabel(self)
+        self.use_threads_count_label.setText('Кол-во задействованных потоков:')
+        calc_param_block_grid.addWidget(self.use_threads_count_label, 1, 1)
+        #       Макет строки ввода
+        use_threads_count_box = QHBoxLayout()
+        calc_param_block_grid.addLayout(use_threads_count_box, 1, 2)
+        #           Строка ввода
+        self.use_threads_count_line_edit = QLineEdit(self)
+        self.use_threads_count_line_edit.setValidator(QIntValidator())
+        self.use_threads_count_line_edit.setFixedWidth(self.short_input_line_wight)
+        use_threads_count_box.addWidget(self.use_threads_count_line_edit)
+        #           Кнопка ввода максимального кол-ва потоков для вычисления
+        self.max_threads_btn = QPushButton('MAX', self)
+        self.max_threads_btn.clicked.connect(self.max_threads_btn_click)
+        use_threads_count_box.addWidget(self.max_threads_btn)
+        use_threads_count_box.addStretch(1)
+        #       Ввод максимального кол-ва ядер, как значения по умолчанию
+        self.max_threads_btn_click()
+        #   Ввод количества строк в батче
+        #       Подпись
+        self.use_batch_max_count_label = QLabel(self)
+        self.use_batch_max_count_label.setText('Макс. кол-во строк в батче:')
+        calc_param_block_grid.addWidget(self.use_batch_max_count_label, 2, 1)
+        #       Строка ввода
+        self.max_batch_len_line_edit = QLineEdit(self)
+        self.max_batch_len_line_edit.setValidator(QIntValidator())
+        self.max_batch_len_line_edit.setFixedWidth(self.short_input_line_wight)
+        self.max_batch_len_line_edit.setText(str(self.default_max_batch_len))
+        calc_param_block_grid.addWidget(self.max_batch_len_line_edit, 2, 2)
+
+        # Отображение progress bar обработки
+        #   Подпись
+        self.pbar_label = QLabel(self)
+        self.pbar_label.setText('Прогресс раcпознавания:')
+        tab_layout.addWidget(self.pbar_label)
+        #   Progress bar
+        self.pbar = ProgressBar(QProgressBar(self))
+        tab_layout.addWidget(self.pbar.pbar)
+        #       Обнуление progress bar
+        self.pbar.reset(1)
+        
+        # Кнопки управления вычислениями
+        #   Макет
+        calc_command_btms_box = QHBoxLayout()
+        tab_layout.addLayout(calc_command_btms_box)
+        calc_command_btms_box.addStretch(1)
+        #       Кнопка запуска вычислений
+        self.run_btn = QPushButton('ЗАПУСК', self)
+        self.run_btn.clicked.connect(self.run)
+        #self.run_btn.clicked.connect(self.start_thread)
+        calc_command_btms_box.addWidget(self.run_btn)
+
+        #   Заполнение редактирумых элементов окна значениями из конфигурационного файла, которыми эти элементы были заполнены при последнем успешном запуске вычислений
+        self.load_config()
+    
+    def fill_pattern_combo(self):
+        """
+        Заплняет комбобокс выбора шалона очистки
+        :return: добавляет названия доступных шаблонов очистки в комбобокс выбора шаблона очистки
+        """
+        self.select_pattern_combo.clear()
+        self.select_pattern_combo.addItems(CLEAR_PATTERNS_DICT.keys())
+    
+    def input_file_path_btn_click(self):
+        """
+        Функция кнопки вызова диалогового окна выбора файла для строки ввода обрабатываемого файла
+        :return: в строку ввода обрабатываемого файла вводится путь к выбраному файлу
+        """
+        choosed_file_path = self.get_path_from_open_file_dialog('Обрабатываемый файл')
+        if choosed_file_path != '':
+            self.input_file_path_line_edit.setText(choosed_file_path)
+    
+    def output_file_path_btn_click(self):
+        """
+        Функция кнопки вызова диалогового окна выбора файла для строки ввода обработанного файла
+        :return: в строку ввода обработанного файла вводится путь к выбраному файлу
+        """
+        choosed_file_path = self.get_path_from_save_file_dialog('Обработанный файл')
+        if choosed_file_path != '':
+            self.output_file_path_line_edit.setText(choosed_file_path)
+    
+    def max_threads_btn_click(self):
+        """
+        Функция кнопки ввода максимального кол-ва потоков для вычисления
+        :return: записывает в строку ввода используемого количества потоков максималього числа потоков
+        """
+        self.use_threads_count_line_edit.setText(str(self.cpu_max))
+    
+    def load_config(self):
+        """
+        Заполнение редактируемых элементов окна составления справочника значениями из сохраненного конфигурационного файла config\\proc_tab_config.json, если он есть
+        """
+        try:
+            with open(os.path.join('config', 'clean_tab_config.json')) as config_file:
+                dir_tab_config = json.load(config_file)
+            self.select_pattern_combo.setCurrentText(dir_tab_config['sel_pat'])
+            self.input_file_path_line_edit.setText(dir_tab_config['input_data_path'])
+            self.sku_col_name_text_edit.setText(dir_tab_config['sku_col_name'])
+            self.output_file_path_line_edit.setText(dir_tab_config['output_data_path'])
+            self.use_threads_count_line_edit.setText(dir_tab_config['use_threads_count'])
+            self.max_batch_len_line_edit.setText(dir_tab_config['max_batch_len'])
+            self.sku_sheet_name_line_edit.setText(dir_tab_config['sku_sheet_name'])
+        except:
+            pass
+    
+    def catch_config(self):
+        """
+        Запись конфигурационного файла json, содержащего значения редактируемых элементов окна вычислений, которые будут воспроизводиться при открытии окна в следущую сессию
+        :return: файл json, содержащий значения редактируемых элементов окна вычислений; если директория config отсутствует, создает ее
+        """
+        self.tab_config = {
+                           'sel_pat': self.select_pattern_combo.currentText(),
+                           'input_data_path': self.input_file_path_line_edit.text(),
+                           'sku_sheet_name': self.sku_sheet_name_line_edit.text(),
+                           'sku_col_name': self.sku_col_name_text_edit.toPlainText(),
+                           'output_data_path': self.output_file_path_line_edit.text(),
+                           'use_threads_count': self.use_threads_count_line_edit.text(),
+                           'max_batch_len': self.max_batch_len_line_edit.text()
+                          }
+
+    def save_config(self):
+        """
+        Запись конфигурационного файла json, содержащего значения редактируемых элементов окна вычислений, которые будут воспроизводиться при открытии окна в следущую сессию.
+        Значения редактируемых элементов окна вычислений берутся из self.tab_config, которая предварительно записывается функцией self.catch_config()
+        :return: файл json, содержащий значения редактируемых элементов окна вычислений; если директория config отсутствует, создает ее
+        """
+        if not os.path.exists('config'):
+            os.makedirs('config')
+        with open(os.path.join('config', 'clean_tab_config.json'), 'w') as config_file:
+            config_file.write(json.dumps(self.tab_config))
+
+
+    def start_thread(self):
+        """
+        Запускает функцию self.run() в отдельном потоке через функцию self.app_win.run_tab_func
+        """
+        self.app_win.run_tab_func(self)
+
+    def run(self):
+        """
+        Запускает распознавание категорий по SKU из заданного обрабатываемого файла по выбранному справочнику. Обрабатывает SKU из обрабатываемого файла по батчам заданного размера
+        используя заданный справочник категорий и записывает наименования категорий в csv файл по заданному пути.
+        """
+        try:
+            try:
+                # Сбор данных из GUI и определение параметров файла с данными для обработки, подготовка к началу рассчетов
+                #   Название шаблона очистки SKU
+                clean_pattern = self.select_pattern_combo.currentText()
+                #   Путь к файлу, со строками SKU для обработки
+                input_data_path = self.input_file_path_line_edit.text()
+                # Название листа, содержащей строки SKU для обработки, если строка пустая, то берется первый лист в заданном файле
+                sku_sheet_name = self.sku_sheet_name_line_edit.text()
+                #   Название столбца, содержащего строки SKU для обработки, если строка пустая, то берется первый столбец в заданном файле
+                sku_col_name = self.sku_col_name_text_edit.toPlainText()
+                #   Путь к файлу, в который будут выводиться результаты распознавания
+                output_data_path = self.output_file_path_line_edit.text()
+                #   Количество задействованых в вычислении потоков, если строка пустая, то берется максимальное доступное количество потоков
+                use_threads_count = self.use_threads_count_line_edit.text()
+                if len(use_threads_count) == 0 or int(use_threads_count) > self.cpu_max:
+                    use_threads_count == self.cpu_max
+                    # Заполнение пустой строки значением по умолчанию
+                    self.use_threads_count_line_edit.setText(str(use_threads_count))
+                else:
+                    use_threads_count = int(use_threads_count)
+                #   Максимальное количество строк в одном батче, если строка пустая, то берется значение потоков по умолчанию
+                max_batch_len = self.max_batch_len_line_edit.text()
+                if len(max_batch_len) == 0:
+                    max_batch_len == self.default_max_batch_len
+                    # Заполнение пустой строки значением по умолчанию
+                    self.max_batch_len_line_edit.setText(str(use_threads_count))
+                else:
+                    max_batch_len = int(max_batch_len)
+                # Считывание содержания строк окна
+                self.catch_config()
+            except Exception as e:
+                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                raise Exception("ERROR!!!")
+            try:
+                # Распознавание SKU из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
+                SKUCleaner(input_data_path, sku_sheet_name, sku_col_name, output_data_path, max_batch_len, clean_pattern, use_threads_count,
+                self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
+            except Exception as e:
+                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                raise Exception("ERROR!!!")
+
+            #   Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
+            try:
+                self.save_config()
+            except Exception as e:
+                # Сообщение об ошибке
+                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                raise Exception("ERROR!!!")
+        except:
+            pass
+        finally:
+            # Сигнал о завершении процесса
+            self.app_win.worker.finished.emit()
 
 
 class InfoWindow(AppGUI):
@@ -654,57 +905,17 @@ class InfoWindow(AppGUI):
         self.proc_progress_text = QTextEdit(self)
         self.proc_progress_text.setReadOnly(True)
 
-    def reset_timer(self):
+    def set_message_to_gui(self, msg):
         """
-        Начать отсчет времени. Текущее время записывается в поле self.calc_begin_time. Функция countdown возвращает отсчет времени от поля self.calc_begin_time.
-        """
-        self.calc_begin_time = datetime.now()
-    
-    def set_massage(self, msg):
-        """
-        Записывает заданное сообщение msg в текстовое окно интерфейса self.dir_sheet_name_line_edit
+        Записывает заданное сообщение msg в текстовое окно графического интерфейса self.proc_progress_text
+
         :param msg: строка сообщения (str)
+        :param proc_progress_text: текстовое окно, в которое выводится сообщение (QTextEdit)
+
         :return: записывает msg в окно сообщений
         """
         self.proc_progress_text.append(msg)
         QApplication.processEvents()
-    
-    def set_massage_with_tab(self, msg):
-        """
-        Записывает заданное сообщение msg в текстовое окно интерфейса self.dir_sheet_name_line_edit и добавляет в начале табуляцию
-        :param msg: строка сообщения (str)
-        :return: записывает msg в окно сообщений
-        """
-        self.set_massage('\t' + msg)
-    
-    def set_massage_with_countdown(self, msg):
-        """
-        Записывает заданное сообщение msg в текстовое окно интерфейса self.dir_sheet_name_line_edit и добавляет в начале отсчет времени self.countdown()
-        :param msg: строка сообщения (str)
-        :return: записывает msg в окно сообщений
-        """
-        self.set_massage(self.countdown() + '\t' + msg)
-    
-    def countdown(self):
-        """
-        Вывод отсчета времени от заданного начала отчета времени self.calc_begin_time в формате строки 'h:mm:ss'
-        :return: Отсчет времени от заданного начала отчета времени self.calc_begin_time в формате строки 'h:mm:ss'
-        """
-        # Вычисление времени от начала отсчета self.proc_begin_time
-        time = datetime.now() - self.calc_begin_time
-        # Вычисление целых часов, минут и секунд в time
-        hours, reminder = divmod(time.total_seconds(), 60)
-        minutes, seconds = divmod(reminder, 60)
-        hours_str = str(floor(hours))
-        minutes_str = str(floor(minutes))
-        # Приведение целых минут и секунд к формату mm и ss, соответственно
-        if len(minutes_str) == 1:
-            minutes_str = '0' + minutes_str
-        seconds_str = str(floor(seconds))
-        if len(seconds_str) == 1:
-            seconds_str = '0' + seconds_str
-        # Вывод времени в формате h:mm:ss
-        return ":".join([hours_str, minutes_str, seconds_str])
 
 
 class AppWindow(AppGUI):
@@ -718,8 +929,6 @@ class AppWindow(AppGUI):
         self.window_wight = 600
         # Начальная высота окна приложения
         self.window_high = 800
-
-        #self.threadpool = QThreadPool()
 
         # Создание окна
         self.initUI()
@@ -736,19 +945,25 @@ class AppWindow(AppGUI):
         try:
             self.setWindowIcon(QIcon('NTech_logo.png'))
         except:
-            print()
+            pass
 
         # Макет окна приложений
         app_layout = QVBoxLayout(self)
 
-        # Вкладки вычислений
-        #   Создание вкладок вычислений
+        # Вкладки
+        #   Создание вкладок
+        #       Вкладка распознования категорий
         self.proc_tab = ProcessingTab(self)
+        #       Вкладка составления справочника категорий
         self.dir_tab = DirectoryTab(self)
+        #       Вкладка очистки SKU
+        self.clean_tab = SKUCleanTab(self)
         #   Окно вкладок вычислений
         tabs = QTabWidget()
         tabs.addTab(self.proc_tab, "Распознавание")
         tabs.addTab(self.dir_tab, "Справочник")
+        tabs.addTab(self.clean_tab, "Очистка")
+
         #   Макет окна
         tab_layout = QVBoxLayout()
         tab_layout.addWidget(tabs)
@@ -771,33 +986,122 @@ class AppWindow(AppGUI):
 
         app_layout.addWidget(info_win_box)
 
-        # # Кнопка остановки вычислений
-        # #   Макет
-        # stop_btm_box = QHBoxLayout()
-        # stop_btm_box.addStretch(1)
-        # #   Кнопка
-        # self.stop_btn = QPushButton('СТОП', self)
-        # self.stop_btn.clicked.connect(self.stop)
-        # self.stop_btn.setEnabled(False)
-        # stop_btm_box.addWidget(self.stop_btn)
-
-        # app_layout.addLayout(stop_btm_box)
+        # Кнопка остановки вычислений
+        #   Макет
+        stop_btm_box = QHBoxLayout()
+        stop_btm_box.addStretch(1)
+        #   Кнопка
+        self.stop_btn = QPushButton('СТОП', self)
+        self.stop_btn.setEnabled(False)
+        stop_btm_box.addWidget(self.stop_btn)
+        self.stop_btn.clicked.connect(self.stop)
+        app_layout.addLayout(stop_btm_box)
 
         # Начальный размер окна приложения
         self.resize(self.window_wight, self.window_high)
-    
-    # def stop(self):
-    #     print()
 
     def enable_run_btns(self):
+        """
+        Делает кнопки "ЗАПУСК" каждой вкладки активыми, а кнопку "СТОП" основного окна неактивной
+        """
         self.proc_tab.run_btn.setEnabled(True)
         self.dir_tab.run_btn.setEnabled(True)
-        # self.stop_btn.setEnabled(False)
+        self.clean_tab.run_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
 
     def disable_run_btns(self):
+        """
+        Делает кнопку "СТОП" основного окна активной, а кнопки "ЗАПУСК" каждой вкладки неактивной
+        """
         self.proc_tab.run_btn.setEnabled(False)
         self.dir_tab.run_btn.setEnabled(False)
-        # self.stop_btn.setEnabled(True)
+        self.clean_tab.run_btn.setEnabled(False)
+        self.stop_btn.setEnabled(True)
+    
+    def stop(self):
+        """
+        Остановка процесса обработки
+        """
+        # Cообщение о начале остановки обработки
+        self.info_win.set_message_to_gui('Остановка процесса...')
+        # Переключение флажка self.is_running на False, что и дает сигнал об остановки процесса
+        self.is_running = False
+    
+    def is_running_flag(self):
+        """
+        Возвращает True, если обработка идет и False, если обработка была остановлена (флаг self.is_running)
+        """
+        return self.is_running
+    
+    def run_tab_func(self, tab):
+        """
+        Запуск функции run из вкладки tab с помощью отдельного потока
+        """
+        self.is_running = True
+        # Создание потока
+        self.thread = QThread()
+        # Создание объекта Worker, исполняющего функцию tab.run
+        self.worker = Worker(tab.run)
+        # Привязывание потока
+        self.worker.moveToThread(self.thread)
+        # Подключение сигналов о начале работы к функции self.worker.run
+        self.thread.started.connect(self.disable_run_btns)
+        self.thread.started.connect(self.worker.run)
+        # Подключение сигналов о выводе сообщений к информационному окну
+        self.worker.message.connect(self.info_win.set_message_to_gui)
+        # Если в выбранной вкладке есть progress bar, к нему подключаются сигналы об перезапуске и обновлении
+        if hasattr(tab, "pbar"):
+            self.worker.reset_progress.connect(tab.pbar.reset)
+            self.worker.progress.connect(tab.pbar.set)
+        # Сигнал об обновлении списка справочников во вкладке распознования категорий (дается после составления нового справочника для его добавления в список)
+        self.worker.update_dir_list.connect(self.proc_tab.find_directories)
+        # Сигнал о завершение потока
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.finished.connect(self.thread.wait)
+        self.worker.finished.connect(self.enable_run_btns)
+
+        # Начало работы потока
+        self.thread.start()
+
+
+class ProgressBar:
+    """
+    Progress bar в виде графического интерфейса
+    """
+
+    def __init__(self, pbar):
+        """
+        :param pbar: виджет progress bar из PyQt (QProgressBar)
+        """
+        self.pbar = pbar
+        # Значение отображаемой величины, соответствующее 100%
+        self.max_value = 100
+    
+    def reset(self, max_value):
+        """
+        Перезапуск progress bar - присвоение максимального значения, соответствующего 100% и выставление нулевого значния.
+
+        :param max_value: значение отображаемой величины, соответствующее 100%
+
+        :return: progress bar присваивается максимальное значение, выставление нулевого значения
+        """
+        self.max_value = max_value
+        self.set(0)
+    
+    def set(self, value):
+        """
+        Выставление значения progress bar
+
+        :param value: выставляемое значение progress bar абсолютное)
+
+        :return: на progress bar выставляется значение процента value от self.max_value
+        """
+        # Вычисление процентного значения, которое будет выставляться на progress bar
+        pbar_value = int(value / self.max_value * 100)
+        self.pbar.setValue(pbar_value)
+        QApplication.processEvents()
 
 def run_app():
     # GUI
@@ -807,25 +1111,76 @@ def run_app():
     sys.exit(app.exec_())
 
 
-# class Worker(QRunnable):
-#     """
-    
-#     """
-#     def __init__(self, app_win, func, *args, **kwargs):
-#         super(Worker, self).__init__()
-#         self.func = func
-#         self.args = args
-#         self.kwargs = kwargs
+class Worker(QObject):
+    """
+    Класс запускающий функцию в отдельно процессе. Предусматривает сигналы о завершении работы процесса, вывод сообщений, управление progress bar через сигналы
+    """
+    # Сигнал о завершении процесса
+    finished = pyqtSignal()
+    # Сигнал о выводе сообщения
+    message = pyqtSignal(str)
+    # Сигнал об обновлении progress bar
+    progress = pyqtSignal(int)
+    # Сигнал о перезапуске progress bar
+    reset_progress = pyqtSignal(int)
+    # Сигнал о прерывании обработки
+    stop_working = pyqtSignal()
+    # Сигнал об обновлении списка справочников во вкладке распознования категорий
+    update_dir_list = pyqtSignal()
 
-#         self.app_win = app_win
-    
-#     @pyqtSlot()
-#     def run(self):
-        
-#         self.app_win.enable_run_btns()
 
-#         self.func(*self.args, **self.kwargs)
+    def __init__(self, func):
+        super(Worker, self).__init__()
+        # Исполняемая функция
+        self.func = func
+    
+    def run(self):
+        """
+        Начало выполнения функции self.func
+        """
+        self.func()
+    
+    def set_message_to_gui_from_thread(self, msg):
+        """
+        Вывод сообщения msg из потока с помощью сигнала
+        """
+        self.message.emit(msg)
+    
+    def update_dir_list_from_thread(self):
+        # Обновление списка справочников во вкладке распознования категорий (дается после составления нового справочника для его добавления в список)
+        self.update_dir_list_from_thread.emit()
 
-#         self.app_win.disable_run_btns()
+
+class ThreadProgressBar:
+    """
+    Progress bar, управляемый через объект Worker с помощью сигналов progress и reset_progress в виде графического интерфейса
+    """
+    def __init__(self, worker):
+        # Объкт Worker, из которого запускается progress bar
+        self.worker = worker
     
+    def reset(self, max_value):
+        """
+        Перезапуск progress bar - присвоение максимального значения, соответствующего 100% и выставление нулевого значния.
+
+        :param max_value: значение отображаемой величины, соответствующее 100%
+
+        :return: progress bar присваивается максимальное значение, выставление нулевого значения
+        """
+        self.worker.reset_progress.emit(max_value)
     
+    def set(self, value):
+        """
+        Выставление значения progress bar
+
+        :param value: выставляемое значение progress bar абсолютное)
+
+        :return: на progress bar выставляется значение процента value
+        """
+        self.worker.progress.emit(value)
+    
+def error_message(msg):
+    """
+    Возвращает строку об ошибке (добавляет ERROR!!! к msg)
+    """
+    return " ".join(["ERROR!!!", msg])
