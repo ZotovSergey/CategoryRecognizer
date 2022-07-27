@@ -576,7 +576,7 @@ class DirectoryTab(AppGUI):
                 # Сохранение справочника
                 category_dir.save(dir_name)
                 # Обновление списка справочников
-                self.worker.update_dir_list_from_thread()
+                self.app_win.worker.update_dir_list_from_thread()
                 # Сообщение о завершении составлении справочника и его сохранение, вывод количества строк
                 self.app_win.worker.set_message_to_gui_from_thread("".join(['Справочник \"', dir_name, '\" составлен и сохранен']))
                 # Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
@@ -737,8 +737,7 @@ class SKUCleanTab(AppGUI):
         calc_command_btms_box.addStretch(1)
         #       Кнопка запуска вычислений
         self.run_btn = QPushButton('ЗАПУСК', self)
-        self.run_btn.clicked.connect(self.run)
-        #self.run_btn.clicked.connect(self.start_thread)
+        self.run_btn.clicked.connect(self.start_thread)
         calc_command_btms_box.addWidget(self.run_btn)
 
         #   Заполнение редактирумых элементов окна значениями из конфигурационного файла, которыми эти элементы были заполнены при последнем успешном запуске вычислений
@@ -1148,7 +1147,7 @@ class Worker(QObject):
     
     def update_dir_list_from_thread(self):
         # Обновление списка справочников во вкладке распознования категорий (дается после составления нового справочника для его добавления в список)
-        self.update_dir_list_from_thread.emit()
+        self.update_dir_list.emit()
 
 
 class ThreadProgressBar:

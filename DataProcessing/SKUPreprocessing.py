@@ -45,7 +45,7 @@ class SKUReaderCSV:
 
         :return: rows_count строк из файла из csv-файла self.file_path, колонки self.rows_col_name
         """
-        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna().squeeze().values.tolist()
+        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna().squeeze(axis=1).values.tolist()
 
     def get_sku_column_name(self):
         """
@@ -88,7 +88,7 @@ class SKUReaderExcel:
         
         self.column_name = self.data.columns[0]
 
-        self.data = self.data.squeeze().values.tolist()
+        self.data = self.data.squeeze(axis=1).values.tolist()
     
     def __len__(self):
         """
