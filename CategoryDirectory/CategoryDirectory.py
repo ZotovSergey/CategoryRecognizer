@@ -1,6 +1,4 @@
 import pandas as pd
-import os
-import pickle
 
 from datetime import datetime
 
@@ -10,15 +8,6 @@ from Utilities.Utilities import *
 """
 Пакет, осуществляющий определение категории по SKU
 """
-
-def load_directory(dir_name):
-    """
-    Загружает справочник по заданному пути, если папка с сохраненными справочниками существует
-    :param dir_name: путь до загружаемого справочника
-    :return: справочник по заданному пути, объект CategoryDirectory
-    """
-    with open(os.path.join('saves', dir_name), 'rb') as file:
-        return pickle.load(file)
 
 def features_preprocessing(features):
     """
@@ -37,16 +26,6 @@ def features_preprocessing(features):
     for row in new_features:
         while '' in row: row.remove('')
     return list(new_features)
-
-def find_all_dir():
-    """
-    Находит все сохраненные справочники в saves, если папка с сохраненными справочниками существует
-    "return" список всех сохраненных в save справочников
-    """
-    try:
-        return os.listdir('saves')
-    except:
-        return []
 
  
 class CategoryDirectory:
@@ -101,9 +80,12 @@ class CategoryDirectory:
                     add_limit_identifiers_title = features_df.columns[3]
                 if len(excluding_identifiers_title) == 0:
                     excluding_identifiers_title = features_df.columns[4]
-                    
+
+            # Добавление кавычек, если указано название
+            if len(dir_name) > 0:
+                dir_name = "".join(["\"", dir_name, "\""])
             # Сообщение о начале составления справочника
-            set_message_with_countdown("".join(['Составление справочника \"', dir_name, '\"']), timer_start, set_msg_func)
+            set_message_with_countdown(" ".join(['Составление справочника', dir_name]), timer_start, set_msg_func)
             set_message_with_tab("".join(['по файлу \"', data_path, '\";']), set_msg_func)
             set_message_with_tab("".join(['по листу \"', directory_sheet_name, '\";']), set_msg_func)
             set_message_with_tab("".join(['столбец категорий:\"', category_rightholders_title, '\";']), set_msg_func)
@@ -397,12 +379,3 @@ class CategoryDirectory:
         prep_sku_row = self.preprocessing_func(sku_row)
         return list(identify_category_cython.identify_category_and_dec_id(prep_sku_row, self.category_rightholders, self.main_identifiers, self.main_limit_identifiers, self.add_limit_identifiers, self.excluding_identifiers))
 
-
-    def save(self, dir_name):
-        """
-        :return: сохраняет этот справочник в директорию saves; если директория saves отсутствует, создает ее
-        """
-        if not os.path.exists('saves'):
-            os.makedirs('saves')
-        with open(os.path.join('saves', dir_name), 'wb') as file:
-            pickle.dump(self, file, protocol=pickle.HIGHEST_PROTOCOL)

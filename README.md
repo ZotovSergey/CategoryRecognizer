@@ -10,7 +10,7 @@ python CategoryDirectory\setup.py build_ext --inplace
 python setup.py build
 Приложение будет создно в директории build
 Чтобы создать exe-приложение CategoryRecognizer.exe с помощью pyinstaller необходимо из директории проекта набрать команду:
-pyinstaller --onefile --noconsole --icon=NTech_logo.ico CategoryRecognizer.py
+pyinstaller --onefile --noconsole --name=CategoryRecognizer --icon=NTech_logo.ico main.py
 Приложение будет создно в директории dist
 После этого нужно вручную перенести недостающие файлы в одну дирректорию с CategoryRecognizer.exe
 

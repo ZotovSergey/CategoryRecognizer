@@ -1,0 +1,1 @@
+pyinstaller --onefile --noconsole --name=CategoryRecognizer --icon=NTech_logo.ico main.py
