@@ -7,7 +7,7 @@ import sys
 base = 'Win32GUI' if sys.platform=='win32' else None
 
 executables = [
-    Executable('RunApp.py', base=base, target_name = 'CategoryRecognizer.exe', icon='NTech_logo.ico')
+    Executable('main.py', base=base, target_name = 'CategoryRecognizer.exe', icon='NTech_logo.ico')
 ]
 
 include_files = [

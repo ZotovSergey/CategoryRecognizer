@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import pickle
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIntValidator, QIcon
@@ -10,7 +11,7 @@ import multiprocessing as mp
 
 from DataProcessing.DataProcessing import CategoryRecognizer, SKUCleaner
 from DataProcessing.SKUPreprocessing import CLEAR_PATTERNS_DICT, preprocess_sku_for_recognizing
-from CategoryDirectory.CategoryDirectory import CategoryDirectory, find_all_dir, load_directory
+from CategoryDirectory.CategoryDirectory import CategoryDirectory
 
 
 class AppGUI(QWidget):
@@ -211,7 +212,10 @@ class ProcessingTab(AppGUI):
         :return: добавляет названия доступных справочников в комбобокс выбора справочника
         """
         self.select_dir_combo.clear()
-        dir_list = find_all_dir()
+        try:
+            dir_list = os.listdir('saves')
+        except:
+            dir_list = []
         self.select_dir_combo.addItems(dir_list)
     
     def input_file_path_btn_click(self):
@@ -574,9 +578,9 @@ class DirectoryTab(AppGUI):
                 # Сообщение о начале сохранения справочника
                 self.app_win.worker.set_message_to_gui_from_thread("".join(['Сохранение справочника \"', dir_name, '\"']))
                 # Сохранение справочника
-                category_dir.save(dir_name)
+                save_directory(category_dir, dir_name)
                 # Обновление списка справочников
-                self.worker.update_dir_list_from_thread()
+                self.app_win.worker.update_dir_list_from_thread()
                 # Сообщение о завершении составлении справочника и его сохранение, вывод количества строк
                 self.app_win.worker.set_message_to_gui_from_thread("".join(['Справочник \"', dir_name, '\" составлен и сохранен']))
                 # Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
@@ -591,6 +595,26 @@ class DirectoryTab(AppGUI):
             # Сигнал о завершении процесса
             self.app_win.worker.finished.emit()
 
+def save_directory(dir, dir_name):
+    """
+    :param dir: справочик категорий - объект CategoryDirectory, который сохраняется в диреторию saves
+    :param dir_name: название справочника категорий dir, под которым он будет сохраняться
+
+    :return: сохраняет справочник dir в директорию saves с названием dir_name; если директория saves отсутствует, создает ее
+    """
+    if not os.path.exists('saves'):
+        os.makedirs('saves')
+    with open(os.path.join('saves', dir_name), 'wb') as file:
+        pickle.dump(dir, file, protocol=pickle.HIGHEST_PROTOCOL)
+
+def load_directory(dir_name):
+    """
+    Загружает справочник по заданному пути, если папка с сохраненными справочниками существует
+    :param dir_name: путь до загружаемого справочника
+    :return: справочник по заданному пути, объект CategoryDirectory
+    """
+    with open(os.path.join('saves', dir_name), 'rb') as file:
+        return pickle.load(file)
 
 class SKUCleanTab(AppGUI):
     """
@@ -737,8 +761,7 @@ class SKUCleanTab(AppGUI):
         calc_command_btms_box.addStretch(1)
         #       Кнопка запуска вычислений
         self.run_btn = QPushButton('ЗАПУСК', self)
-        self.run_btn.clicked.connect(self.run)
-        #self.run_btn.clicked.connect(self.start_thread)
+        self.run_btn.clicked.connect(self.start_thread)
         calc_command_btms_box.addWidget(self.run_btn)
 
         #   Заполнение редактирумых элементов окна значениями из конфигурационного файла, которыми эти элементы были заполнены при последнем успешном запуске вычислений
@@ -1148,7 +1171,7 @@ class Worker(QObject):
     
     def update_dir_list_from_thread(self):
         # Обновление списка справочников во вкладке распознования категорий (дается после составления нового справочника для его добавления в список)
-        self.update_dir_list_from_thread.emit()
+        self.update_dir_list.emit()
 
 
 class ThreadProgressBar:

@@ -6,6 +6,7 @@ import os
 import chardet
 import re
 
+
 class SKUReaderCSV:
     """
     Ридер и предобработчик SKU. Читает строки SKU из заданного csv-файла и предобрабатывает их для дальнейшего распозавания категорий
@@ -25,15 +26,17 @@ class SKUReaderCSV:
         else:
             self.sku_col = sku_col_name
         self.encoding = encoding
+        # Вычисление  длины итаемого файла
+        rows_count = -1
+        for line in csv.reader(open(self.data_path, 'r', encoding=self.encoding)):
+            rows_count += 1
+        self.rows_count = rows_count
 
     def __len__(self):
         """
         Количество строк читаемого файла
         """
-        rows_count = -1
-        for line in csv.reader(open(self.data_path, 'r', encoding=self.encoding)):
-            rows_count += 1
-        return rows_count
+        return self.rows_count
     
     def read(self, start, rows_count):
         """
@@ -45,7 +48,7 @@ class SKUReaderCSV:
 
         :return: rows_count строк из файла из csv-файла self.file_path, колонки self.rows_col_name
         """
-        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna().squeeze().values.tolist()
+        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna().squeeze(axis=1).values.tolist()
 
     def get_sku_column_name(self):
         """
@@ -88,7 +91,7 @@ class SKUReaderExcel:
         
         self.column_name = self.data.columns[0]
 
-        self.data = self.data.squeeze().values.tolist()
+        self.data = self.data.squeeze(axis=1).values.tolist()
     
     def __len__(self):
         """
@@ -121,7 +124,7 @@ class SKUReaderExcel:
 
 def init_sku_reader(data_path, sku_col_name=None, sku_sheet_name=None):
     """
-    Создание ридера и предобработчика батчей SKU из csv, txt или excel-файла, в зависимости от расширения файла
+    Создание ридера (объекта, содержащий функцию read(batch_start, batch_len), считывающий batch_len строк SKU начиная с batch_start) и предобработчика батчей SKU из csv, txt или excel-файла, в зависимости от расширения файла
 
     :param file_path: путь к читаемому файлу содержащему SKU для обработки (str)
     :param sku_sheet_name: название листа читаемого excel-файла, содержащего SKU (если данные читаются из excel-файла); если подается пустое название столбца с SKU, то используется первая строка заданного файла (str)
@@ -159,7 +162,7 @@ def preprocess_sku_for_recognizing(sku):
     """
     return add_spaces_at_start_end(sku.upper())
 
-def main_clean(sku):
+def base_cleanning(sku):
     """
     Общая очистка SKU от лишней информации, характерной для любых случаев и приведенеи к более общему виду
 
@@ -169,17 +172,17 @@ def main_clean(sku):
     """
     # Замена нечитаемых пробелов на обычные
     cleared_sku = replace_non_breaking_space(sku)
-    # Замена некоторых символов строки на пробелы
-    cleared_sku = replace_symb2_all(cleared_sku)
     # Замена всех скобок на обычные
     cleared_sku = replace_brackets(cleared_sku)
     # Замена обратных слэшей на обычные и их сжатие
-    cleared_sku = replace_slashes(cleared_sku)
+    cleared_sku = replace_squeeze_slashes(cleared_sku)
     # Ряд трансформация идут по тех пор, пока не прекратятся изменения строки
     start_is_clear = False
     while not start_is_clear:
+        # Сжатие пробелов
+        new_cleared_sku = squeeze_spaces(cleared_sku)
         # Удаление ряда символов перед двоеточием в начале строки
-        new_cleared_sku = remove_eight_symb_before_colon_at_start(cleared_sku)
+        new_cleared_sku = remove_eight_symb_before_colon_at_start(new_cleared_sku)
         # Удаление некоторых символов из начала строки
         new_cleared_sku = remove_symb1_at_start(new_cleared_sku)
         # Удаление записей в скобках <> из начала строки
@@ -188,12 +191,14 @@ def main_clean(sku):
         if cleared_sku == new_cleared_sku:
             start_is_clear = True
         cleared_sku = new_cleared_sku
+    # Замена некоторых символов строки на пробелы
+    cleared_sku = replace_symb2_all(cleared_sku)
     # Удаление цифр после двоеточия в конце
     cleared_sku = remove_num_symb_after_colon_at_end(cleared_sku)
     # Удаление обозначения "КНОПКА" в конце строки
     cleared_sku = remove_buton_note_at_end(cleared_sku)
     # Сжатие пробелов
-    cleared_sku = replace_squeeze_spaces(cleared_sku)
+    cleared_sku = squeeze_spaces(cleared_sku)
 
     return cleared_sku
 
@@ -217,7 +222,7 @@ def replace_non_breaking_space(sku):
     """
     return re.sub(r'\u00a0', ' ', sku)
 
-def replace_squeeze_spaces(sku):
+def squeeze_spaces(sku):
     """
     Замена множественных пробелов на одинарные (сжимание пробелов)
 
@@ -269,7 +274,7 @@ def replace_symb2_all(sku):
 
 def replace_brackets(sku):
     """
-    Замена символов "~", "«", "»", "“", "”", "#", "*", "?", "<", ">" на пробел
+    Замена квадратных и фигурных на круглые
 
     :param sku: строка SKU (string)
 
@@ -277,9 +282,9 @@ def replace_brackets(sku):
     """
     return re.sub(r'[}\]]', ')', re.sub(r'[{\[]', '(', sku))
 
-def replace_slashes(sku):
+def replace_squeeze_slashes(sku):
     """
-    Замена символов "~", "«", "»", "“", "”", "#", "*", "?", "<", ">" на пробел
+    Замена символов обратных слэшей на обычные и сжимание обычных слэшей
 
     :param sku: строка SKU (string)
 
@@ -308,5 +313,5 @@ def remove_buton_note_at_end(sku):
     return re.sub(r'КНОПКА[0-9-\s]{0,}$', '', sku)
 
 CLEAR_PATTERNS_DICT = {
-                      'Общий': main_clean
+                      'Базовый': base_cleanning
                       }
