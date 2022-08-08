@@ -11,7 +11,6 @@ executables = [
 ]
 
 include_files = [
-                 'saves',
                  'config',
                  'NTech_logo.png'
                  ]

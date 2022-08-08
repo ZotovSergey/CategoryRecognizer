@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import multiprocessing as mp
+import filecmp
 
 from datetime import datetime
 
@@ -85,6 +86,10 @@ class SKUProcessorInterface(SKUProcessor):
         self.timer_start = datetime.now()
 
         try:
+            # Проверка того, различается ли обрабатываемый и обработанный файл
+            if filecmp.cmp(input_data_path, output_data_path):
+                raise Exception('Обрабатываемый и обработанный файл одинаковые, что повлечет потерю информации из переписываемого файла до начала обработки')
+
             self.set_msg_func = set_msg_func
             self.pbar = pbar
             self.is_running_flag = is_running_flag
@@ -168,7 +173,7 @@ class SKUProcessorInterface(SKUProcessor):
 
             if (self.is_running_flag is None) or (self.is_running_flag()):
                 # Сообщение о корректном завершении обработки
-                set_message_with_countdown('Распознавание категорий по SKU завершено, результаты сохранены в обработанный файл', self.timer_start, self.set_msg_func)
+                set_message_with_countdown('Обработка SKU завершена, результаты сохранены в обработанный файл', self.timer_start, self.set_msg_func)
             else:
                 # Сообщение об экстренной остановке работы
                 set_message_with_countdown('Обработка остановлена', self.timer_start, self.set_msg_func)

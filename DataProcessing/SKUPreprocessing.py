@@ -1,3 +1,4 @@
+import string
 import numpy as np
 import pandas as pd
 import csv
@@ -48,7 +49,7 @@ class SKUReaderCSV:
 
         :return: rows_count строк из файла из csv-файла self.file_path, колонки self.rows_col_name
         """
-        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False).replace(to_replace=r'\r\n', value ='\n', regex=True).replace(r'^\s*$', np.nan, regex=True).dropna().squeeze(axis=1).values.tolist()
+        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False, on_bad_lines='skip').replace(to_replace=r'\r\n', value ='\n', regex=True).squeeze(axis=1).values.tolist()
 
     def get_sku_column_name(self):
         """
@@ -86,8 +87,8 @@ class SKUReaderExcel:
             sku_col = 0
         else:
             sku_col = sku_col_name
-        # Строк SKU из заданного файла, заданного листа, заданной строки
-        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str', keep_default_na=False).replace(r'^\s*$', np.nan, regex=True).dropna()
+        # Строки SKU из заданного файла, заданного листа, заданной строки
+        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str', keep_default_na=False)
         
         self.column_name = self.data.columns[0]
 
@@ -170,8 +171,10 @@ def base_cleanning(sku):
 
     :return: измененная строка SKU
     """
+    # Удаление чисел выше 50000
+    cleared_sku = remove_numbers_under_value(sku, 50000)
     # Замена нечитаемых пробелов на обычные
-    cleared_sku = replace_non_breaking_space(sku)
+    cleared_sku = replace_non_breaking_space(cleared_sku)
     # Замена всех скобок на обычные
     cleared_sku = replace_brackets(cleared_sku)
     # Замена обратных слэшей на обычные и их сжатие
@@ -315,3 +318,21 @@ def remove_buton_note_at_end(sku):
 CLEAR_PATTERNS_DICT = {
                       'Базовый': base_cleanning
                       }
+
+def remove_numbers_under_value(sku, value):
+    """
+    Удаление чисел больше value
+    
+    :param sku: строка SKU (string)
+    :param value: значение, числа выше которого необходимо удалять из SKU (int)
+
+    :return: измененная строка SKU
+    """
+    # Все числа в SKU
+    numbers_list = re.findall(r'[0-9]+[.,]?[0-9]*', sku)
+    # Перебор всех чисел
+    for num_str in numbers_list:
+        # Проверка значения числа
+        if float(num_str.replace(",", ".")) > value:
+            sku = sku.replace(num_str, " ")
+    return sku
