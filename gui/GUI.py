@@ -346,7 +346,8 @@ class ProcessingTab(AppGUI):
             try:
                 self.save_config()
             except Exception as e:
-                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                #self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                self.app_win.info_win.set_message_to_gui(error_message(str(e)))
                 raise Exception("ERROR!!!")
         except Exception as e:
             pass
@@ -889,15 +890,11 @@ class SKUCleanTab(AppGUI):
             except Exception as e:
                 self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
                 raise Exception("ERROR!!!")
-            try:
-                # Распознавание SKU из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
-                SKUCleaner(input_data_path, sku_sheet_name, sku_col_name, output_data_path, max_batch_len, clean_pattern, use_threads_count,
-                self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
-            except Exception as e:
-                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
-                raise Exception("ERROR!!!")
+            # Распознавание SKU из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
+            SKUCleaner(input_data_path, sku_sheet_name, sku_col_name, output_data_path, max_batch_len, clean_pattern, use_threads_count,
+            self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
 
-            #   Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
+            # Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             try:
                 self.save_config()
             except Exception as e:
