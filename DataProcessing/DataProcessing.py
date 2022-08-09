@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import multiprocessing as mp
 import filecmp
+import os
 
 from datetime import datetime
 
@@ -87,8 +88,9 @@ class SKUProcessorInterface(SKUProcessor):
 
         try:
             # Проверка того, различается ли обрабатываемый и обработанный файл
-            if filecmp.cmp(input_data_path, output_data_path):
-                raise Exception('Обрабатываемый и обработанный файл одинаковые, что повлечет потерю информации из переписываемого файла до начала обработки')
+            if os.path.exists(output_data_path):
+                if filecmp.cmp(input_data_path, output_data_path):
+                    raise Exception('Обрабатываемый и обработанный файл одинаковые, что повлечет потерю информации из переписываемого файла до начала обработки')
 
             self.set_msg_func = set_msg_func
             self.pbar = pbar
