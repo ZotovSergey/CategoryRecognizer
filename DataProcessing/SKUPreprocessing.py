@@ -1,4 +1,3 @@
-import string
 import numpy as np
 import pandas as pd
 import csv
@@ -202,6 +201,8 @@ def base_cleanning(sku):
     cleared_sku = remove_buton_note_at_end(cleared_sku)
     # Сжатие пробелов
     cleared_sku = squeeze_spaces(cleared_sku)
+    # Удаление пробелов в начале и в конце
+    cleared_sku = remove_spaces_at_start_end(cleared_sku)
 
     return cleared_sku
 
@@ -315,9 +316,15 @@ def remove_buton_note_at_end(sku):
     """
     return re.sub(r'КНОПКА[0-9-\s]{0,}$', '', sku)
 
-CLEAR_PATTERNS_DICT = {
-                      'Базовый': base_cleanning
-                      }
+def remove_spaces_at_start_end(sku):
+    """
+    Удаление пробелов в начале и в конце
+    
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\s$', '', re.sub(r'^\s', '', sku))
 
 def remove_numbers_under_value(sku, value):
     """
@@ -336,3 +343,8 @@ def remove_numbers_under_value(sku, value):
         if float(num_str.replace(",", ".")) > value:
             sku = sku.replace(num_str, " ")
     return sku
+
+CLEAR_PATTERNS_DICT = {
+                      'Базовый': base_cleanning
+                      }
+
