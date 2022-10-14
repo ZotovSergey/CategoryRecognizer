@@ -250,16 +250,6 @@ def replace_vert_tab(sku):
     """
     return re.sub(r'\u000b', ' ', sku)
 
-def replace_vert_tab(sku):
-    """
-    Замена вертикальной табуляции на пробел
-
-    :param sku: строка SKU (string)
-
-    :return: измененная строка SKU
-    """
-    return re.sub(r'\u000a', ' ', sku)
-
 def replace_line_break(sku):
     """
     Замена переноса строки на пробел
@@ -268,7 +258,7 @@ def replace_line_break(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'', ' ', sku)
+    return re.sub(r'\u000a', ' ', sku)
 
 def squeeze_spaces(sku):
     """
@@ -298,7 +288,7 @@ def remove_symb1_at_start(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'^[\s\.\,_\-–*]{1,}', '', sku)
+    return re.sub(r'^\s*[\.\,_\-–*!]+', '', sku)
 
 def remove_note_between_angle_brackets_at_start(sku):
     """
@@ -318,7 +308,7 @@ def replace_symb2_all(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'[~«»“”\"\'`#?<>‘]|(!{2,})|(\*+\s*\*+)', ' ', sku)
+    return re.sub(r'[~«»“”\"\'`#?<>‘]|(!+\s*!+)|(\*+\s*\*+)', ' ', sku)
 
 def replace_brackets(sku):
     """
