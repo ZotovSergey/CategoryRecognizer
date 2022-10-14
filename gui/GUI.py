@@ -340,7 +340,7 @@ class ProcessingTab(AppGUI):
 
             # Распознавание SKU из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
             CategoryRecognizer(input_data_path, sku_sheet_name, sku_col_name, output_data_path, sel_dir, max_batch_len, get_dec_id, use_threads_count,
-            self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
+            self.app_win.worker.set_message_to_gui, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
 
             #   Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             try:
@@ -850,6 +850,7 @@ class SKUCleanTab(AppGUI):
         Запускает функцию self.run() в отдельном потоке через функцию self.app_win.run_tab_func
         """
         self.app_win.run_tab_func(self)
+        #self.run()
 
     def run(self):
         """
@@ -893,6 +894,7 @@ class SKUCleanTab(AppGUI):
             # Распознавание SKU из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
             SKUCleaner(input_data_path, sku_sheet_name, sku_col_name, output_data_path, max_batch_len, clean_pattern, use_threads_count,
             self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
+            #self.app_win.info_win.set_message_to_gui, self.pbar, self.app_win.is_running_flag)            
 
             # Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             try:

@@ -1,4 +1,3 @@
-import string
 import numpy as np
 import pandas as pd
 import csv
@@ -27,7 +26,7 @@ class SKUReaderCSV:
         else:
             self.sku_col = sku_col_name
         self.encoding = encoding
-        # Вычисление  длины итаемого файла
+        # Вычисление  длины читаемого файла
         rows_count = -1
         for line in csv.reader(open(self.data_path, 'r', encoding=self.encoding)):
             rows_count += 1
@@ -55,7 +54,7 @@ class SKUReaderCSV:
         """
         :return: название колонки с SKU читаемого файла
         """
-        return pd.read_csv(self.data_path, header=None, usecols=[self.sku_col], nrows=1, sep='\t', dtype='str', encoding=self.encoding).fillna('')[0][0]
+        return pd.read_csv(self.data_path, usecols=[self.sku_col], nrows=0, sep='\t', dtype='str', encoding=self.encoding, on_bad_lines='skip').columns[0]
     
     def get_sku_excel_sheet(self):
         """
@@ -123,7 +122,7 @@ class SKUReaderExcel:
         """
         return self.sku_sheet_name
 
-def init_sku_reader(data_path, sku_col_name=None, sku_sheet_name=None):
+def init_sku_reader(data_path, sku_sheet_name=None, sku_col_name=None):
     """
     Создание ридера (объекта, содержащий функцию read(batch_start, batch_len), считывающий batch_len строк SKU начиная с batch_start) и предобработчика батчей SKU из csv, txt или excel-файла, в зависимости от расширения файла
 
@@ -171,10 +170,14 @@ def base_cleanning(sku):
 
     :return: измененная строка SKU
     """
-    # Удаление чисел выше 50000
-    cleared_sku = remove_numbers_under_value(sku, 50000)
     # Замена нечитаемых пробелов на обычные
-    cleared_sku = replace_non_breaking_space(cleared_sku)
+    cleared_sku = replace_non_breaking_space(sku)
+    # Замена горизонтальной табуляции на пробелы
+    cleared_sku = replace_hor_tab(cleared_sku)
+    # Замена горизонтальной табуляции на пробелы
+    cleared_sku = replace_vert_tab(cleared_sku)
+    # Замена перехода строк на пробелы
+    cleared_sku = replace_line_break(cleared_sku)
     # Замена всех скобок на обычные
     cleared_sku = replace_brackets(cleared_sku)
     # Замена обратных слэшей на обычные и их сжатие
@@ -202,6 +205,8 @@ def base_cleanning(sku):
     cleared_sku = remove_buton_note_at_end(cleared_sku)
     # Сжатие пробелов
     cleared_sku = squeeze_spaces(cleared_sku)
+    # Удаление пробелов в начале и в конце
+    cleared_sku = remove_spaces_at_start_end(cleared_sku)
 
     return cleared_sku
 
@@ -217,13 +222,53 @@ def add_spaces_at_start_end(sku):
 
 def replace_non_breaking_space(sku):
     """
-    Замена пробела с кодировкой &#160 или \u00a0 на обычный
+    Замена пробела с кодировкой \u00a0 на обычный
 
     :param sku: строка SKU (string)
 
     :return: измененная строка SKU
     """
     return re.sub(r'\u00a0', ' ', sku)
+
+def replace_hor_tab(sku):
+    """
+    Замена горизонтальной табуляции на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\u0009', ' ', sku)
+
+def replace_vert_tab(sku):
+    """
+    Замена вертикальной табуляции на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\u000b', ' ', sku)
+
+def replace_vert_tab(sku):
+    """
+    Замена вертикальной табуляции на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\u000a', ' ', sku)
+
+def replace_line_break(sku):
+    """
+    Замена переноса строки на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'', ' ', sku)
 
 def squeeze_spaces(sku):
     """
@@ -247,13 +292,13 @@ def remove_eight_symb_before_colon_at_start(sku):
 
 def remove_symb1_at_start(sku):
     """
-    Удаление символов " ", "‘", ".", ",", "_", "-", "–" в начале SKU на пробел
+    Удаление символов " ", ".", ",", "_", "-", "–", "*" в начале SKU на пробел
 
     :param sku: строка SKU (string)
 
     :return: измененная строка SKU
     """
-    return re.sub(r'^[\s‘\.\,_\-–]{1,}', '', sku)
+    return re.sub(r'^[\s\.\,_\-–*]{1,}', '', sku)
 
 def remove_note_between_angle_brackets_at_start(sku):
     """
@@ -267,13 +312,13 @@ def remove_note_between_angle_brackets_at_start(sku):
 
 def replace_symb2_all(sku):
     """
-    Замена символов "~", "«", "»", "“", "”", "#", "*", "?", "<", ">" на пробел
+    Замена символов "~", "«", "»", "“", "”", "\"", "'", "`", "#", "?", "<", ">", "‘", сочетаний более одного "!", сочетание более одной  на пробел, 
 
     :param sku: строка SKU (string)
 
     :return: измененная строка SKU
     """
-    return re.sub(r'[~«»“”#*?<>]', ' ', sku)
+    return re.sub(r'[~«»“”\"\'`#?<>‘]|(!{2,})|(\*+\s*\*+)', ' ', sku)
 
 def replace_brackets(sku):
     """
@@ -315,9 +360,15 @@ def remove_buton_note_at_end(sku):
     """
     return re.sub(r'КНОПКА[0-9-\s]{0,}$', '', sku)
 
-CLEAR_PATTERNS_DICT = {
-                      'Базовый': base_cleanning
-                      }
+def remove_spaces_at_start_end(sku):
+    """
+    Удаление пробелов в начале и в конце
+    
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\s$', '', re.sub(r'^\s', '', sku))
 
 def remove_numbers_under_value(sku, value):
     """
@@ -336,3 +387,8 @@ def remove_numbers_under_value(sku, value):
         if float(num_str.replace(",", ".")) > value:
             sku = sku.replace(num_str, " ")
     return sku
+
+CLEAR_PATTERNS_DICT = {
+                      'Базовый': base_cleanning
+                      }
+
