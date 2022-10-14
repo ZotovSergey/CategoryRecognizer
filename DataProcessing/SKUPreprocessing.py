@@ -170,41 +170,45 @@ def base_cleanning(sku):
 
     :return: измененная строка SKU
     """
-    # Замена нечитаемых пробелов на обычные
-    cleared_sku = replace_non_breaking_space(sku)
-    # Замена горизонтальной табуляции на пробелы
-    cleared_sku = replace_hor_tab(cleared_sku)
-    # Замена горизонтальной табуляции на пробелы
-    cleared_sku = replace_vert_tab(cleared_sku)
-    # Замена перехода строк на пробелы
-    cleared_sku = replace_line_break(cleared_sku)
+    # Замена всех нестандартных пробельных символов на обычные пробелы
+    cleared_sku = replace_bad_spaces(sku)
     # Замена всех скобок на обычные
     cleared_sku = replace_brackets(cleared_sku)
     # Замена обратных слэшей на обычные и их сжатие
-    cleared_sku = replace_squeeze_slashes(cleared_sku)
-    # Ряд трансформация идут по тех пор, пока не прекратятся изменения строки
-    start_is_clear = False
-    while not start_is_clear:
-        # Сжатие пробелов
-        new_cleared_sku = squeeze_spaces(cleared_sku)
-        # Удаление ряда символов перед двоеточием в начале строки
-        new_cleared_sku = remove_eight_symb_before_colon_at_start(new_cleared_sku)
-        # Удаление некоторых символов из начала строки
-        new_cleared_sku = remove_symb1_at_start(new_cleared_sku)
-        # Удаление записей в скобках <> из начала строки
-        new_cleared_sku = remove_note_between_angle_brackets_at_start(new_cleared_sku)
-        # Проверка изменения в строке
-        if cleared_sku == new_cleared_sku:
-            start_is_clear = True
-        cleared_sku = new_cleared_sku
+    cleared_sku = replace_backslashes(cleared_sku)
     # Замена некоторых символов строки на пробелы
     cleared_sku = replace_symb2_all(cleared_sku)
+    # Замена сочетаний более одного "*" через пробелы на пробел
+    cleared_sku = replace_many_asteriskes(cleared_sku)
+    # Замена сочетаний более одного "!" на пробел
+    cleared_sku = replace_many_exclamation_points(cleared_sku)
+    # Замена сочетаний более одного "$" на пробел
+    cleared_sku = replace_many_dollars(cleared_sku)
+    # Замена сочетаний более одного "+" на пробел
+    cleared_sku = replace_many_pluses(cleared_sku)
+    # Замена сочетаний более одного "/" на пробел
+    cleared_sku = replace_many_slashes(cleared_sku)
     # Удаление цифр после двоеточия в конце
     cleared_sku = remove_num_symb_after_colon_at_end(cleared_sku)
     # Удаление обозначения "КНОПКА" в конце строки
     cleared_sku = remove_buton_note_at_end(cleared_sku)
     # Сжатие пробелов
     cleared_sku = squeeze_spaces(cleared_sku)
+    # Ряд трансформация идут по тех пор, пока не прекратятся изменения строки
+    start_is_clear = False
+    while not start_is_clear:
+        # Удаление ряда символов перед двоеточием в начале строки
+        new_cleared_sku = remove_eight_symb_before_colon_at_start(cleared_sku)
+        # Удаление некоторых символов из начала строки
+        new_cleared_sku = remove_symb1_at_start(new_cleared_sku)
+        # Удаление записей в скобках <> из начала строки
+        new_cleared_sku = remove_note_between_angle_brackets_at_start(new_cleared_sku)
+        # Сжатие пробелов
+        new_cleared_sku = squeeze_spaces(new_cleared_sku)
+        # Проверка изменения в строке
+        if cleared_sku == new_cleared_sku:
+            start_is_clear = True
+        cleared_sku = new_cleared_sku
     # Удаление пробелов в начале и в конце
     cleared_sku = remove_spaces_at_start_end(cleared_sku)
 
@@ -220,7 +224,7 @@ def add_spaces_at_start_end(sku):
     """
     return "".join([' ', sku, ' '])
 
-def replace_non_breaking_space(sku):
+def replace_bad_spaces(sku):
     """
     Замена пробела с кодировкой \u00a0 на обычный
 
@@ -228,37 +232,7 @@ def replace_non_breaking_space(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'\u00a0', ' ', sku)
-
-def replace_hor_tab(sku):
-    """
-    Замена горизонтальной табуляции на пробел
-
-    :param sku: строка SKU (string)
-
-    :return: измененная строка SKU
-    """
-    return re.sub(r'\u0009', ' ', sku)
-
-def replace_vert_tab(sku):
-    """
-    Замена вертикальной табуляции на пробел
-
-    :param sku: строка SKU (string)
-
-    :return: измененная строка SKU
-    """
-    return re.sub(r'\u000b', ' ', sku)
-
-def replace_line_break(sku):
-    """
-    Замена переноса строки на пробел
-
-    :param sku: строка SKU (string)
-
-    :return: измененная строка SKU
-    """
-    return re.sub(r'\u000a', ' ', sku)
+    return re.sub(r'[\s\u00a0\u0009\u000b\u000a]', ' ', sku)
 
 def squeeze_spaces(sku):
     """
@@ -282,13 +256,13 @@ def remove_eight_symb_before_colon_at_start(sku):
 
 def remove_symb1_at_start(sku):
     """
-    Удаление символов " ", ".", ",", "_", "-", "–", "*" в начале SKU на пробел
+    Удаление символов " ", ".", ",", "_", "-", "–", "*", "!", "^", "=", "$", "@", "+", "/" в начале SKU на пробел
 
     :param sku: строка SKU (string)
 
     :return: измененная строка SKU
     """
-    return re.sub(r'^\s*[\.\,_\-–*!]+', '', sku)
+    return re.sub(r'^\s*[\.\,_\-–\*\!\^\=\$@\+\/]+', '', sku)
 
 def remove_note_between_angle_brackets_at_start(sku):
     """
@@ -302,13 +276,63 @@ def remove_note_between_angle_brackets_at_start(sku):
 
 def replace_symb2_all(sku):
     """
-    Замена символов "~", "«", "»", "“", "”", "\"", "'", "`", "#", "?", "<", ">", "‘", сочетаний более одного "!", сочетание более одной  на пробел, 
+    Замена символов "~", "«", "»", "“", "”", "\"", "\'", "`", "#", "?", "<", ">", "‘", "∙" на пробел, 
 
     :param sku: строка SKU (string)
 
     :return: измененная строка SKU
     """
-    return re.sub(r'[~«»“”\"\'`#?<>‘]|(!+\s*!+)|(\*+\s*\*+)', ' ', sku)
+    return re.sub(r'[~«»“”\"\'`#?<>‘∙]', ' ', sku)
+
+def replace_many_asteriskes(sku):
+    """
+    Замена сочетаний более одного "*" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\*+\s*\*+[\s\*]*', ' ', sku)
+
+def replace_many_exclamation_points(sku):
+    """
+    Замена сочетаний более одного "!" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\!{2,}', ' ', sku)
+
+def replace_many_dollars(sku):
+    """
+    Замена сочетаний более одного "$" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\${2,}', ' ', sku)
+
+def replace_many_pluses(sku):
+    """
+    Замена сочетаний более одного "+" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'\+{2,}', ' ', sku)
+
+def replace_many_slashes(sku):
+    """
+    Замена сочетаний более одного "/" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'/{2,}', ' ', sku)
 
 def replace_brackets(sku):
     """
@@ -320,7 +344,7 @@ def replace_brackets(sku):
     """
     return re.sub(r'[}\]]', ')', re.sub(r'[{\[]', '(', sku))
 
-def replace_squeeze_slashes(sku):
+def replace_backslashes(sku):
     """
     Замена символов обратных слэшей на обычные и сжимание обычных слэшей
 
@@ -328,7 +352,7 @@ def replace_squeeze_slashes(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'/{2,}', '/', re.sub(r'[\\]', '/', sku))
+    return re.sub(r'\\', '/', sku)
 
 def remove_num_symb_after_colon_at_end(sku):
     """
