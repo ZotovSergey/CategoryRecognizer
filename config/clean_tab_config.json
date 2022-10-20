@@ -1,0 +1,1 @@
+{"sel_pat": "\u0411\u0430\u0437\u043e\u0432\u044b\u0439", "input_data_path": "D:/Projects/MergeCSV/skuCleanTest.txt", "sku_sheet_name": "", "sku_col_name": "SKU", "output_data_path": "D:/Data/\u041c\u0435\u0433\u0430\u041f\u043e\u0438\u0441\u043a/Return/Clean test3.csv", "use_threads_count": "4", "max_batch_len": "100000"}
