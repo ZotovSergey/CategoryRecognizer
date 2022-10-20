@@ -27,9 +27,9 @@ class SKUReaderCSV:
             self.sku_col = sku_col_name
         self.encoding = encoding
         # Вычисление  длины читаемого файла
-        rows_count = -1
-        for line in csv.reader(open(self.data_path, 'r', encoding=self.encoding)):
-            rows_count += 1
+        with open(self.data_path, 'r', encoding=encoding) as f:
+            for rows_count, line in enumerate(f):
+                pass
         self.rows_count = rows_count
 
     def __len__(self):
@@ -147,7 +147,8 @@ def init_sku_reader(data_path, sku_sheet_name=None, sku_col_name=None):
         # Формат обрабатываемого файла - csv, txt
         # Определение кодировки обрабатываемого файла
         #   Сообщение о начале определния кодировки
-        encoding = chardet.detect(open(data_path, 'rb').read())['encoding']
+        bytesArr = open(data_path, 'rb').read(10000)
+        encoding = chardet.detect(bytesArr)['encoding']
         # Создание объекта-ридера SKU из csv-файла по пути input_data_path, из столбца sku_col_name (или первого столбца), осуществляющего чтение и предобработку SKU
         sku_reader = SKUReaderCSV(data_path, sku_col_name, encoding)
     return sku_reader
@@ -176,6 +177,27 @@ def base_cleanning(sku):
     cleared_sku = replace_brackets(cleared_sku)
     # Замена обратных слэшей на обычные и их сжатие
     cleared_sku = replace_backslashes(cleared_sku)
+    # Ряд трансформация идут по тех пор, пока не прекратятся изменения строки
+    start_is_clear = False
+    while not start_is_clear:
+        # Удаление ряда символов перед двоеточием в начале строки
+        new_cleared_sku = remove_eight_symb_before_colon_at_start(cleared_sku)
+        # Удаление набора символов кроме знака "<" из начала строки
+        new_cleared_sku = remove_symb2_ex_less_at_start(new_cleared_sku)
+        # Удаление некоторых символов из начала строки
+        new_cleared_sku = remove_symb1_at_start(new_cleared_sku)
+        # Удаление записей в скобках <> из начала строки
+        new_cleared_sku = remove_note_between_angle_brackets_at_start(new_cleared_sku)
+        # Удаление знака "<" из начала строки
+        new_cleared_sku = remove_less_at_start(new_cleared_sku)
+        # Удаление записей (М) и (М+) в начале SKU
+        new_cleared_sku = remove_m_symb_at_start(new_cleared_sku)
+        # Сжатие пробелов
+        new_cleared_sku = squeeze_spaces(new_cleared_sku)
+        # Проверка изменения в строке
+        if cleared_sku == new_cleared_sku:
+            start_is_clear = True
+        cleared_sku = new_cleared_sku
     # Замена некоторых символов строки на пробелы
     cleared_sku = replace_symb2_all(cleared_sku)
     # Замена сочетаний более одного "*" через пробелы на пробел
@@ -188,21 +210,13 @@ def base_cleanning(sku):
     cleared_sku = replace_many_pluses(cleared_sku)
     # Замена сочетаний более одного "/" на пробел
     cleared_sku = replace_many_slashes(cleared_sku)
-    # Удаление цифр после двоеточия в конце
-    cleared_sku = remove_num_symb_after_colon_at_end(cleared_sku)
-    # Удаление обозначения "КНОПКА" в конце строки
-    cleared_sku = remove_buton_note_at_end(cleared_sku)
-    # Сжатие пробелов
-    cleared_sku = squeeze_spaces(cleared_sku)
     # Ряд трансформация идут по тех пор, пока не прекратятся изменения строки
     start_is_clear = False
     while not start_is_clear:
-        # Удаление ряда символов перед двоеточием в начале строки
-        new_cleared_sku = remove_eight_symb_before_colon_at_start(cleared_sku)
-        # Удаление некоторых символов из начала строки
-        new_cleared_sku = remove_symb1_at_start(new_cleared_sku)
-        # Удаление записей в скобках <> из начала строки
-        new_cleared_sku = remove_note_between_angle_brackets_at_start(new_cleared_sku)
+        # Удаление обозначения "КНОПКА" в конце строки
+        new_cleared_sku = remove_buton_note_at_end(cleared_sku)
+        # Удаление цифр после двоеточия в конце
+        new_cleared_sku = remove_num_symb_after_colon_at_end(new_cleared_sku)
         # Сжатие пробелов
         new_cleared_sku = squeeze_spaces(new_cleared_sku)
         # Проверка изменения в строке
@@ -266,23 +280,63 @@ def remove_symb1_at_start(sku):
 
 def remove_note_between_angle_brackets_at_start(sku):
     """
-    Замена символов записи между скобками "<", ">" в начале SKU на пробел
+    Удаление символов записи между скобками "<", ">" в начале SKU
 
     :param sku: строка SKU (string)
 
     :return: измененная строка SKU
     """
-    return re.sub(r'^<.{0,}>', '', sku)
+    return re.sub(r'^\s*<.{0,}>', '', sku)
+
+def remove_m_symb_at_start(sku):
+    """
+    Удаление записей (М) и (М+) в начале SKU
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'^\s*\([MМ]\+?\)', '', sku)
 
 def replace_symb2_all(sku):
     """
-    Замена символов "~", "«", "»", "“", "”", "\"", "\'", "`", "#", "?", "<", ">", "‘", "∙" на пробел, 
+    Замена символов "~", "«", "»", "“", "”", "\"", "\'", "`", "#", "?", "<", ">", "‘", "∙" и множество других символов на пробел
 
     :param sku: строка SKU (string)
 
     :return: измененная строка SKU
     """
-    return re.sub(r'[~«»“”\"\'`#?<>‘∙]', ' ', sku)
+    return re.sub(r'[~«»“”\"\'`#?<>‘∙\u2524\u2561\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580]', ' ', sku)
+
+def remove_symb2_ex_less_at_start(sku):
+    """
+    Удаление символов "~", "«", "»", "“", "”", "\"", "\'", "`", "#", "?", ">", "‘", "∙" и множество других символов
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'^\s*[~«»“”\"\'`#?>‘∙\u2524\u2561\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580]+', '', sku)
+
+def remove_less_at_start(sku):
+    """
+    Удаление символа "<"
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'^\s*[<]+', '', sku)
+
+def replace_less_at_start(sku):
+    """
+    Замена символов "~", "«", "»", "“", "”", "\"", "\'", "`", "#", "?", ">", "‘", "∙" и множество других символов на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'[~«»“”\"\'`#?>‘∙\u2524\u2561\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580]', ' ', sku)
 
 def replace_many_asteriskes(sku):
     """
@@ -302,7 +356,7 @@ def replace_many_exclamation_points(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'\!{2,}', ' ', sku)
+    return re.sub(r'\!+\s*\!+[\s\!]*', ' ', sku)
 
 def replace_many_dollars(sku):
     """
@@ -312,7 +366,7 @@ def replace_many_dollars(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'\${2,}', ' ', sku)
+    return re.sub(r'\$+\s*\$+[\s\$]*', ' ', sku)
 
 def replace_many_pluses(sku):
     """
@@ -322,7 +376,7 @@ def replace_many_pluses(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'\+{2,}', ' ', sku)
+    return re.sub(r'\++\s*\++[\s\+]*', ' ', sku)
 
 def replace_many_slashes(sku):
     """
@@ -332,7 +386,7 @@ def replace_many_slashes(sku):
 
     :return: измененная строка SKU
     """
-    return re.sub(r'/{2,}', ' ', sku)
+    return re.sub(r'/+\s*/+[\s/]*', ' ', sku)
 
 def replace_brackets(sku):
     """
