@@ -6,7 +6,7 @@ import os
 
 from datetime import datetime
 
-from DataProcessing.SKUPreprocessing import init_sku_reader, CLEAR_PATTERNS_DICT
+from DataProcessing.SKUPreprocessing import init_sku_reader, init_writer, CLEAR_PATTERNS_DICT
 from Utilities.Utilities import *
 
 class SKUProcessor:
@@ -23,7 +23,7 @@ class SKUProcessor:
         :param use_threads_count: количество потоков, использумых для обработки, если превышает максимально доступное оличество потоков, то применяетс максимально доступное количество (int)
         """
         self.sku_reader = sku_reader
-        self.output_data_path = output_data_path
+        self.writer = init_writer(output_data_path)
         self.proc_func = proc_func
         self.max_batch_len = max_batch_len
         self.use_threads_count = use_threads_count
@@ -63,7 +63,7 @@ class SKUProcessor:
         :return: csv-файл по пути self.output_data_path с записанным фреймом данных rows
         """
         df = pd.DataFrame(output_rows)
-        df.to_csv(self.output_data_path, sep='\t', index=False, header=False, mode='a')
+        self.writer.append(df)
 
 
 class SKUProcessorInterface(SKUProcessor):
@@ -91,7 +91,6 @@ class SKUProcessorInterface(SKUProcessor):
             if os.path.exists(output_data_path):
                 if filecmp.cmp(input_data_path, output_data_path):
                     raise Exception('Обрабатываемый и обработанный файл одинаковые, что повлечет потерю информации из переписываемого файла до начала обработки')
-
             self.set_msg_func = set_msg_func
             self.pbar = pbar
             self.is_running_flag = is_running_flag
@@ -213,7 +212,6 @@ class CategoryRecognizer(SKUProcessorInterface):
         else:
             # Выводится категория и идентификаторы, по которым алгоритм определил категорию
             proc_func = category_directory.identify_category_and_dec_id_cython
-        
         super(CategoryRecognizer, self).__init__(input_data_path, sku_sheet_name, sku_col_name, output_data_path, proc_func, max_batch_len, use_threads_count, set_msg_func, pbar, is_running_flag)
 
         try:
@@ -241,7 +239,7 @@ class CategoryRecognizer(SKUProcessorInterface):
             if get_dec_id:
                 dec_id_header = pd.DataFrame({'Главный идентификатор': [], 'Главный ограничивающий идентификатор': [], 'Дополнительный ограничивающий идентификатор': []})
                 output_file_header = pd.concat([output_file_header, dec_id_header], axis=1)
-            output_file_header.to_csv(self.output_data_path, sep='\t', index=False)
+            self.writer.write(output_file_header)
             #   Сообщение о создании обработанного файла
             set_message_with_countdown("".join(['Обработанный файл \"', output_data_path, '\" создан']), self.timer_start, self.set_msg_func)
 
@@ -293,7 +291,7 @@ class SKUCleaner(SKUProcessorInterface):
             # Создание пустого обработанного файла, в который будут записываться результаты распознавания по батчам
             output_file_header = pd.DataFrame({'SKU': [], 'Очищенные SKU': []})
             #   Добавление в создаваемый файл столбцов для записи определяющих идентификаторов, если это необходимо
-            output_file_header.to_csv(self.output_data_path, sep='\t', index=False)
+            self.writer.write(output_file_header)
             #   Сообщение о создании обработанного файла
             set_message_with_countdown("".join(['Обработанный файл \"', output_data_path, '\" создан']), self.timer_start, self.set_msg_func)
 

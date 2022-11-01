@@ -1,6 +1,4 @@
-import numpy as np
 import pandas as pd
-import csv
 import json
 import os
 import chardet
@@ -122,6 +120,28 @@ class SKUReaderExcel:
         """
         return self.sku_sheet_name
 
+"""
+Райтер для записи данных в CSV файл
+
+:param file_path: путь к записываемому файлу
+:param encoding: кодировка записываемого файла
+"""
+
+def init_writer(file_path):
+    writer = SKUWriterCSV(file_path)
+    writer.encoding = None
+    return writer
+
+class SKUWriterCSV:
+    def __init__(self, file_path):
+        self.file_path = file_path
+
+    def write(self, df):
+        df.to_csv(self.file_path, sep='\t', index=False, encoding=self.encoding, errors="ignore")
+    
+    def append(self, df):
+        df.to_csv(self.file_path, sep='\t', index=False, header=False, mode='a', encoding=self.encoding, errors="ignore")
+
 def init_sku_reader(data_path, sku_sheet_name=None, sku_col_name=None):
     """
     Создание ридера (объекта, содержащий функцию read(batch_start, batch_len), считывающий batch_len строк SKU начиная с batch_start) и предобработчика батчей SKU из csv, txt или excel-файла, в зависимости от расширения файла
@@ -147,7 +167,7 @@ def init_sku_reader(data_path, sku_sheet_name=None, sku_col_name=None):
         # Формат обрабатываемого файла - csv, txt
         # Определение кодировки обрабатываемого файла
         #   Сообщение о начале определния кодировки
-        bytesArr = open(data_path, 'rb').read(10000)
+        bytesArr = open(data_path, 'rb').read(1000000)
         encoding = chardet.detect(bytesArr)['encoding']
         # Создание объекта-ридера SKU из csv-файла по пути input_data_path, из столбца sku_col_name (или первого столбца), осуществляющего чтение и предобработку SKU
         sku_reader = SKUReaderCSV(data_path, sku_col_name, encoding)
