@@ -45,7 +45,11 @@ class SKUProcessor:
         :param data_rows: предобработанные строки SKU
 
         :return: список данных, возвращаемый функцией self.proc_func
-        """ 
+        """
+        # processed_rows = [""] * len(data_rows)
+        # for i, row in enumerate(data_rows):
+        #     processed_rows[i] = self.proc_func(row)
+
         # Создание пула потоков для self.use_threads_count потоков
         pool = mp.Pool(self.use_threads_count)
         # Распознование категорий в соответствии справочнику self.category_directory
@@ -273,7 +277,7 @@ class SKUCleaner(SKUProcessorInterface):
 
         super(SKUCleaner, self).__init__(input_data_path, sku_sheet_name, sku_col_name, output_data_path, proc_func, max_batch_len, use_threads_count, set_msg_func, pbar, is_running_flag)
 
-        try:            
+        try:
             # Обработка
             #   Сообщение о начале обработки
             set_message_with_countdown('Очистка SKU', self.timer_start, set_msg_func)
@@ -295,6 +299,53 @@ class SKUCleaner(SKUProcessorInterface):
             #   Сообщение о создании обработанного файла
             set_message_with_countdown("".join(['Обработанный файл \"', output_data_path, '\" создан']), self.timer_start, self.set_msg_func)
 
+        except Exception as e:
+            set_error_message(str(e), self.timer_start, self.set_msg_func)
+        
+        # Основные многопоточные вычисления
+        self.process()
+    
+class FeatureParser(SKUProcessorInterface):
+    """
+    Функция поиска значения характеристики в sku по заданному алгоритму
+    """
+    def __init__(self, input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_name, feature_parser, max_batch_len, use_threads_count, set_msg_func, pbar, is_running_flag=None):
+        """
+        :param input_data_path: путь к файлу, со строками SKU для обработки
+        :param sku_sheet_name: название листа, содержащей строки SKU для обработки, если строка пустая, то берется первый лист в заданном файле
+        :param sku_col_name: название столбца, содержащего строки SKU для обработки, если строка пустая, то берется первый столбец в заданном файле
+        :param output_data_path: путь к файлу, в который будут выводиться результаты распознавания
+        :param feature_name: название искомой характеристики
+        :param feature_parser: объект, содержащий шаблоны поиска характеристики
+        :param max_batch_len: максимальное количество строк SKU, содержащихся в одном обрабатываемом батче
+        :param use_threads_count: количество потоков, использумых для обработки, если превышает максимально доступное оличество потоков, то применяетс максимально доступное количество (int)
+        :param set_msg_func: функция вывода сообщения (string)
+        :param pbar: объект progress bar, содержащий функции reset, set
+        :param is_running_flag: функция, возвращающая False, если вычисления были остановлены, по умолчанию None - при том вычисления не могут быть остановлены
+        """
+    
+        super(FeatureParser, self).__init__(input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_parser.parse, max_batch_len, use_threads_count, set_msg_func, pbar, is_running_flag)
+
+        try:
+            # Обработка
+            #   Сообщение о начале обработки
+            set_message_with_countdown(" ".join(['Поиск характеристики', feature_name]), self.timer_start, set_msg_func)
+            set_message_with_tab("".join(['в строках файла \"', input_data_path, '\";']), set_msg_func)
+            if self.sku_reader.get_sku_excel_sheet() is not None:
+                set_message_with_tab("".join(['лист SKU: \"', self.sku_reader.get_sku_excel_sheet(), '\";']), self.set_msg_func)
+            set_message_with_tab("".join(['столбец SKU: \"', self.sku_reader.get_sku_column_name(), '\";']), self.set_msg_func)
+            set_message_with_tab("".join(['кол-во задействованных потоков: ', str(self.use_threads_count), ';']), self.set_msg_func)
+            set_message_with_tab("".join(['макс. кол-во строк в батче: ', str(self.max_batch_len), ';']), self.set_msg_func)
+            set_message_with_tab(" ".join(['обрабатываемый файл содержит', str(len(self.sku_reader)), 'строк']), self.set_msg_func)
+            set_message_with_tab(" ".join(['файл делится на', str(self.batches_num), 'батчей;']), self.set_msg_func)
+            set_message_with_tab("".join(['результат обработки будет сохранен в файл: \"', output_data_path, '\"']), self.set_msg_func)
+
+            # Создание пустого обработанного файла, в который будут записываться результаты распознавания по батчам
+            output_file_header = pd.DataFrame({'SKU': [], feature_name: []})
+            #   Добавление в создаваемый файл столбцов для записи определяющих идентификаторов, если это необходимо
+            self.writer.write(output_file_header)
+            #   Сообщение о создании обработанного файла
+            set_message_with_countdown("".join(['Обработанный файл \"', output_data_path, '\" создан']), self.timer_start, self.set_msg_func)
         except Exception as e:
             set_error_message(str(e), self.timer_start, self.set_msg_func)
         
