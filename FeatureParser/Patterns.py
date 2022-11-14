@@ -301,7 +301,7 @@ def find_add_val(sku, char_loc, left_pattern_arr, right_pattern_arr):
         if len(found_mult_arr) > 0:
             # Из последнего (самого правого) из найденных множитилей извлекается число
             b = found_mult_arr[-1].span()
-            add_val = parse_number(sku[b[0] : b[1]])
+            add_val = parse_number(sku_left_part[b[0] : b[1]])
             # Если число извлечено верно, цикл прерывается, а значение найденного дополнительного значения и возвращается
             if add_val != None:
                 return add_val
@@ -312,7 +312,7 @@ def find_add_val(sku, char_loc, left_pattern_arr, right_pattern_arr):
         if len(found_mult_arr) > 0:
             # Из найденного дополнительного значения извлекается число
             b = found_mult_arr[0].span()
-            add_val = parse_number(sku[b[0] : b[1]])
+            add_val = parse_number(sku_right_part[b[0] : b[1]])
             # Если число извлечено верно, цикл прерывается, а значение найденного дополнительного значения и возвращается
             if add_val != None:
                 return add_val

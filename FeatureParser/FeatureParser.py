@@ -37,7 +37,7 @@ class FeatureParser:
         # Проверка, является ли строка sku пустой или состоящей из пробелов; если это не так, то идет парсинг характеристики, иначе возвращается нулевое значение
         if len(sku) > 0 and re.search(spaces_line_regexp, sku) is None:
             # Перебор всех функций self.parse_func_chain, по которым будет определяться значение характеристики по sku
-            for pattern_func in self.parse_func_chain:
+            for i, pattern_func in enumerate(self.parse_func_chain):
                 char_val = pattern_func(sku)
                 # Если значение характеристики было найдено, то оно после дальнейшей обработки будет возвращено, иначе проводится поиск по следующему шаблону
                 if char_val is not None:
