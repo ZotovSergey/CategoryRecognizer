@@ -7,8 +7,8 @@
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитров(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -18,8 +18,8 @@
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -28,8 +28,8 @@
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитр(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -39,8 +39,8 @@
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -50,8 +50,8 @@
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -60,8 +60,8 @@
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грамм(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -71,8 +71,8 @@
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -81,8 +81,8 @@
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грам(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -92,8 +92,8 @@
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -102,8 +102,8 @@
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*гр(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -112,8 +112,8 @@
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*мл(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -122,8 +122,8 @@
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*г(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -133,8 +133,8 @@
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -144,8 +144,8 @@
                     "ValueType":            "Int",
                     "ReverseSearch":        true,
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -164,8 +164,8 @@
                     "Mult":                 1000,
                     "MinVal":               100,
                     "MaxVal":               25000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*\\*\\s*", "\\s*х\\s*", "\\s*x\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             },
             {
@@ -176,8 +176,8 @@
                     "ReverseSearch":        true,
                     "MinVal":               100,
                     "MaxVal":               25000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*"],
-                    "MultSymbolPatterns":   ["\\s*\\*\\s*", "\\s*х\\s*", "\\s*x\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
+                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
                 }
             }
         ],

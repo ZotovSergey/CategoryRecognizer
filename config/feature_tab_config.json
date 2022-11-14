@@ -1,1 +1,0 @@
-{"sel_dir": "ColorsNum", "input_data_path": "D:/Data/FeatureParser/ColorsNum_test.csv", "sku_sheet_name": "", "sku_col_name": "", "output_data_path": "D:/Data/FeatureParser/ColorsNum_test_ret.csv", "use_threads_count": "4", "max_batch_len": "100000"}
