@@ -1,6 +1,12 @@
+import numpy as np
+
 from datetime import datetime
 from math import floor
 
+def conv_nan(val):
+    if val is np.nan:
+        return None
+    return val
 
 def set_message_with_tab(msg, set_msg_func):
     """

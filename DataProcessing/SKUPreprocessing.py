@@ -46,13 +46,13 @@ class SKUReaderCSV:
 
         :return: rows_count строк из файла из csv-файла self.file_path, колонки self.rows_col_name
         """
-        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False, on_bad_lines='skip').replace(to_replace=r'\r\n', value ='\n', regex=True).squeeze(axis=1).values.tolist()
+        return pd.read_csv(self.data_path, usecols=[self.sku_col], skiprows=range(1, start + 1), nrows=rows_count, sep='\t', dtype='str', encoding=self.encoding, skip_blank_lines=False, keep_default_na=False, on_bad_lines='skip').replace(to_replace=r'\r\n', value ='\n', regex=True).dropna().squeeze(axis=1).values.tolist()
 
     def get_sku_column_name(self):
         """
         :return: название колонки с SKU читаемого файла
         """
-        return pd.read_csv(self.data_path, usecols=[self.sku_col], nrows=0, sep='\t', dtype='str', encoding=self.encoding, on_bad_lines='skip').columns[0]
+        return pd.read_csv(self.data_path, usecols=[self.sku_col], nrows=0, sep='\t', dtype='str', encoding=self.encoding, on_bad_lines='skip').dropna().columns[0]
     
     def get_sku_excel_sheet(self):
         """
@@ -85,7 +85,7 @@ class SKUReaderExcel:
         else:
             sku_col = sku_col_name
         # Строки SKU из заданного файла, заданного листа, заданной строки
-        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str', keep_default_na=False)
+        self.data = ex_file.parse(sheet_name=self.sku_sheet_name, usecols=[sku_col], dtype='str', keep_default_na=False, on_bad_lines='skip').dropna()
         
         self.column_name = self.data.columns[0]
 

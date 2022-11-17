@@ -6,9 +6,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитров(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -16,10 +17,11 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*килограмм(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -27,9 +29,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитр(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -37,10 +40,11 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*килограм(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -48,10 +52,11 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*литров(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -59,9 +64,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грамм(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -69,10 +75,11 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*литр(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -80,9 +87,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грам(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -90,10 +98,11 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*кг(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -101,9 +110,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*гр(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -111,9 +121,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*мл(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -121,9 +132,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*г(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -131,10 +143,11 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*л(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -142,10 +155,11 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*к(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MinVal":               1,
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -160,12 +174,12 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]\\d+",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "Mult":                 1000,
                     "MinVal":               100,
                     "MaxVal":               25000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
                 }
             },
             {
@@ -173,11 +187,150 @@
                 "Pattern": {
                     "Reg":                  "\\d+",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               100,
                     "MaxVal":               25000,
-                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*((штук)|(шт\\.)|(шт))?"],
-                    "MultSymbolPatterns":   ["\\s*([*хx]|(по))\\s*"]
+                    "MultPatterns":         ["\\d+[.,]?\\d*\\s*"],
+                    "MultSymbolPatterns":   ["\\s*[*хx]\\s*"]
+                }
+            }
+        ],
+        "DefaultValue": "1000"
+    },
+
+    "Weight of PCS": {
+        "Patterns": [
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитров(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "\\d+[.,]?\\d*\\s*килограмм(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "Mult":                 1000,
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитр(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "\\d+[.,]?\\d*\\s*килограм(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "Mult":                 1000,
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "\\d+[.,]?\\d*\\s*литров(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "Mult":                 1000,
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грамм(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "\\d+[.,]?\\d*\\s*литр(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "Mult":                 1000,
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грам(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "\\d+[.,]?\\d*\\s*кг(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "Mult":                 1000,
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*гр(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*мл(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*г(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "\\d+[.,]?\\d*\\s*л(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "Mult":                 1000,
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "\\d+[.,]?\\d*\\s*к(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "Mult":                 1000,
+                    "MinVal":               1
                 }
             }
         ],
@@ -191,7 +344,7 @@
                 "Pattern": {
                     "Reg":                  "м\\.?\\s*д\\.?\\s*ж\\.?\\s*\\d+[.,]?\\d*\\s*%",
                     "ValueType":            "FloatComma",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MaxVal":               100,
                     "Prefix":               "м.д.ж. ",
                     "Suffix":               "%",
@@ -205,7 +358,7 @@
                 "Pattern": {
                     "Reg":                  "\\d+[.,]?\\d*\\s*%",
                     "ValueType":            "FloatComma",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MaxVal":               100,
                     "Prefix":               "м.д.ж. ",
                     "Suffix":               "%",
@@ -278,12 +431,24 @@
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*штук(?![a-zA-Zа-яА-Я])",
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*штуки(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((штук)|(шт)|ш)?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*штук(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             },
@@ -292,10 +457,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*шт(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((шт)|ш)?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             },
@@ -304,10 +469,118 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ш(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ш?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*упаковок(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*упаковки(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*уп(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*паучей(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*пауча(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*пауч(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*банки(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*банок(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*банк(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Reverse",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             },
@@ -316,10 +589,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цветов(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цветов)|(цвета)|(цвет)|(цв)|ц)?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             },
@@ -328,10 +601,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цвета(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цвета)|(цвет)|(цв)|ц)?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             },
@@ -340,10 +613,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цвет(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цвет)|(цв)|ц)?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             },
@@ -352,10 +625,10 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цв(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цв)|ц)?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             },
@@ -364,10 +637,28 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ц(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ц?(?![a-zA-Zа-яА-Я])"],
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
+                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                }
+            }
+        ],
+        "DefaultValue": "1шт"
+    },
+
+    "Sum of PCS": {
+        "Patterns": [
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((штуки)|(штук)|(шт)|(ш)|(упаковок)|(упаковки)|(уп)|(паучей)|(пауча)|(пауч)|(банки)|(банок)|(банк)|(цветов)|(цвета)|(цвет)|(цв)|(ц))(?![a-zA-Zа-яА-Я])",
+                    "ValueType":            "Int",
+                    "Order":                "Sum",
+                    "MinVal":               1,
+                    "Suffix":               "шт",
+                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
                     "AddSymbolPatterns":    ["\\s*\\+\\s*"]
                 }
             }
@@ -382,7 +673,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цветов(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цветов)|(цвета)|(цвет)|(цв)|ц)?(?![a-zA-Zа-яА-Я])"],
@@ -394,7 +685,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цвета(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цвета)|(цвет)|(цв)|ц)?(?![a-zA-Zа-яА-Я])"],
@@ -406,7 +697,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цвет(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цвет)|(цв)|ц)?(?![a-zA-Zа-яА-Я])"],
@@ -418,7 +709,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*цв(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((цв)|ц)?(?![a-zA-Zа-яА-Я])"],
@@ -430,7 +721,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ц(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ц?(?![a-zA-Zа-яА-Я])"],
@@ -442,7 +733,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*штук(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((штук)|(шт)|ш)?(?![a-zA-Zа-яА-Я])"],
@@ -454,7 +745,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*шт(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((шт)|ш)?(?![a-zA-Zа-яА-Я])"],
@@ -466,7 +757,7 @@
                 "Pattern": {
                     "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ш(?![a-zA-Zа-яА-Я])",
                     "ValueType":            "Int",
-                    "ReverseSearch":        true,
+                    "Order":                "Reverse",
                     "MinVal":               1,
                     "Suffix":               "шт",
                     "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*ш?(?![a-zA-Zа-яА-Я])"],
@@ -482,7 +773,7 @@
                 "Type": "Val",
                 "Pattern": {
                     "Reg":              "\\d+[.,]?\\d*\\s*см(?![a-zA-Zа-яА-Я])",
-                    "ReverseSearch":    true,
+                    "Order":            "Reverse",
                     "Suffix":           "см"
                 }
             }

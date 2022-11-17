@@ -31,10 +31,13 @@ class ValuePattern:
         suffix = ""
         left_add_pat_arr = []
         right_add_pat_arr = []
+        add_val_pat_arr = []
         left_mult_pat_arr = []
         right_mult_pat_arr = []
+        mult_val_pat_arr = []
         left_range_pat_arr = []
         right_range_pat_arr = []
+        range_val_pat_arr = []
         range_symbol = ""
         # Регулярное выражение (строковое) для поиска индикатора в SKU, если его нет в patternParam, возвращается ошибка
         if "Reg" in pattern_param_dict:
@@ -61,6 +64,7 @@ class ValuePattern:
                 if "AddSymbolPatterns" in pattern_param_dict:
                     add_symbol_patterns = pattern_param_dict["AddSymbolPatterns"]
                     left_add_pat_arr, right_add_pat_arr = side_reg_symb_val(add_patterns, add_symbol_patterns)
+                    add_val_pat_arr = add_patterns[:len(left_add_pat_arr)]
             # Составление регулярных выражений для поиска множителей числового значения характеристики слева и справа, для этого в описании шаблона в конфигурационном файле должны быть
 			# регулярные выражения для символов умножения и для самого множителя
             if "MultPatterns" in pattern_param_dict:
@@ -68,6 +72,7 @@ class ValuePattern:
                 if "MultSymbolPatterns" in pattern_param_dict:
                     mult_symbol_patterns = pattern_param_dict["MultSymbolPatterns"]
                     left_mult_pat_arr, right_mult_pat_arr = side_reg_symb_val(mult_patterns, mult_symbol_patterns)
+                    mult_val_pat_arr = mult_patterns[:len(left_mult_pat_arr)]
             # Составление регулярных выражений для поиска диапазона числовых значений характеристики слева и справа, для этого в описании шаблона в конфигурационном файле должны быть
 			# регулярные выражения для символов диапазона и для самого второго значения, а также знак диапазона, который ставится между значениями
             if "RangeBorderPatterns" in pattern_param_dict:
@@ -77,6 +82,7 @@ class ValuePattern:
                     if "RangeSymbol" in pattern_param_dict:
                         range_symbol = pattern_param_dict["RangeSymbol"]
                         left_range_pat_arr, right_range_pat_arr = side_reg_symb_val(range_border_patterns, range_symbol_patterns)
+                        range_val_pat_arr = range_border_patterns[:len(left_range_pat_arr)]
 
             num_val_pat = NumberValuePattern(
                 reg,
@@ -85,16 +91,20 @@ class ValuePattern:
                 max_val,
                 left_add_pat_arr,
                 right_add_pat_arr,
+                add_val_pat_arr,
                 left_mult_pat_arr,
-                right_mult_pat_arr
+                right_mult_pat_arr,
+                mult_val_pat_arr
             )
             # Функция, определяющее числовое значение характеристики, соответствующее шаблону; по умолчанию проверка соответствий регулярному выражению идет с приоритетом соответствиям
             # слева, если в параметрах шаблона обозначено, что reverseSearch - правда, то преоритет будет для соответствий справа
             value_parse_func = num_val_pat.parse_straight
-            if "ReverseSearch" in pattern_param_dict:
-                reverse_search = pattern_param_dict["ReverseSearch"]
-                if reverse_search:
+            if "Order" in pattern_param_dict:
+                order = pattern_param_dict["Order"]
+                if order == "Reverse":
                     value_parse_func = num_val_pat.parse_reverse
+                if order == "Sum":
+                    value_parse_func = num_val_pat.parse_sum
             # Выбор функции, приводящей числовое значение к строчному
             value_to_str_func = TypeConverters.float_to_str_float
             if "ValueType" in pattern_param_dict:
@@ -107,6 +117,7 @@ class ValuePattern:
             self.suffix = suffix
             self.left_range_pat_arr = left_range_pat_arr
             self.right_range_pat_arr = right_range_pat_arr
+            self.range_val_pat_arr = range_val_pat_arr
             self.range_symbol = range_symbol
             self.value_parse_func = value_parse_func
             self.value_to_str_func = value_to_str_func
@@ -144,7 +155,7 @@ class ValuePattern:
     """
     def find_range(self, sku, match_loc, first_range_val):
         # Поиск всех значений, удовлетворяющих паттерну диапазона слева и справа от первого значения
-        second_range_val = find_add_val(sku, match_loc, self.left_range_pat_arr, self.right_range_pat_arr)
+        second_range_val = find_add_val(sku, match_loc, self.left_range_pat_arr, self.right_range_pat_arr, self.range_val_pat_arr)
         # Определение порядка значений диапазона (порядок возрастания, если значения равны, считается, что диапазон не найден)
         range_num = None
         if second_range_val is not None:
@@ -159,7 +170,7 @@ class ValuePattern:
 Содержит основные параметры поиска числового значения характеристики, которое можно найти по данному шаблону и основные функции, с помощью которых проводится поиск значения в строке SKU
 """
 class NumberValuePattern:
-    def __init__(self, reg, mult, min_val, max_val, left_add_pat_arr, right_add_pat_arr, left_mult_pat_arr, right_mult_pat_arr):
+    def __init__(self, reg, mult, min_val, max_val, left_add_pat_arr, right_add_pat_arr, add_val_pat_arr, left_mult_pat_arr, right_mult_pat_arr, mult_val_pat_arr):
         # Регулярное выражение для поиска индикатора характеристики
         self.reg = reg
         # Множитель массы из индикатора
@@ -172,11 +183,15 @@ class NumberValuePattern:
         self.left_add_pat_arr = left_add_pat_arr
         # Список шаблонов для поиска слагаемого справа
         self.right_add_pat_arr = right_add_pat_arr
+        # Список шаблонов для поиска значений слагаемых
+        self.add_val_pat_arr = add_val_pat_arr
         # Список шаблонов для поиска множителя слева
         self.left_mult_pat_arr = left_mult_pat_arr
         # Список шаблонов для поиска множителя справа
         self.right_mult_pat_arr = right_mult_pat_arr
-    
+        # Список шаблонов для поиска значений множителей
+        self.mult_val_pat_arr = mult_val_pat_arr
+
     """
     Поиск значения характеристики с плавающей точкой по строке sku, согласно условиям из структуры pattern, в прямом порядке (значение слева sku преоритетней)
 
@@ -188,6 +203,9 @@ class NumberValuePattern:
         # Поиск всех границ соответствий регулярному выражению self.reg
         matches = []
         for m in re.finditer(self.reg, sku):
+            matches.append(m)
+        # Перебор всех соответствий в прямом порядке (слева направо)
+        for m in matches:
             # Парсинг числа float64 из найденного соответствия
             loc_borders = m.span()
             val = self.parse_char_from_match(sku, loc_borders)
@@ -210,7 +228,7 @@ class NumberValuePattern:
         for m in re.finditer(self.reg, sku):
             matches.append(m)
         matches.reverse()
-        # Перебор всех соответствий в прямом порядке (слева направо)
+        # Перебор всех соответствий в обратном порядке (справа налево)
         for m in matches:
             # Парсинг числа float64 из найденного соответствия
             loc_borders = m.span()
@@ -218,6 +236,25 @@ class NumberValuePattern:
             # Если число в соответствии найдено, поиск завершается
             if val is not None:
                 return val, loc_borders
+        # Если ни один вариант не подошел или не было найдено ни одно соответствие регулярному выражению, функция прекращает работу, а характеристика считается не найденной
+        return None, None
+    
+    def parse_sum(self, sku):
+        # Поиск всех границ соответствий регулярному выражению self.reg
+        matches = []
+        for m in re.finditer(self.reg, sku):
+            matches.append(m)
+        val = 0
+        # Перебор и сложение всех соответствий
+        for m in matches:
+            # Парсинг числа float64 из найденного соответствия
+            loc_borders = m.span()
+            val_cond = self.parse_char_from_match(sku, loc_borders)
+            if val_cond is not None:
+                val += val_cond
+            # Если число в соответствии найдено, поиск завершается
+        if val > 0:
+            return val, loc_borders
         # Если ни один вариант не подошел или не было найдено ни одно соответствие регулярному выражению, функция прекращает работу, а характеристика считается не найденной
         return None, None
 
@@ -254,7 +291,7 @@ class NumberValuePattern:
     """
     def find_add_addendum(self, sku, char_loc):
         add = 0.
-        add_cond = find_add_val(sku, char_loc, self.left_add_pat_arr, self.right_add_pat_arr)
+        add_cond = find_add_val(sku, char_loc, self.left_add_pat_arr, self.right_add_pat_arr, self.add_val_pat_arr)
         if add_cond is not None:
             add = add_cond
         return add
@@ -270,7 +307,7 @@ class NumberValuePattern:
     """
     def find_add_mult(self, sku, char_loc):
         mult = 1.
-        mult_cond = find_add_val(sku, char_loc, self.left_mult_pat_arr, self.right_mult_pat_arr)
+        mult_cond = find_add_val(sku, char_loc, self.left_mult_pat_arr, self.right_mult_pat_arr, self.mult_val_pat_arr)
         if mult_cond is not None:
             mult = mult_cond
         return mult
@@ -281,12 +318,13 @@ class NumberValuePattern:
 
 :param sku: строка, в которой было найдено числовое значение характеристики и ведется поиск
 :param char_loc: локация (номера первого и последнего символов) числового значения характеристики в строке sku
-:param left_pattern_arr: массив регулярных выражений для поиска допольнительных значение слева от основного
-:param right_pattern_arr: массив регулярных выражений для поиска допольнительных значение справа от основного
+:param left_pattern_arr: массив регулярных выражений для поиска дополнительных значение слева от основного
+:param right_pattern_arr: массив регулярных выражений для поиска дополнительных значение справа от основного
+:param val_pattern_arr: массив регулярных выражений для поиска значений допольнительных значений
 
 :return: дополнительное значение характеристики, если оно найдено; флаг, показывающий, что значение найдено
 """
-def find_add_val(sku, char_loc, left_pattern_arr, right_pattern_arr):
+def find_add_val(sku, char_loc, left_pattern_arr, right_pattern_arr, val_pattern_arr):
     # Часть строки sku слева от найденного соответствии
     sku_left_part = sku[:char_loc[0]]
     # Часть строки sku справа от найденного соответствии
@@ -301,7 +339,11 @@ def find_add_val(sku, char_loc, left_pattern_arr, right_pattern_arr):
         if len(found_mult_arr) > 0:
             # Из последнего (самого правого) из найденных множитилей извлекается число
             b = found_mult_arr[-1].span()
-            add_val = parse_number(sku_left_part[b[0] : b[1]])
+            left_add = sku_left_part[b[0] : b[1]]
+            str_val_arr = []
+            for m in re.finditer(val_pattern_arr[i], left_add):
+                str_val_arr.append(m)
+            add_val = parse_number(left_add[str_val_arr[-1].span()[0] : str_val_arr[-1].span()[1]])
             # Если число извлечено верно, цикл прерывается, а значение найденного дополнительного значения и возвращается
             if add_val != None:
                 return add_val
@@ -312,14 +354,18 @@ def find_add_val(sku, char_loc, left_pattern_arr, right_pattern_arr):
         if len(found_mult_arr) > 0:
             # Из найденного дополнительного значения извлекается число
             b = found_mult_arr[0].span()
-            add_val = parse_number(sku_right_part[b[0] : b[1]])
+            right_add = sku_right_part[b[0] : b[1]]
+            str_val_arr = []
+            for m in re.finditer(val_pattern_arr[i], right_add):
+                str_val_arr.append(m)
+            add_val = parse_number(right_add[str_val_arr[-1].span()[0] : str_val_arr[-1].span()[1]])
             # Если число извлечено верно, цикл прерывается, а значение найденного дополнительного значения и возвращается
             if add_val != None:
                 return add_val
     return None
 
 """
-Функция составляет комбинации регулярных выражений значений и символов/разделителей для нахожддения справа и слева от оснолвного выражения
+Функция составляет сочетания регулярных выражений значений и символов/разделителей для нахождения справа и слева от оснолвного выражения
 
 :param val_reg_str_arr: массив строчных регулярных выражений некоторых значений
 :param symb_reg_str_arr []string: массив строчных регулярных выражений символов/разделителей
@@ -329,13 +375,12 @@ def find_add_val(sku, char_loc, left_pattern_arr, right_pattern_arr):
 def side_reg_symb_val(val_reg_str_arr, symb_reg_str_arr):
     left_pattern_arr = []
     right_pattern_arr = []
-    # Перебор всех регулярных выражений знаков множителей из конфигураций
-    for mult_symb_re in symb_reg_str_arr:
-        # Перебор всех регулярных выражений значений множителей из конфигураций
-        for mult_re in val_reg_str_arr:
-            # Составление регулярного выражения для определения множителя характеристики слева и справа
-            left_pattern_arr.append("".join([mult_re, mult_symb_re, "$"]))
-            right_pattern_arr.append("".join(["^", mult_symb_re, mult_re]))
+    # Перебор всех регулярных выражений сочетаний знаков множителей из конфигураций
+    mult_reg_count = min([len(symb_reg_str_arr), len(val_reg_str_arr)])
+    for i in range(mult_reg_count):
+        # Составление регулярного выражения для определения множителя характеристики слева и справа
+        left_pattern_arr.append("".join([val_reg_str_arr[i], symb_reg_str_arr[i], "$"]))
+        right_pattern_arr.append("".join(["^", symb_reg_str_arr[i], val_reg_str_arr[i]]))
     return left_pattern_arr, right_pattern_arr
 
 """
