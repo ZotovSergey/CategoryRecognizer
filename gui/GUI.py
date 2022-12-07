@@ -1001,6 +1001,9 @@ class FeatureParsingTab(AppGUI):
         self.output_file_path_btn.clicked.connect(self.output_file_path_btn_click)
         self.output_file_path_btn.setFixedWidth(self.file_path_btn_wight)
         output_file_path_box.addWidget(self.output_file_path_btn)
+        # Чекбокс вывода SKU без найденной характеристики
+        self.remove_feature_check = QCheckBox("Выводить SKU без найденной характеристики", self)
+        tab_layout.addWidget(self.remove_feature_check)
 
         # Блок параметров вычислений
         #   Макет-сетка
@@ -1118,6 +1121,7 @@ class FeatureParsingTab(AppGUI):
             self.use_threads_count_line_edit.setText(dir_tab_config['use_threads_count'])
             self.max_batch_len_line_edit.setText(dir_tab_config['max_batch_len'])
             self.sku_sheet_name_line_edit.setText(dir_tab_config['sku_sheet_name'])
+            self.remove_feature_check.setChecked(dir_tab_config['remove_feature_check'])
         except:
             pass
     
@@ -1134,6 +1138,7 @@ class FeatureParsingTab(AppGUI):
                            'output_data_path': self.output_file_path_line_edit.text(),
                            'use_threads_count': self.use_threads_count_line_edit.text(),
                            'max_batch_len': self.max_batch_len_line_edit.text(),
+                           'remove_feature_check': self.remove_feature_check.isChecked()
                           }
 
     def save_config(self):
@@ -1182,6 +1187,8 @@ class FeatureParsingTab(AppGUI):
                 output_data_path = self.output_file_path_line_edit.text()
                 #   Количество задействованых в вычислении потоков, если строка пустая, то берется максимальное доступное количество потоков
                 use_threads_count = self.use_threads_count_line_edit.text()
+                #   Выводить SKU без найденной характеристики
+                remove_feature_check = self.remove_feature_check.isChecked()
                 if len(use_threads_count) == 0 or int(use_threads_count) > self.cpu_max:
                     use_threads_count == self.cpu_max
                     # Заполнение пустой строки значением по умолчанию
@@ -1204,7 +1211,7 @@ class FeatureParsingTab(AppGUI):
                 raise Exception("ERROR!!!")
 
             # Поиск характеристик из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
-            FeatureParser(input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_label, feature_parser, max_batch_len, use_threads_count,
+            FeatureParser(input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_label, feature_parser, max_batch_len, use_threads_count, remove_feature_check,
             self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
             #self.app_win.info_win.set_message_to_gui, self.pbar)
             #   Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна

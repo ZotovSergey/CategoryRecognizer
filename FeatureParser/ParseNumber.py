@@ -5,12 +5,16 @@ import re
 
 :param s: строка, из которой извлекается число
 
-:return: первое число из s в типе float64
+:return: первое число из s в типе float64, позиция числа в строке
 """
 def parse_number(s):
     # У числа s строчного типа "," меняется на "." затем число преобразуется к типу float
     try:
+        m = re.search("\d+[.,]?\d*", s)
+        loc = m.span()
         num = float(re.findall("\d+[.,]?\d*", s)[0].replace(",", "."))
+        num = float(s[loc[0]:loc[1]].replace(",", "."))
     except:
         num = None
-    return num 
+        loc = None
+    return num, loc
