@@ -198,139 +198,91 @@
         "DefaultValue": "1000"
     },
 
-    "Weight of PCS": {
+    "Weight of animal feed": {
         "Patterns": [
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитров(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "MinVal":               1
+                    "Reg":              "\\d+[.,]?\\d*\\s*((миллилитров)|(миллилитр)|(грамм)|(грам)|(гр)|(мл)|(г)|(g))(?![a-wy-zA-WY-Zа-фц-яА-ФЦ-Я])",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "MinVal":           1,
+                    "ExceptionLeft":    ["=\\s*$"]
                 }
             },
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "\\d+[.,]?\\d*\\s*килограмм(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "Mult":                 1000,
-                    "MinVal":               1
+                    "Reg":              "\\d+[.,]?\\d*\\s*((килограмм)|(килограм)|(литров)|(литр)|(кг)|(л)|(к)|(kg)|(k))(?![a-wy-zA-WY-Zа-фц-яА-ФЦ-Я])",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "Mult":             1000,
+                    "MinVal":           1,
+                    "ExceptionLeft":    ["=\\s*$"]
                 }
             },
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*миллилитр(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "MinVal":               1
+                    "Reg":              "\\d+[.,]?\\d*\\s*([*xх]|(по))",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "MinVal":           21
                 }
             },
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "\\d+[.,]?\\d*\\s*килограм(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "Mult":                 1000,
-                    "MinVal":               1
+                    "Reg":              "([*xх]|(по))\\s*\\d+[.,]?\\d*",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "MinVal":           21,
+                    "ExceptionRight":   ["^\\s*((штуки)|(штук)|(шт)|(ш)|(упаковок)|(упаковки)|(уп)|(паучей)|(пауча)|(пауч)|(банки)|(банок)|(банк))"]
                 }
             },
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "\\d+[.,]?\\d*\\s*литров(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "Mult":                 1000,
-                    "MinVal":               1
+                    "Reg":              "\\d+[.,]?\\d*\\s*([*xх]|(по))",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "Mult":             1000,
+                    "MaxVal":           20000,
+                    "MinVal":           1
                 }
             },
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грамм(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "MinVal":               1
+                    "Reg":              "([*xх]|(по))\\s*\\d+[.,]?\\d*",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "Mult":             1000,
+                    "MaxVal":           20000,
+                    "MinVal":           1,
+                    "ExceptionRight":   ["^\\s*((штуки)|(штук)|(шт)|(ш)|(упаковок)|(упаковки)|(уп)|(паучей)|(пауча)|(пауч)|(банки)|(банок)|(банк))"]
                 }
             },
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "\\d+[.,]?\\d*\\s*литр(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "Mult":                 1000,
-                    "MinVal":               1
+                    "Reg":              "\\d+[.,]?\\d*\\s*",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "MinVal":           21,
+                    "ExceptionLeft":    ["=\\s*$"]
                 }
             },
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*грам(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "MinVal":               1
-                }
-            },
-            {
-                "Type": "Val",
-                "Pattern": {
-                    "Reg":                  "\\d+[.,]?\\d*\\s*кг(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "Mult":                 1000,
-                    "MinVal":               1
-                }
-            },
-            {
-                "Type": "Val",
-                "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*гр(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "MinVal":               1
-                }
-            },
-            {
-                "Type": "Val",
-                "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*мл(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "MinVal":               1
-                }
-            },
-            {
-                "Type": "Val",
-                "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*г(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "MinVal":               1
-                }
-            },
-            {
-                "Type": "Val",
-                "Pattern": {
-                    "Reg":                  "\\d+[.,]?\\d*\\s*л(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "Mult":                 1000,
-                    "MinVal":               1
-                }
-            },
-            {
-                "Type": "Val",
-                "Pattern": {
-                    "Reg":                  "\\d+[.,]?\\d*\\s*к(?![a-zA-Zа-яА-Я])",
-                    "ValueType":            "Int",
-                    "Order":                "Reverse",
-                    "Mult":                 1000,
-                    "MinVal":               1
+                    "Reg":              "\\d+[.,]?\\d*\\s*",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "Mult":             1000,
+                    "MaxVal":           20000,
+                    "ExceptionLeft":    ["=\\s*$"],
+                    "ExceptionRight":   ["^\\s*((штуки)|(штук)|(шт)|(ш)|(упаковок)|(упаковки)|(уп)|(паучей)|(пауча)|(пауч)|(банки)|(банок)|(банк))"]
                 }
             }
         ],
@@ -648,22 +600,38 @@
         "DefaultValue": "1шт"
     },
 
-    "Sum of PCS": {
+    "PCS of animal feed": {
         "Patterns": [
             {
                 "Type": "Val",
                 "Pattern": {
-                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((штуки)|(штук)|(шт)|(ш)|(упаковок)|(упаковки)|(уп)|(паучей)|(пауча)|(пауч)|(банки)|(банок)|(банк)|(цветов)|(цвета)|(цвет)|(цв)|(ц))(?![a-zA-Zа-яА-Я])",
+                    "Reg":                  "(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*((штуки)|(штук)|(шт)|(ш)|(упаковок)|(упаковки)|(уп)|(паучей)|(пауча)|(пауч)|(банки)|(банок)|(банк))(?![a-wy-zA-WY-Zа-фц-яА-ФЦ-Я])",
                     "ValueType":            "Int",
                     "Order":                "Sum",
-                    "MinVal":               1,
-                    "Suffix":               "шт",
-                    "AddendumPatterns":     ["(?<!(?<=[\\d.,])[.,\\d])\\d+\\s*"],
-                    "AddSymbolPatterns":    ["\\s*\\+\\s*"]
+                    "MinVal":               1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":              "\\d+[.,]?\\d*\\s*([*xх]|(по))",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "MinVal":           1
+                }
+            },
+            {
+                "Type": "Val",
+                "Pattern": {
+                    "Reg":              "([*xх]|(по))\\s*\\d+[.,]?\\d*",
+                    "ValueType":        "Float",
+                    "Order":            "Reverse",
+                    "MinVal":           1,
+                    "ExceptionRight":    ["^\\s*((миллилитров)|(миллилитр)|(грамм)|(грам)|(гр)|(мл)|(г)|(g)|(килограмм)|(килограм)|(литров)|(литр)|(кг)|(л)|(к)|(kg)|(k))"]
                 }
             }
         ],
-        "DefaultValue": "1шт"
+        "DefaultValue": "1"
     },
 
     "ColorsNum": {
