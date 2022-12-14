@@ -24,9 +24,11 @@ class ValuePattern:
 	    # Функция, приводящая числовое значение к строчному
         self.value_to_str_func = None
         # Значения параметров шаблона по умолчанию, если их нет в pattern_param
+        name = ""
         mult = 1.
         min_val = 0.
         max_val = np.inf
+        multiplicity = 0
         prefix = ""
         suffix = ""
         left_add_pat_arr = []
@@ -39,12 +41,14 @@ class ValuePattern:
         right_range_pat_arr = []
         range_val_pat_arr = []
         range_symbol = []
-        exception_left_arr = []
-        exception_right_arr = []
+        exceptions_arr = []
 
         # Регулярное выражение (строковое) для поиска индикатора в SKU, если его нет в patternParam, возвращается ошибка
         if "Reg" in pattern_param_dict:
             reg = pattern_param_dict["Reg"]
+            # Парсинг названия шаблона
+            if "Name" in pattern_param_dict:
+                name = pattern_param_dict["Name"]
             # Парсинг значения множителя числового значения характеристики, если он есть в описании шаблона в конфигурационном файле
             if "Mult" in pattern_param_dict:
                 mult = pattern_param_dict["Mult"]
@@ -54,6 +58,9 @@ class ValuePattern:
             # Парсинг максимального числового значения характеристики, если он есть в описании шаблона в конфигурационном файле
             if "MaxVal" in pattern_param_dict:
                 max_val = pattern_param_dict["MaxVal"]
+            # Парсинг кратности
+            if "Multiplicity" in pattern_param_dict:
+                multiplicity = pattern_param_dict["Multiplicity"]
             # Парсинг приставки числового значения характеристики, если он есть в описании шаблона в конфигурационном файле
             if "Prefix" in pattern_param_dict:
                 prefix = pattern_param_dict["Prefix"]
@@ -86,26 +93,24 @@ class ValuePattern:
                         range_symbol = pattern_param_dict["RangeSymbol"]
                         left_range_pat_arr, right_range_pat_arr = side_reg_symb_val(range_border_patterns, range_symbol_patterns)
                         range_val_pat_arr = range_border_patterns[:len(left_range_pat_arr)]
-            # Составление регулярных выражений для поиска исключений слева от числовых значений
-            if "ExceptionLeft" in pattern_param_dict:
-                exception_left_arr = pattern_param_dict["ExceptionLeft"]
-             # Составление регулярных выражений для поиска исключений слева от числовых значений
-            if "ExceptionRight" in pattern_param_dict:
-                exception_right_arr = pattern_param_dict["ExceptionRight"]
+            # Составление регулярных выражений для поиска полных исключений
+            if "Exceptions" in pattern_param_dict:
+                exceptions_arr = pattern_param_dict["Exceptions"]
             
             num_val_pat = NumberValuePattern(
                 reg,
+                name,
                 mult,
                 min_val,
                 max_val,
+                multiplicity,
                 left_add_pat_arr,
                 right_add_pat_arr,
                 add_val_pat_arr,
                 left_mult_pat_arr,
                 right_mult_pat_arr,
                 mult_val_pat_arr,
-                exception_left_arr,
-                exception_right_arr
+                exceptions_arr
             )
             # Функция, определяющее числовое значение характеристики, соответствующее шаблону; по умолчанию проверка соответствий регулярному выражению идет с приоритетом соответствиям
             # слева, если в параметрах шаблона обозначено, что reverseSearch - правда, то преоритет будет для соответствий справа
@@ -122,15 +127,22 @@ class ValuePattern:
                     value_parse_func = num_val_pat.parse_min
 
             # Выбор функции, приводящей числовое значение к строчному
-            value_to_str_func = TypeConverters.float_to_str_float
+            converter = TypeConverters.NumToStrConvertor(None)
             if "ValueType" in pattern_param_dict:
                 value_type = pattern_param_dict["ValueType"]
+                round_count_match = re.search("\d+$", value_type)
+                round_count = None
+                if round_count_match is not None:
+                    round_count_loc = round_count_match.span()
+                    round_count = int(value_type[round_count_loc[0] : round_count_loc[1]])
+                    value_type = value_type[:round_count_loc[0]]
                 if value_type == "Int":
-                    value_to_str_func = TypeConverters.float_to_str_int
+                    converter = TypeConverters.NumToStrConvertor(0)
                 if value_type == "Float":
-                    value_to_str_func = TypeConverters.float_to_str_float
+                    converter = TypeConverters.NumToStrConvertor(round_count)
                 if value_type == "FloatComma":
-                    value_to_str_func = TypeConverters.float_to_str_float_comma
+                    converter = TypeConverters.NumToStrConvertor(round_count, True)
+                value_to_str_func = converter.transform
             self.prefix = prefix
             self.suffix = suffix
             self.left_range_pat_arr = left_range_pat_arr
@@ -150,7 +162,7 @@ class ValuePattern:
     def parse(self, sku):
         # Приведение SKU к нижнему регистру
         sku_low = sku.lower()
-        num_val, match_loc = self.value_parse_func(sku_low)
+        num_val, match_loc, name = self.value_parse_func(sku_low)
         if num_val is not None:
             # Поиск диапазона по регулярным выражениям
             val_range = self.find_range(sku_low, match_loc, num_val)
@@ -159,8 +171,8 @@ class ValuePattern:
             else:
                 val_str = self.value_to_str_func(num_val)
             # Значение возвращается с приставкой и суффиксом
-            return "".join([self.prefix, val_str, self.suffix]), match_loc
-        return None, match_loc
+            return "".join([self.prefix, val_str, self.suffix]), match_loc, name
+        return None, match_loc, name
 
     """
     Поиск обозначения диапазона в SKU по потенциальному первому значению диапазона (или второго) и его расположению в SKU
@@ -188,15 +200,20 @@ class ValuePattern:
 Содержит основные параметры поиска числового значения характеристики, которое можно найти по данному шаблону и основные функции, с помощью которых проводится поиск значения в строке SKU
 """
 class NumberValuePattern:
-    def __init__(self, reg, mult, min_val, max_val, left_add_pat_arr, right_add_pat_arr, add_val_pat_arr, left_mult_pat_arr, right_mult_pat_arr, mult_val_pat_arr, exception_left_arr, exception_right_arr):
+    def __init__(self, reg, name, mult, min_val, max_val, multiplicity, left_add_pat_arr, right_add_pat_arr, add_val_pat_arr, left_mult_pat_arr, right_mult_pat_arr, mult_val_pat_arr, exceptions_arr):
         # Регулярное выражение для поиска индикатора характеристики
         self.reg = reg
+        # Название шаблона
+        self.name = name
         # Множитель массы из индикатора
         self.mult = mult
         # Минимальное значение допустимое при использовании данного шаблона
         self.min_val = min_val
         # Максимальное значение допустимое при использовании данного шаблона
         self.max_val = max_val
+        # Допустимая кратность значения полученного значения
+        self.multiplicity = multiplicity
+        
         # Список шаблонов для поиска слагаемого слева
         self.left_add_pat_arr = left_add_pat_arr
         # Список шаблонов для поиска слагаемого справа
@@ -209,10 +226,8 @@ class NumberValuePattern:
         self.right_mult_pat_arr = right_mult_pat_arr
         # Список шаблонов для поиска значений множителей
         self.mult_val_pat_arr = mult_val_pat_arr
-        # Список шаблонов для исключений слева
-        self.exception_left_arr = exception_left_arr
-        # Список шаблонов для исключений справа
-        self.exception_right_arr = exception_right_arr
+        # Список шаблонов для полных исключений
+        self.exceptions_arr = exceptions_arr
 
     """
     Поиск значения характеристики с плавающей точкой по строке sku, согласно условиям из структуры pattern, в прямом порядке (значение слева sku преоритетней)
@@ -223,9 +238,7 @@ class NumberValuePattern:
     """
     def parse_straight(self, sku):
         # Поиск всех границ соответствий регулярному выражению self.reg
-        matches = []
-        for m in re.finditer(self.reg, sku):
-            matches.append(m)
+        matches = self.find_matches(sku)
         # Перебор всех соответствий в прямом порядке (слева направо)
         for m in matches:
             # Парсинг числа float64 из найденного соответствия
@@ -236,9 +249,9 @@ class NumberValuePattern:
                 # Если число в соответствии найдено, поиск завершается
                 if val is not None:
                     loc = num_loc + loc_borders[0]
-                    return val, loc
+                    return val, loc, self.name
         # Если ни один вариант не подошел или не было найдено ни одно соответствие регулярному выражению, функция прекращает работу, а характеристика считается не найденной
-        return None, None
+        return None, None, None
     
     """
     Поиск значения характеристики с плавающей точкой по строке sku, согласно условиям из структуры pattern, в обратном порядке (значение справа sku преоритетней)
@@ -249,9 +262,7 @@ class NumberValuePattern:
     """
     def parse_reverse(self, sku):
         # Поиск всех границ соответствий регулярному выражению self.reg
-        matches = []
-        for m in re.finditer(self.reg, sku):
-            matches.append(m)
+        matches = self.find_matches(sku)
         matches.reverse()
         # Перебор всех соответствий в обратном порядке (справа налево)
         for m in matches:
@@ -263,9 +274,9 @@ class NumberValuePattern:
                 # Если число в соответствии найдено, поиск завершается
                 if val is not None:
                     loc = [num_loc[0] + loc_borders[0], num_loc[1] + loc_borders[0]]
-                    return val, loc
+                    return val, loc, self.name
         # Если ни один вариант не подошел или не было найдено ни одно соответствие регулярному выражению, функция прекращает работу, а характеристика считается не найденной
-        return None, None
+        return None, None, None
     
     """
     Поиск и сложение значений характеристик с плавающей точкой по строке sku, согласно условиям из структуры pattern
@@ -276,9 +287,7 @@ class NumberValuePattern:
     """
     def parse_sum(self, sku):
         # Поиск всех границ соответствий регулярному выражению self.reg
-        matches = []
-        for m in re.finditer(self.reg, sku):
-            matches.append(m)
+        matches = self.find_matches(sku)
         val = 0
         # Перебор и сложение всех соответствий
         for m in matches:
@@ -291,9 +300,9 @@ class NumberValuePattern:
                     val += val_cond
             # Если число в соответствии найдено, поиск завершается
         if val > 0:
-            return val, [0, 0]
+            return val, [0, 0], self.name
         # Если ни один вариант не подошел или не было найдено ни одно соответствие регулярному выражению, функция прекращает работу, а характеристика считается не найденной
-        return None, None
+        return None, None, None
 
     """
     Поиск максимального значения характеристики с плавающей точкой по строке sku, согласно условиям из структуры pattern
@@ -304,9 +313,7 @@ class NumberValuePattern:
     """
     def parse_max(self, sku):
         # Поиск всех границ соответствий регулярному выражению self.reg
-        matches = []
-        for m in re.finditer(self.reg, sku):
-            matches.append(m)
+        matches = self.find_matches(sku)
         val = 0
         loc_borders = [0, 0]
         # Перебор и сложение всех соответствий
@@ -321,9 +328,9 @@ class NumberValuePattern:
                     loc_borders = loc_borders_cond
             # Если число в соответствии найдено, поиск завершается
         if val > 0:
-            return val, loc_borders
+            return val, loc_borders, self.name
         # Если ни один вариант не подошел или не было найдено ни одно соответствие регулярному выражению, функция прекращает работу, а характеристика считается не найденной
-        return None, None
+        return None, None, None
 
     """
     Поиск минимального значения характеристики с плавающей точкой по строке sku, согласно условиям из структуры pattern
@@ -334,9 +341,7 @@ class NumberValuePattern:
     """
     def parse_min(self, sku):
         # Поиск всех границ соответствий регулярному выражению self.reg
-        matches = []
-        for m in re.finditer(self.reg, sku):
-            matches.append(m)
+        matches = self.find_matches(sku)
         val = np.inf
         loc_borders = [0, 0]
         # Перебор и сложение всех соответствий
@@ -351,9 +356,9 @@ class NumberValuePattern:
                     loc_borders = loc_borders_cond
             # Если число в соответствии найдено, поиск завершается
         if val < np.inf:
-            return val, loc_borders
+            return val, loc_borders, self.name
         # Если ни один вариант не подошел или не было найдено ни одно соответствие регулярному выражению, функция прекращает работу, а характеристика считается не найденной
-        return None, None
+        return None, None, None
 
     """
     Поиск в некотором части строки sku, ограниченной локацией matchLoc значения характеристики, удовлетворяющего шаблону, а также поиск дополнительного множителя характеристики
@@ -375,10 +380,51 @@ class NumberValuePattern:
             if not ((val >= self.min_val) and (val <= self.max_val)):
                 # Если верно, то характеристика считается найденной и функция заканчивает работу, значение характеристики переписывается в строку и к ней добавляется суффикс
                 val = None
+            # Проверка кратности
+            elif not ((self.multiplicity == 0) or (val % self.multiplicity == 0)):
+                # Если верно, то характеристика считается найденной и функция заканчивает работу, значение характеристики переписывается в строку и к ней добавляется суффикс
+                val = None
         return val, loc
 
     """
-    Функция поиска исключений в SKU слева и справа от найденного числового значения характеристики по регулярным выражениям pattern.exception_left_arr и pattern.exception_right_arr
+    Функция поиска соответствий в SKU по регулярным выражениям
+
+    :param sku: строка, в которой было найдено числовое значение характеристики и ведется поиск множителя
+
+    :return: найдено ли исключение
+    """
+    def find_matches(self, sku):
+        matches = []
+        if isinstance(self.reg, str):
+            for m in re.finditer(self.reg, sku):
+                matches.append(m)
+        else:
+            if "SelfReg" in self.reg:
+                for match in re.finditer(self.reg["SelfReg"], sku):
+                    loc = match.span()
+                    if "LeftReg" in self.reg:
+                        left_found = False
+                        left_reg = self.reg["LeftReg"]
+                        m = re.search(left_reg, sku[:loc[0]])
+                        if m is not None:
+                            left_found = True
+                    else:
+                        left_found = True
+                    if left_found:
+                        if "RightReg" in self.reg:
+                            right_found = False
+                            right_reg = self.reg["RightReg"]
+                            m = re.search(right_reg, sku[loc[1]:])
+                            if m is not None:
+                                right_found = True
+                        else:
+                            right_found = True
+                        if right_found:
+                            matches.append(match)
+        return matches
+
+    """
+    Функция поиска исключений в SKU слева и справа от найденного числового значения характеристики по регулярным выражениям
 
     :param sku: строка, в которой было найдено числовое значение характеристики и ведется поиск множителя
     :param charLoc: локация (номера первого и последнего символов) числового значения характеристики в строке sku
@@ -386,14 +432,35 @@ class NumberValuePattern:
     :return: найдено ли исключение
     """
     def find_exception(self, sku, char_loc):
-        for left_exp_reg in self.exception_left_arr:
-            m = re.search(left_exp_reg, sku[:char_loc[0]])
-            if m is not None:
-                return True
-        for right_exp_reg in self.exception_right_arr:
-            m = re.search(right_exp_reg, sku[char_loc[1]:])
-            if m is not None:
-                return True
+        for exception_reg_dict in self.exceptions_arr:
+            if "LeftReg" in exception_reg_dict:
+                left_found = False
+                left_exp_reg = exception_reg_dict["LeftReg"]
+                m = re.search(left_exp_reg, sku[:char_loc[0]])
+                if m is not None:
+                    left_found = True
+            else:
+                left_found = True
+            if left_found:
+                if "RightReg" in exception_reg_dict:
+                    right_found = False
+                    right_exp_reg = exception_reg_dict["RightReg"]
+                    m = re.search(right_exp_reg, sku[char_loc[1]:])
+                    if m is not None:
+                        right_found = True
+                else:
+                    right_found = True
+                if right_found:
+                    if "SelfReg" in exception_reg_dict:
+                        self_found = False
+                        self_exp_reg = exception_reg_dict["SelfReg"]
+                        m = re.search(self_exp_reg, sku[char_loc[0] : char_loc[1]])
+                        if m is not None:
+                            self_found = True
+                    else:
+                        self_found = True
+                    if self_found:
+                        return True
         return False
 
     """
@@ -524,5 +591,5 @@ class ConstValuePattern:
         match_arr = re.search(self.reg, sku_low)
         # Если найдено хотя бы одно соответствие, возвращается соответствующее значение из pattern
         if match_arr is not None:
-            return self.val, [0, 0]
-        return None, None
+            return self.val, [0, 0], ""
+        return None, None, None
