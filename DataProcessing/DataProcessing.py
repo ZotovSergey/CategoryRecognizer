@@ -46,17 +46,17 @@ class SKUProcessor:
 
         :return: список данных, возвращаемый функцией self.proc_func
         """
-        # processed_rows = [""] * len(data_rows)
-        # for i, row in enumerate(data_rows):
-        #     processed_rows[i] = self.proc_func(row)
-        #     print(i)
+        processed_rows = [""] * len(data_rows)
+        for i, row in enumerate(data_rows):
+            processed_rows[i] = self.proc_func(row)
+            #print(i)
 
-        # Создание пула потоков для self.use_threads_count потоков
-        pool = mp.Pool(self.use_threads_count)
-        # Распознование категорий в соответствии справочнику self.category_directory
-        processed_rows = list(pool.map(self.proc_func, data_rows))
-        # Закрытие пула потоков
-        pool.close()
+        # # Создание пула потоков для self.use_threads_count потоков
+        # pool = mp.Pool(self.use_threads_count)
+        # # Распознование категорий в соответствии справочнику self.category_directory
+        # processed_rows = list(pool.map(self.proc_func, data_rows))
+        # # Закрытие пула потоков
+        # pool.close()
         return processed_rows
     
     def write_batch_to_csv_file(self, output_rows):
@@ -310,7 +310,7 @@ class FeatureParser(SKUProcessorInterface):
     """
     Функция поиска значения характеристики в sku по заданному алгоритму
     """
-    def __init__(self, input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_name, feature_parser, max_batch_len, use_threads_count, remove_feature_check, set_msg_func, pbar, is_running_flag=None):
+    def __init__(self, input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_name, feature_parser, max_batch_len, use_threads_count, remove_feature_check, pattern_check, set_msg_func, pbar, is_running_flag=None):
         """
         :param input_data_path: путь к файлу, со строками SKU для обработки
         :param sku_sheet_name: название листа, содержащей строки SKU для обработки, если строка пустая, то берется первый лист в заданном файле
@@ -321,15 +321,22 @@ class FeatureParser(SKUProcessorInterface):
         :param max_batch_len: максимальное количество строк SKU, содержащихся в одном обрабатываемом батче
         :param use_threads_count: количество потоков, использумых для обработки, если превышает максимально доступное оличество потоков, то применяетс максимально доступное количество (int)
         :param remove_feature_check: выводить SKU без найденной характеристики
+        :param pattern_check: Выводить название шаблона, по которому найдена характеристика
         :param set_msg_func: функция вывода сообщения (string)
         :param pbar: объект progress bar, содержащий функции reset, set
         :param is_running_flag: функция, возвращающая False, если вычисления были остановлены, по умолчанию None - при том вычисления не могут быть остановлены
         """
-
+        # Выбор функции
         if remove_feature_check:
-            parse_func = feature_parser.parse_and_remove
+            if pattern_check:
+                parse_func = feature_parser.parse_and_remove_and_pattern
+            else:
+                parse_func = feature_parser.parse_and_remove
         else:
-            parse_func = feature_parser.parse
+            if pattern_check:
+                parse_func = feature_parser.parse_and_pattern
+            else:
+                parse_func = feature_parser.parse
     
         super(FeatureParser, self).__init__(input_data_path, sku_sheet_name, sku_col_name, output_data_path, parse_func, max_batch_len, use_threads_count, set_msg_func, pbar, is_running_flag)
 
@@ -353,6 +360,10 @@ class FeatureParser(SKUProcessorInterface):
             if remove_feature_check:
                 dec_id_header = pd.DataFrame({'SKU без найденной характеристики': []})
                 output_file_header = pd.concat([output_file_header, dec_id_header], axis=1)
+            #   Добавление в создаваемый файл столбца для записи названий шаблонов 
+            if pattern_check:
+                pat_header = pd.DataFrame({'Шаблон': []})
+                output_file_header = pd.concat([output_file_header, pat_header], axis=1)
             #   Добавление в создаваемый файл столбцов для записи определяющих идентификаторов, если это необходимо
             self.writer.write(output_file_header)
             #   Сообщение о создании обработанного файла

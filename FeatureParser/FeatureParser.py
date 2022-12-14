@@ -15,6 +15,8 @@ class FeatureParser:
         self.parse_func_chain = []
         #   Значение характеристики по умолчанию (если не сработал ни один из шаблонов)
         self.default_val = ""
+        #   Название значения по-умолчанию
+        self.default_name = ""
 
         #   Добавление функций по паттернам
         if "Patterns" in config:
@@ -22,9 +24,12 @@ class FeatureParser:
             for pattern_config in patterns_config_arr:
                 pattern = pattern_type_select(pattern_config)
                 self.parse_func_chain.append(pattern.parse)
-        #   Добавление значения по умолчанию
+        #   Добавление значений по умолчанию
         if "DefaultValue" in config:
             self.default_val = config["DefaultValue"]
+        if "DefaultName" in config:
+            self.default_name = config["DefaultName"]
+
     
     def parse(self, sku):
         """
@@ -38,7 +43,7 @@ class FeatureParser:
         if len(sku) > 0 and re.search(spaces_line_regexp, sku) is None:
             # Перебор всех функций self.parse_func_chain, по которым будет определяться значение характеристики по sku
             for i, pattern_func in enumerate(self.parse_func_chain):
-                char_val, loc = pattern_func(sku)
+                char_val, loc, pattern_name = pattern_func(sku)
                 #print(i)
                 # Если значение характеристики было найдено, то оно после дальнейшей обработки будет возвращено, иначе проводится поиск по следующему шаблону
                 if char_val is not None:
@@ -58,13 +63,52 @@ class FeatureParser:
         if len(sku) > 0 and re.search(spaces_line_regexp, sku) is None:
             # Перебор всех функций self.parse_func_chain, по которым будет определяться значение характеристики по sku
             for i, pattern_func in enumerate(self.parse_func_chain):
-                char_val, loc = pattern_func(sku)
+                char_val, loc, pattern_name = pattern_func(sku)
                 # Если значение характеристики было найдено, то оно после дальнейшей обработки будет возвращено, иначе проводится поиск по следующему шаблону
                 if char_val is not None:
                     removed_feature_sku = " ".join([sku[:loc[0]], sku[loc[1]:]])
                     return [char_val, removed_feature_sku]
             return [self.default_val, sku]
-        return ["", sku]
+        return ["", ""]
+    
+    def parse_and_pattern(self, sku):
+        """
+        Функция поиска значения характеристики в sku, вывод названия шаблона
+
+        :param sku string: строка SKU, в которой осуществляется поиск значения характеристики
+
+        :return: значение характеристики в формате строки, определенное по строке sku, если строка sku пустая или состоит из пробелов, возвращается пустая строка
+        """
+        # Проверка, является ли строка sku пустой или состоящей из пробелов; если это не так, то идет парсинг характеристики, иначе возвращается нулевое значение
+        if len(sku) > 0 and re.search(spaces_line_regexp, sku) is None:
+            # Перебор всех функций self.parse_func_chain, по которым будет определяться значение характеристики по sku
+            for i, pattern_func in enumerate(self.parse_func_chain):
+                char_val, loc, pattern_name = pattern_func(sku)
+                # Если значение характеристики было найдено, то оно после дальнейшей обработки будет возвращено, иначе проводится поиск по следующему шаблону
+                if char_val is not None:
+                    return [char_val, pattern_name]
+            return [self.default_val, self.default_name]
+        return ["", ""]
+    
+    def parse_and_remove_and_pattern(self, sku):
+        """
+        Функция поиска значения характеристики в sku
+
+        :param sku string: строка SKU, в которой осуществляется поиск значения характеристики
+
+        :return: значение характеристики в формате строки, определенное по строке sku, если строка sku пустая или состоит из пробелов, возвращается пустая строка
+        """
+        # Проверка, является ли строка sku пустой или состоящей из пробелов; если это не так, то идет парсинг характеристики, иначе возвращается нулевое значение
+        if len(sku) > 0 and re.search(spaces_line_regexp, sku) is None:
+            # Перебор всех функций self.parse_func_chain, по которым будет определяться значение характеристики по sku
+            for i, pattern_func in enumerate(self.parse_func_chain):
+                char_val, loc, pattern_name = pattern_func(sku)
+                # Если значение характеристики было найдено, то оно после дальнейшей обработки будет возвращено, иначе проводится поиск по следующему шаблону
+                if char_val is not None:
+                    removed_feature_sku = " ".join([sku[:loc[0]], sku[loc[1]:]])
+                    return [char_val, removed_feature_sku, pattern_name]
+            return [self.default_val, sku, self.default_name]
+        return ["", "", ""]
 
 def pattern_type_select(pattern_param_dict):
     """

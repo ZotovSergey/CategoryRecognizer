@@ -1004,6 +1004,9 @@ class FeatureParsingTab(AppGUI):
         # Чекбокс вывода SKU без найденной характеристики
         self.remove_feature_check = QCheckBox("Выводить SKU без найденной характеристики", self)
         tab_layout.addWidget(self.remove_feature_check)
+        # Чекбокс вывода названий шаблона, по которому найдена характеристика
+        self.pattern_check = QCheckBox("Выводить название шаблона, по которому найдена характеристика", self)
+        tab_layout.addWidget(self.pattern_check)
 
         # Блок параметров вычислений
         #   Макет-сетка
@@ -1122,6 +1125,7 @@ class FeatureParsingTab(AppGUI):
             self.max_batch_len_line_edit.setText(dir_tab_config['max_batch_len'])
             self.sku_sheet_name_line_edit.setText(dir_tab_config['sku_sheet_name'])
             self.remove_feature_check.setChecked(dir_tab_config['remove_feature_check'])
+            self.pattern_check.setChecked(dir_tab_config['pattern_check'])
         except:
             pass
     
@@ -1138,7 +1142,8 @@ class FeatureParsingTab(AppGUI):
                            'output_data_path': self.output_file_path_line_edit.text(),
                            'use_threads_count': self.use_threads_count_line_edit.text(),
                            'max_batch_len': self.max_batch_len_line_edit.text(),
-                           'remove_feature_check': self.remove_feature_check.isChecked()
+                           'remove_feature_check': self.remove_feature_check.isChecked(),
+                           'pattern_check': self.pattern_check.isChecked()
                           }
 
     def save_config(self):
@@ -1156,8 +1161,8 @@ class FeatureParsingTab(AppGUI):
         """
         Запускает функцию self.run() в отдельном потоке через функцию self.app_win.run_tab_func
         """
-        self.app_win.run_tab_func(self)
-        #self.run()
+        #self.app_win.run_tab_func(self)
+        self.run()
 
     def run(self):
         """
@@ -1175,8 +1180,8 @@ class FeatureParsingTab(AppGUI):
                     config = json.load(config_file)
                 feature_config = config[feature_label]
                 feature_parser = FP(feature_config)
-                self.app_win.worker.set_message_to_gui_from_thread(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
-                #self.app_win.info_win.set_message_to_gui(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
+                #self.app_win.worker.set_message_to_gui_from_thread(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
+                self.app_win.info_win.set_message_to_gui(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
                 #   Путь к файлу, со строками SKU для обработки
                 input_data_path = self.input_file_path_line_edit.text()
                 #   Название листа, содержащей строки SKU для обработки, если строка пустая, то берется первый лист в заданном файле
@@ -1189,6 +1194,8 @@ class FeatureParsingTab(AppGUI):
                 use_threads_count = self.use_threads_count_line_edit.text()
                 #   Выводить SKU без найденной характеристики
                 remove_feature_check = self.remove_feature_check.isChecked()
+                #   Выводить название шаблона, по которому найдена характеристика
+                pattern_check = self.pattern_check.isChecked()
                 if len(use_threads_count) == 0 or int(use_threads_count) > self.cpu_max:
                     use_threads_count == self.cpu_max
                     # Заполнение пустой строки значением по умолчанию
@@ -1207,13 +1214,13 @@ class FeatureParsingTab(AppGUI):
                 # Считывание содержания строк окна
                 self.catch_config()
             except Exception as e:
-                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                #self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
                 raise Exception("ERROR!!!")
 
             # Поиск характеристик из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
-            FeatureParser(input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_label, feature_parser, max_batch_len, use_threads_count, remove_feature_check,
-            self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
-            #self.app_win.info_win.set_message_to_gui, self.pbar)
+            FeatureParser(input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_label, feature_parser, max_batch_len, use_threads_count, remove_feature_check, pattern_check,
+            #self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
+            self.app_win.info_win.set_message_to_gui, self.pbar)
             #   Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             try:
                 self.save_config()
@@ -1225,8 +1232,8 @@ class FeatureParsingTab(AppGUI):
             pass
         finally:
             # Сигнал о завершении процесса
-            self.app_win.worker.finished.emit()
-            #pass
+            #self.app_win.worker.finished.emit()
+            pass
 
 class InfoWindow(AppGUI):
     """
