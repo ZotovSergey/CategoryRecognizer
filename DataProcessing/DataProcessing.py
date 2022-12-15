@@ -46,17 +46,16 @@ class SKUProcessor:
 
         :return: список данных, возвращаемый функцией self.proc_func
         """
-        processed_rows = [""] * len(data_rows)
-        for i, row in enumerate(data_rows):
-            processed_rows[i] = self.proc_func(row)
-            #print(i)
+        # processed_rows = [""] * len(data_rows)
+        # for i, row in enumerate(data_rows):
+        #     processed_rows[i] = self.proc_func(row)
 
-        # # Создание пула потоков для self.use_threads_count потоков
-        # pool = mp.Pool(self.use_threads_count)
-        # # Распознование категорий в соответствии справочнику self.category_directory
-        # processed_rows = list(pool.map(self.proc_func, data_rows))
-        # # Закрытие пула потоков
-        # pool.close()
+        # Создание пула потоков для self.use_threads_count потоков
+        pool = mp.Pool(self.use_threads_count)
+        # Распознование категорий в соответствии справочнику self.category_directory
+        processed_rows = list(pool.map(self.proc_func, data_rows))
+        # Закрытие пула потоков
+        pool.close()
         return processed_rows
     
     def write_batch_to_csv_file(self, output_rows):
