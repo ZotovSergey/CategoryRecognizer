@@ -1161,8 +1161,8 @@ class FeatureParsingTab(AppGUI):
         """
         Запускает функцию self.run() в отдельном потоке через функцию self.app_win.run_tab_func
         """
-        #self.app_win.run_tab_func(self)
-        self.run()
+        self.app_win.run_tab_func(self)
+        #self.run()
 
     def run(self):
         """
@@ -1180,8 +1180,8 @@ class FeatureParsingTab(AppGUI):
                     config = json.load(config_file)
                 feature_config = config[feature_label]
                 feature_parser = FP(feature_config)
-                #self.app_win.worker.set_message_to_gui_from_thread(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
-                self.app_win.info_win.set_message_to_gui(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
+                self.app_win.worker.set_message_to_gui_from_thread(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
+                #self.app_win.info_win.set_message_to_gui(" ".join(['Алгоритм для поиска характеристики', feature_label, 'составлен']))
                 #   Путь к файлу, со строками SKU для обработки
                 input_data_path = self.input_file_path_line_edit.text()
                 #   Название листа, содержащей строки SKU для обработки, если строка пустая, то берется первый лист в заданном файле
@@ -1214,13 +1214,13 @@ class FeatureParsingTab(AppGUI):
                 # Считывание содержания строк окна
                 self.catch_config()
             except Exception as e:
-                #self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
-                raise Exception("ERROR!!!")
+                self.app_win.worker.set_message_to_gui_from_thread(error_message(str(e)))
+                #raise Exception("ERROR!!!")
 
             # Поиск характеристик из обрабатываемого файла в соответствии заданному справочнику и запись результатов обработки в обработанный файл
             FeatureParser(input_data_path, sku_sheet_name, sku_col_name, output_data_path, feature_label, feature_parser, max_batch_len, use_threads_count, remove_feature_check, pattern_check,
-            #self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
-            self.app_win.info_win.set_message_to_gui, self.pbar)
+            self.app_win.worker.set_message_to_gui_from_thread, ThreadProgressBar(self.app_win.worker), self.app_win.is_running_flag)
+            #self.app_win.info_win.set_message_to_gui, self.pbar)
             #   Сохранение считанных строк окна в конфигурационный файл json, в следующую сессию эти строки записываются при открытии окна
             try:
                 self.save_config()
@@ -1232,8 +1232,8 @@ class FeatureParsingTab(AppGUI):
             pass
         finally:
             # Сигнал о завершении процесса
-            #self.app_win.worker.finished.emit()
-            pass
+            self.app_win.worker.finished.emit()
+            #pass
 
 class InfoWindow(AppGUI):
     """
