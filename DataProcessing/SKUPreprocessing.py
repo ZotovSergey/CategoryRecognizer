@@ -230,6 +230,10 @@ def base_cleanning(sku):
     cleared_sku = replace_many_pluses(cleared_sku)
     # Замена сочетаний более одного "/" на пробел
     cleared_sku = replace_many_slashes(cleared_sku)
+    # Замена сочетаний более одного ";" на пробел
+    cleared_sku = replace_many_semicolon(cleared_sku)
+    # Замена сочетаний более одного "_" на пробел
+    cleared_sku = replace_many_underscore(cleared_sku)
     # Ряд трансформация идут по тех пор, пока не прекратятся изменения строки
     start_is_clear = False
     while not start_is_clear:
@@ -407,6 +411,26 @@ def replace_many_slashes(sku):
     :return: измененная строка SKU
     """
     return re.sub(r'/+\s*/+[\s/]*', ' ', sku)
+
+def replace_many_semicolon(sku):
+    """
+    Замена сочетаний более одного ";" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r';+\s*;+[\s;]*', ' ', sku)
+
+def replace_many_underscore(sku):
+    """
+    Замена сочетаний более одного "_" на пробел
+
+    :param sku: строка SKU (string)
+
+    :return: измененная строка SKU
+    """
+    return re.sub(r'_+\s*_+[\s_]*', ' ', sku)
 
 def replace_brackets(sku):
     """
